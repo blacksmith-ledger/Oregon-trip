@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Cody to the Coast v0.4</title>
+<title>Cody to the Coast v0.5</title>
 <style>
 :root{
   --paper:#fff5d7; --ink:#26353a; --blue:#315f72; --orange:#b65b35;
@@ -25,6 +25,11 @@ button{touch-action:manipulation}
 header{padding:18px 12px;text-align:center;background:linear-gradient(#315f72,#244754);color:white}
 h1{margin:0;font-size:clamp(1.8rem,8vw,3rem)}
 header p{margin:5px 0 0;opacity:.9}
+.audioControls{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.audioBtn{min-height:42px;padding:8px 14px;border:2px solid rgba(255,255,255,.65);background:#173b50;color:white;border-radius:999px}
+.audioBtn.playing{background:#3f704d}
+.volumeControl{display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.14);font-size:.78rem;font-weight:800}
+.volumeControl input{width:105px;accent-color:#efb35f}
 main{display:grid;gap:12px;padding:12px}
 .panel{background:rgba(255,255,255,.56);border:2px solid var(--line);border-radius:12px;padding:12px}
 .panel h2{margin:0 0 10px;color:#244754;font-size:1.12rem;border-bottom:1px solid #aab9bb;padding-bottom:6px}
@@ -75,7 +80,17 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 </head>
 <body>
 <div class="wrap"><div class="game">
-<header><h1>Cody to the Coast</h1><p>A highway survival comedy — v0.4</p></header>
+<header>
+  <h1>Cody to the Coast</h1>
+  <p>A highway survival comedy — v0.5</p>
+  <div class="audioControls">
+    <button id="musicBtn" class="audioBtn" type="button" aria-pressed="false">♫ Music Off</button>
+    <label class="volumeControl" for="musicVolume">
+      <span>Volume</span>
+      <input id="musicVolume" type="range" min="0" max="100" value="28" aria-label="Music volume">
+    </label>
+  </div>
+</header>
 
 <main id="gameArea">
 <section class="panel full">
@@ -218,7 +233,7 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 <script>
 (() => {
 "use strict";
-const SAVE="cody_to_coast_v04",LEGACY_SAVES=["cody_to_coast_v03","cody_to_coast_v02","cody_to_coast_v01"];
+const SAVE="cody_to_coast_v05",LEGACY_SAVES=["cody_to_coast_v04","cody_to_coast_v03","cody_to_coast_v02","cody_to_coast_v01"];
 const route=[
  {name:"Cody, Wyoming",miles:0,blurb:"The trip begins beneath the wide Wyoming sky."},
  {name:"Bridger, Montana",miles:76,blurb:"A small Montana stop with fuel, food, and room to stretch."},
@@ -305,6 +320,140 @@ const clockText=h=>{
  const ap=hr>=12?"PM":"AM",display=hr%12||12;
  return `Day ${day} • ${display}:${String(min).padStart(2,"0")} ${ap}`;
 };
+
+/* Original looping road-trip music made with the Web Audio API.
+   No separate music file is required, so the game remains one HTML file. */
+const MUSIC_PREF="cody_to_coast_music_v05";
+const musicThemes={
+ mountain:{
+  tempo:112,
+  melody:[67,null,69,71,72,null,71,69,67,null,64,67,69,null,67,null,64,null,67,69,71,null,69,67,64,null,62,64,67,null,64,null],
+  bass:[48,48,43,43,45,45,47,47],
+  chords:[[60,64,67],[55,59,62],[57,60,64],[59,62,67]]
+ },
+ highway:{
+  tempo:124,
+  melody:[64,67,69,null,71,69,67,null,64,67,72,null,71,69,67,null,69,72,74,null,72,71,69,null,67,69,71,69,67,64,62,null],
+  bass:[45,45,48,48,43,43,47,47],
+  chords:[[57,60,64],[60,64,67],[55,59,62],[59,62,66]]
+ },
+ coast:{
+  tempo:104,
+  melody:[72,null,74,76,79,null,76,74,72,null,69,72,74,null,72,null,69,null,72,74,76,null,74,72,69,null,67,69,72,null,69,null],
+  bass:[48,48,53,53,45,45,50,50],
+  chords:[[60,64,67],[65,69,72],[57,60,64],[62,65,69]]
+ }
+};
+let music={
+ ctx:null,master:null,timer:null,on:false,step:0,nextTime:0,volume:.28,requested:false
+};
+function midiToHz(note){return 440*Math.pow(2,(note-69)/12)}
+function activeMusicTheme(){
+ if(typeof state!=="undefined"&&state.routeIndex>=10)return musicThemes.coast;
+ if(typeof state!=="undefined"&&state.routeIndex>=5)return musicThemes.highway;
+ return musicThemes.mountain;
+}
+function loadMusicPreference(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(MUSIC_PREF)||"{}");
+  music.volume=clamp(Number(saved.volume ?? 28)/100,0,1);
+  music.requested=Boolean(saved.enabled);
+ }catch(e){music.volume=.28;music.requested=false}
+}
+function saveMusicPreference(){
+ localStorage.setItem(MUSIC_PREF,JSON.stringify({enabled:music.on,volume:Math.round(music.volume*100)}));
+}
+function ensureAudio(){
+ if(music.ctx)return;
+ const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+ if(!AudioContextClass)return;
+ music.ctx=new AudioContextClass();
+ music.master=music.ctx.createGain();
+ music.master.gain.value=music.volume*.32;
+ music.master.connect(music.ctx.destination);
+}
+function synthNote(note,start,duration,type="triangle",level=.12){
+ if(note===null||note===undefined||!music.ctx||!music.master)return;
+ const osc=music.ctx.createOscillator(),gain=music.ctx.createGain();
+ osc.type=type;osc.frequency.setValueAtTime(midiToHz(note),start);
+ gain.gain.setValueAtTime(.0001,start);
+ gain.gain.exponentialRampToValueAtTime(Math.max(.0002,level),start+.012);
+ gain.gain.exponentialRampToValueAtTime(.0001,start+duration);
+ osc.connect(gain);gain.connect(music.master);
+ osc.start(start);osc.stop(start+duration+.03);
+}
+function drumHit(start,strong=false){
+ if(!music.ctx||!music.master)return;
+ const osc=music.ctx.createOscillator(),gain=music.ctx.createGain();
+ osc.type="sine";osc.frequency.setValueAtTime(strong?92:72,start);
+ osc.frequency.exponentialRampToValueAtTime(38,start+.09);
+ gain.gain.setValueAtTime(strong?.11:.065,start);
+ gain.gain.exponentialRampToValueAtTime(.0001,start+.12);
+ osc.connect(gain);gain.connect(music.master);osc.start(start);osc.stop(start+.14);
+}
+function scheduleMusicStep(step,start){
+ const theme=activeMusicTheme(),beat=60/theme.tempo/2;
+ const melody=theme.melody[step%theme.melody.length];
+ synthNote(melody,start,beat*.82,"triangle",.115);
+ if(step%2===0){
+  const bass=theme.bass[Math.floor(step/4)%theme.bass.length];
+  synthNote(bass,start,beat*1.65,"sine",.105);
+ }
+ if(step%8===0){
+  const chord=theme.chords[Math.floor(step/8)%theme.chords.length];
+  chord.forEach((note,index)=>synthNote(note,start,beat*5.7,index===0?"sine":"triangle",.028));
+ }
+ if(step%4===0)drumHit(start,step%8===0);
+}
+function musicScheduler(){
+ if(!music.on||!music.ctx)return;
+ while(music.nextTime<music.ctx.currentTime+.14){
+  const theme=activeMusicTheme();
+  scheduleMusicStep(music.step,music.nextTime);
+  music.nextTime+=60/theme.tempo/2;
+  music.step=(music.step+1)%32;
+ }
+}
+async function startMusic(){
+ ensureAudio();
+ if(!music.ctx){
+  notice("This browser could not start the built-in music.","bad");
+  return;
+ }
+ try{await music.ctx.resume()}catch(e){}
+ music.on=true;music.requested=true;music.step=0;music.nextTime=music.ctx.currentTime+.04;
+ clearInterval(music.timer);music.timer=setInterval(musicScheduler,25);
+ musicScheduler();updateMusicControls();saveMusicPreference();
+}
+function stopMusic(){
+ music.on=false;music.requested=false;clearInterval(music.timer);music.timer=null;
+ if(music.ctx&&music.ctx.state==="running")music.ctx.suspend();
+ updateMusicControls();saveMusicPreference();
+}
+function toggleMusic(){music.on?stopMusic():startMusic()}
+function updateMusicControls(){
+ const button=$("musicBtn"),slider=$("musicVolume");
+ if(!button||!slider)return;
+ button.textContent=music.on?"♫ Music On":(music.requested?"♫ Tap to Resume":"♫ Music Off");
+ button.classList.toggle("playing",music.on);
+ button.setAttribute("aria-pressed",String(music.on));
+ slider.value=String(Math.round(music.volume*100));
+}
+function setMusicVolume(value){
+ music.volume=clamp(Number(value)/100,0,1);
+ if(music.master)music.master.gain.setTargetAtTime(music.volume*.32,music.ctx.currentTime,.03);
+ saveMusicPreference();
+}
+function setupMusicControls(){
+ loadMusicPreference();updateMusicControls();
+ $("musicBtn").onclick=toggleMusic;
+ $("musicVolume").oninput=e=>setMusicVolume(e.target.value);
+ document.addEventListener("visibilitychange",()=>{
+  if(!music.ctx||!music.on)return;
+  if(document.hidden)music.ctx.suspend();
+  else music.ctx.resume();
+ });
+}
 
 function fresh(){
  return {
@@ -1094,6 +1243,7 @@ $("closeMini").onclick=()=>{if(!mini.running)$("miniModal").classList.remove("sh
 $("leftBtn").onclick=()=>moveMini(-1);$("rightBtn").onclick=()=>moveMini(1);
 window.addEventListener("keydown",e=>{if(e.key==="ArrowLeft")moveMini(-1);if(e.key==="ArrowRight")moveMini(1)});
 canvas.addEventListener("pointerdown",e=>{const r=canvas.getBoundingClientRect();moveMini(e.clientX-r.left<r.width/2?-1:1)});
+setupMusicControls();
 
 if(!state.log.length)addLog("Henry takes the wheel while Emily, Frank, and Edna leave Cody for the coast.");
 if(state.routeIndex>=route.length-1)finish();else render();
