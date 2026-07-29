@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Cody to the Coast v0.2</title>
+<title>Cody to the Coast v0.3</title>
 <style>
 :root{
   --paper:#fff5d7; --ink:#26353a; --blue:#315f72; --orange:#b65b35;
@@ -44,7 +44,7 @@ main{display:grid;gap:12px;padding:12px}
 .inventory{display:grid;grid-template-columns:1fr auto;gap:5px 10px}.inventory div{padding:4px 0;border-bottom:1px dotted #a9b7b9}
 .notice{padding:10px;border:1px solid #a7b9bc;border-radius:9px;background:#edf4f5;margin-bottom:8px}
 .notice.good{background:#e2f0e4;border-color:#8db693}.notice.bad{background:#f5dfda;border-color:#c9877a}
-.actions{display:grid;grid-template-columns:1fr;gap:8px}.optionGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:10px}.paceBtn{background:#dde7e8;color:#294b58;border:2px solid #9eb1b5;min-height:62px;padding:7px;font-size:.9rem}.paceBtn.active{background:#315f72;color:white;border-color:#244754}.paceBtn small{display:block;font-size:.7rem;font-weight:600;margin-top:2px}.weather{display:flex;justify-content:space-between;gap:10px;align-items:center;background:#eef4f5;border:1px solid #b4c3c5;border-radius:9px;padding:8px;margin-top:8px}.weather b{color:#244754}.townChoices{display:grid;gap:9px}.townChoice{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:white;border:1px solid #bcc9cb;border-radius:10px;padding:10px}.townChoice button{min-width:110px}.badge{display:inline-block;padding:2px 7px;border-radius:999px;background:#e1e9ea;font-size:.75rem;font-weight:800;color:#36535d}
+.actions{display:grid;grid-template-columns:1fr;gap:8px}.optionGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:10px}.optionGrid.four{grid-template-columns:repeat(2,minmax(0,1fr))}.paceBtn,.driverBtn,.roadBtn{background:#dde7e8;color:#294b58;border:2px solid #9eb1b5;min-height:62px;padding:7px;font-size:.9rem}.paceBtn.active,.driverBtn.active,.roadBtn.active{background:#315f72;color:white;border-color:#244754}.paceBtn small,.driverBtn small,.roadBtn small{display:block;font-size:.7rem;font-weight:600;margin-top:2px}.weather{display:flex;justify-content:space-between;gap:10px;align-items:center;background:#eef4f5;border:1px solid #b4c3c5;border-radius:9px;padding:8px;margin-top:8px}.weather b{color:#244754}.townChoices{display:grid;gap:9px}.townChoice{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:white;border:1px solid #bcc9cb;border-radius:10px;padding:10px}.townChoice button{min-width:110px}.badge{display:inline-block;padding:2px 7px;border-radius:999px;background:#e1e9ea;font-size:.75rem;font-weight:800;color:#36535d}.journalStats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px}.journalStat{background:#fff;border:1px solid #c4cfd1;border-radius:9px;padding:8px}.journalStat b{display:block;font-size:.72rem;text-transform:uppercase;color:#687579}.journalStat span{font-size:1.2rem;font-weight:900}.spotGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.spot{background:#eef2f2;border:1px solid #c6d0d1;border-radius:8px;padding:7px;font-size:.82rem}.spot.seen{background:#dcecdf;border-color:#8eb596;color:#285639;font-weight:800}.achievementList{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.achievement{padding:5px 8px;border-radius:999px;background:#e6dfc9;border:1px solid #ad9e79;font-size:.78rem;font-weight:800}.encounterChoices{display:grid;gap:8px;margin-top:12px}.encounterChoices button{text-align:left}.endStory{max-width:560px;margin:14px auto;padding:12px;background:#eef4f5;border:1px solid #a8b9bc;border-radius:10px;text-align:left;line-height:1.45}
 button{min-height:50px;border:0;border-radius:10px;padding:10px 12px;font-weight:900;cursor:pointer}
 .primary{background:var(--orange);color:white}.secondary{background:var(--blue);color:white}
 .goodbtn{background:var(--green);color:white}.light{background:#e6dfc9;color:var(--ink);border:2px solid #ad9e79}
@@ -64,15 +64,18 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 .end{text-align:center;padding:28px 15px}.end h2{font-size:2rem}.endgrid{display:grid;grid-template-columns:1fr auto;gap:8px 14px;text-align:left;max-width:390px;margin:18px auto}.endgrid div:nth-child(even){font-weight:900;text-align:right}
 @media(min-width:760px){
   main{grid-template-columns:1fr 1fr}
-  .stats{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
   .party,.cargrid{grid-template-columns:repeat(4,minmax(0,1fr))}
   .actions{grid-template-columns:2fr 1fr 1fr 1fr}
+  .optionGrid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .journalStats{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .spotGrid{grid-template-columns:repeat(5,minmax(0,1fr))}
 }
 </style>
 </head>
 <body>
 <div class="wrap"><div class="game">
-<header><h1>Cody to the Coast</h1><p>A highway survival comedy — v0.2</p></header>
+<header><h1>Cody to the Coast</h1><p>A highway survival comedy — v0.3</p></header>
 
 <main id="gameArea">
 <section class="panel full">
@@ -90,6 +93,8 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
     <div class="stat"><b>Morale</b><span id="moraleStat">78%</span></div>
     <div class="stat"><b>Next stop</b><span id="nextStat">Bridger</span></div>
     <div class="stat"><b>Miles to stop</b><span id="nextMilesStat">76</span></div>
+    <div class="stat"><b>Driver</b><span id="driverStat">Henry</span></div>
+    <div class="stat"><b>Road spots</b><span id="spotsStat">0 / 10</span></div>
   </div>
 </section>
 
@@ -112,12 +117,38 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 </section>
 
 <section class="panel full">
+  <h2>Road-Trip Journal</h2>
+  <div class="journalStats">
+    <div class="journalStat"><b>Photos</b><span id="photosJournal">0</span></div>
+    <div class="journalStat"><b>Souvenirs</b><span id="souvenirsJournal">0</span></div>
+    <div class="journalStat"><b>Towns reached</b><span id="townsJournal">1 / 14</span></div>
+    <div class="journalStat"><b>Achievements</b><span id="achievementCount">0</span></div>
+  </div>
+  <div class="small"><b>Highway spotting challenge</b> — notice all ten during the trip.</div>
+  <div id="spotChecklist" class="spotGrid"></div>
+  <div id="achievements" class="achievementList"></div>
+</section>
+
+<section class="panel full">
   <h2>Road Decisions</h2>
   <div class="small"><b>Driving pace</b></div>
   <div id="paceControls" class="optionGrid">
     <button class="paceBtn" data-pace="relaxed">Relaxed<small>safer, slower</small></button>
     <button class="paceBtn" data-pace="steady">Steady<small>balanced</small></button>
     <button class="paceBtn" data-pace="push">Push On<small>farther, rougher</small></button>
+  </div>
+  <div class="small"><b>Driver for the next stretch</b></div>
+  <div id="driverControls" class="optionGrid four">
+    <button class="driverBtn" data-driver="Henry">Henry<small>reduces car wear</small></button>
+    <button class="driverBtn" data-driver="Emily">Emily<small>finds sights and photos</small></button>
+    <button class="driverBtn" data-driver="Frank">Frank<small>avoids route delays</small></button>
+    <button class="driverBtn" data-driver="Edna">Edna<small>conserves road food</small></button>
+  </div>
+  <div class="small"><b>Road choice</b></div>
+  <div id="roadControls" class="optionGrid">
+    <button class="roadBtn" data-road="direct">Direct Route<small>fastest overall</small></button>
+    <button class="roadBtn" data-road="scenic">Scenic Route<small>photos and morale</small></button>
+    <button class="roadBtn" data-road="easy">Easy Roads<small>less wear and sickness</small></button>
   </div>
   <div id="notice" class="notice">Everyone is packed. The coast is a long way west.</div>
   <div class="actions">
@@ -142,9 +173,13 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
     <div>Random events</div><div id="endEvents"></div>
     <div>Final morale</div><div id="endMorale"></div>
     <div>Souvenirs</div><div id="endSouvenirs"></div>
+    <div>Photos</div><div id="endPhotos"></div>
+    <div>Road spots</div><div id="endSpots"></div>
+    <div>Achievements</div><div id="endAchievements"></div>
     <div>Items collected</div><div id="endCaught"></div>
     <div>Trip rating</div><div id="endRating"></div>
   </div>
+  <div id="endStory" class="endStory"></div>
   <button id="endRestart" class="primary">Take the Trip Again</button>
 </section>
 </div></div>
@@ -166,6 +201,12 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
   <button id="closeTown" class="light">Return to the Car</button>
 </div></div>
 
+<div id="encounterModal" class="modal"><div class="box">
+  <h2 id="encounterTitle">Roadside Decision</h2>
+  <p id="encounterText"></p>
+  <div id="encounterChoices" class="encounterChoices"></div>
+</div></div>
+
 <div id="miniModal" class="modal"><div class="box">
   <h2>Road Pickup Run</h2>
   <p class="small">Move between three lanes. Collect supplies and avoid potholes, cones, and loose tires. The run lasts 20 seconds.</p>
@@ -179,7 +220,7 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 <script>
 (() => {
 "use strict";
-const SAVE="cody_to_coast_v02",LEGACY_SAVE="cody_to_coast_v01";
+const SAVE="cody_to_coast_v03",LEGACY_SAVES=["cody_to_coast_v02","cody_to_coast_v01"];
 const route=[
  {name:"Cody, Wyoming",miles:0,blurb:"The trip begins beneath the wide Wyoming sky."},
  {name:"Bridger, Montana",miles:76,blurb:"A small Montana stop with fuel, food, and room to stretch."},
@@ -226,6 +267,31 @@ const paces={
  steady:{name:"Steady",min:65,max:96,speed:55,event:.70,fuel:1,morale:0,health:0},
  push:{name:"Push On",min:86,max:116,speed:63,event:.84,fuel:1.12,morale:-3,health:-1}
 };
+const drivers={
+ Henry:{name:"Henry",speed:1,event:0,fuel:1,wear:.62,morale:0,supply:1,sight:.04},
+ Emily:{name:"Emily",speed:.98,event:.02,fuel:1,wear:1,morale:2,supply:1,sight:.28},
+ Frank:{name:"Frank",speed:1.06,event:-.10,fuel:.98,wear:.94,morale:0,supply:1,sight:.07},
+ Edna:{name:"Edna",speed:.98,event:-.02,fuel:1,wear:.95,morale:1,supply:.68,sight:.08}
+};
+const roadStyles={
+ direct:{name:"Direct Route",speed:1,event:0,fuel:1,wear:1,morale:0,sight:.04,sick:1},
+ scenic:{name:"Scenic Route",speed:.86,event:.05,fuel:1.10,wear:1.03,morale:5,sight:.34,sick:.92},
+ easy:{name:"Easy Roads",speed:.94,event:-.10,fuel:1.05,wear:.62,morale:1,sight:.08,sick:.52}
+};
+const spotDefinitions=[
+ {key:"rumble",name:"Hit rumble strips"},{key:"birds",name:"Birds eating in road"},
+ {key:"tireParts",name:"Tire parts in road"},{key:"passed",name:"Get passed"},
+ {key:"passCar",name:"Pass another driver"},{key:"hiccup",name:"Emily hiccups"},
+ {key:"billboard",name:"Strange billboard"},{key:"mileage",name:"Mileage sign"},
+ {key:"changeDrivers",name:"Change drivers"},{key:"roadkill",name:"Roadkill seen"}
+];
+const achievementDefinitions={
+ hundred:{name:"First 100 Miles"},mechanic:{name:"Highway Mechanic"},
+ spotter:{name:"Sharp Eyes"},fullSpot:{name:"Road-Trip Bingo"},
+ coast:{name:"Pacific Reached"},collector:{name:"Souvenir Collector"},
+ photographer:{name:"Trip Photographer"},decider:{name:"Roadside Diplomat"},
+ sharedWheel:{name:"Everybody Gets a Turn"}
+};
 const weatherTypes=[
  {key:"clear",name:"Clear skies",icon:"☀️",speed:1,fuel:1,event:0,wiper:0},
  {key:"rain",name:"Steady rain",icon:"🌧️",speed:.88,fuel:1.02,event:.08,wiper:10},
@@ -247,11 +313,12 @@ const clockText=h=>{
 function fresh(){
  return {
   routeIndex:0,into:0,miles:0,hours:0,cash:135,fuel:14,tire:100,glass:100,wiper:75,
-  morale:78,pace:"steady",weatherKey:"clear",weatherName:"Clear skies",souvenirs:0,
-  people:JSON.parse(JSON.stringify(peopleBase)),
+  morale:78,pace:"steady",driver:"Henry",roadStyle:"direct",weatherKey:"clear",weatherName:"Clear skies",
+  souvenirs:0,photos:0,people:JSON.parse(JSON.stringify(peopleBase)),
   inventory:{water:4,coffee:1,pate:1,crackers:2,sandwich:2,trailmix:1,ginger:1,wiper:0,tire:0,glass:0},
   fatigueShield:0,events:0,caught:0,foodClock:0,waterClock:0,lastTownAction:-1,lastMiniAt:-1,
-  visitedSpecial:[],log:[]
+  lastEncounter:"",encounterCooldown:0,decisions:0,repairs:0,driverChanges:0,driversUsed:["Henry"],
+  spots:{},achievements:[],visitedSpecial:[],log:[]
  };
 }
 function migrate(s){
@@ -259,15 +326,22 @@ function migrate(s){
  out.inventory={...b.inventory,...((s&&s.inventory)||{})};
  out.people=b.people.map(base=>({...base,...(((s&&s.people)||[]).find(p=>p.name===base.name)||{})}));
  out.visitedSpecial=Array.isArray(out.visitedSpecial)?out.visitedSpecial:[];
+ out.achievements=Array.isArray(out.achievements)?out.achievements:[];
+ out.driversUsed=Array.isArray(out.driversUsed)&&out.driversUsed.length?out.driversUsed:["Henry"];
+ out.spots=out.spots&&typeof out.spots==="object"?out.spots:{};
  if(!paces[out.pace])out.pace="steady";
+ if(!drivers[out.driver])out.driver="Henry";
+ if(!roadStyles[out.roadStyle])out.roadStyle="direct";
  return out;
 }
 function load(){
  try{
   const current=localStorage.getItem(SAVE);
   if(current)return migrate(JSON.parse(current));
-  const old=localStorage.getItem(LEGACY_SAVE);
-  if(old)return migrate(JSON.parse(old));
+  for(const key of LEGACY_SAVES){
+   const old=localStorage.getItem(key);
+   if(old)return migrate(JSON.parse(old));
+  }
  }catch(e){}
  return null;
 }
@@ -281,6 +355,34 @@ function label(v,words){return v>=75?words[0]:v>=45?words[1]:v>=20?words[2]:word
 function notice(text,type=""){const n=$("notice");n.className="notice"+(type?" "+type:"");n.textContent=text}
 function distanceToNext(){return state.routeIndex>=route.length-1?0:Math.max(0,next().miles-state.into)}
 function weather(){return weatherTypes.find(w=>w.key===state.weatherKey)||weatherTypes[0]}
+function spotCount(){return spotDefinitions.filter(s=>state.spots[s.key]).length}
+function markSpot(key){
+ if(!key||state.spots[key])return false;
+ state.spots[key]=true;
+ const item=spotDefinitions.find(s=>s.key===key);
+ if(item)addLog(`Highway spotting challenge: ${item.name}.`);
+ const count=spotCount();
+ if(count===5){state.morale=clamp(state.morale+6,0,100);addLog("Five highway sights completed. The group earns a morale bonus.")}
+ if(count===spotDefinitions.length){state.morale=clamp(state.morale+12,0,100);state.souvenirs++;addLog("All ten highway sights completed. Road-Trip Bingo earns a souvenir.")}
+ return true;
+}
+function unlock(key){
+ if(state.achievements.includes(key))return;
+ state.achievements.push(key);
+ const a=achievementDefinitions[key];
+ if(a)addLog(`Achievement unlocked: ${a.name}.`);
+}
+function checkAchievements(){
+ if(state.miles>=100)unlock("hundred");
+ if(state.repairs>=3)unlock("mechanic");
+ if(spotCount()>=6)unlock("spotter");
+ if(spotCount()===spotDefinitions.length)unlock("fullSpot");
+ if(state.routeIndex>=10)unlock("coast");
+ if(state.souvenirs>=4)unlock("collector");
+ if(state.photos>=8)unlock("photographer");
+ if(state.decisions>=4)unlock("decider");
+ if(new Set(state.driversUsed).size===4)unlock("sharedWheel");
+}
 
 function render(){
  const pct=clamp(state.miles/totalMiles*100,0,100);
@@ -295,6 +397,8 @@ function render(){
  $("moraleStat").textContent=Math.round(state.morale)+"%";
  $("nextStat").textContent=state.routeIndex>=route.length-1?"Arrived":next().name.split(",")[0];
  $("nextMilesStat").textContent=Math.round(distanceToNext());
+ $("driverStat").textContent=state.driver;
+ $("spotsStat").textContent=`${spotCount()} / ${spotDefinitions.length}`;
  $("partyGrid").innerHTML=state.people.map(p=>`
   <div class="person">
    <div class="personTop"><span class="name">${p.name}</span><span class="health ${p.sick>0?"sick":""}">${Math.round(p.health)}%</span></div>
@@ -310,6 +414,12 @@ function render(){
  $("glassLabel").textContent=label(state.glass,["Clear","Chipped","Cracked","Badly cracked"]);
  $("wiperLabel").textContent=label(state.wiper,["Full","Adequate","Low","Empty"]);
  $("inventory").innerHTML=Object.keys(invNames).map(k=>`<div>${invNames[k]}</div><div><b>${state.inventory[k]||0}</b></div>`).join("");
+ $("photosJournal").textContent=state.photos;
+ $("souvenirsJournal").textContent=state.souvenirs;
+ $("townsJournal").textContent=`${state.routeIndex+1} / ${route.length}`;
+ $("achievementCount").textContent=state.achievements.length;
+ $("spotChecklist").innerHTML=spotDefinitions.map(s=>`<div class="spot ${state.spots[s.key]?"seen":""}">${state.spots[s.key]?"✓":"○"} ${s.name}</div>`).join("");
+ $("achievements").innerHTML=state.achievements.length?state.achievements.map(k=>`<span class="achievement">★ ${achievementDefinitions[k]?.name||k}</span>`).join(""):'<span class="small">No achievements earned yet.</span>';
  $("log").innerHTML=state.log.length?state.log.map(x=>`<div class="entry"><b>${x.t}</b> — ${x.text}</div>`).join(""):'<div class="entry">No road stories yet.</div>';
  $("stationBtn").disabled=!atStop();
  $("townBtn").disabled=!atStop()||state.lastTownAction===state.routeIndex;
@@ -318,12 +428,33 @@ function render(){
  $("miniBtn").disabled=miniUsed;
  $("miniBtn").textContent=miniUsed?"Pickup Run Used":"Road Pickup Run";
  document.querySelectorAll(".paceBtn").forEach(b=>b.classList.toggle("active",b.dataset.pace===state.pace));
+ document.querySelectorAll(".driverBtn").forEach(b=>b.classList.toggle("active",b.dataset.driver===state.driver));
+ document.querySelectorAll(".roadBtn").forEach(b=>b.classList.toggle("active",b.dataset.road===state.roadStyle));
+ checkAchievements();
  save();
 }
 function setPace(key){
  if(!paces[key])return;
  state.pace=key;
  notice(`${paces[key].name} pace selected.`);
+ render();
+}
+function setDriver(name){
+ if(!drivers[name])return;
+ if(state.driver!==name){
+  state.driver=name;state.driverChanges++;
+  if(!state.driversUsed.includes(name))state.driversUsed.push(name);
+  markSpot("changeDrivers");
+  state.morale=clamp(state.morale+1,0,100);
+  addLog(`${name} takes a turn driving.`);
+ }
+ notice(`${name} will drive the next stretch.`);
+ render();
+}
+function setRoadStyle(key){
+ if(!roadStyles[key])return;
+ state.roadStyle=key;
+ notice(`${roadStyles[key].name} selected for the next stretch.`);
  render();
 }
 function person(preferEmily=false){
@@ -351,8 +482,9 @@ function rollWeather(){
 }
 function consumeTravelSupplies(travel,w){
  const messages=[];
- state.foodClock+=travel/145;
- state.waterClock+=travel/(w.key==="heat"?65:105);
+ const supplyMult=drivers[state.driver].supply;
+ state.foodClock+=travel/145*supplyMult;
+ state.waterClock+=travel/(w.key==="heat"?65:105)*supplyMult;
  if(state.waterClock>=1){
   state.waterClock-=1;
   if(state.inventory.water>0){
@@ -396,13 +528,15 @@ function makeFoodSick(messages){
  state.hours+=1.5;state.events++;
 }
 const events=[
- {story:"The car hits the rumble strips.",note:"Everyone is suddenly awake.",delay:.2,apply(){}},
- {story:"Birds are eating something in the road.",note:"You slow down until they scatter.",delay:.4,apply(){}},
- {story:"A shredded tire tread lies across the lane.",note:"A careful swerve avoids the worst of it.",delay:.5,apply(){state.tire=clamp(state.tire-8,0,100)}},
- {story:"A fast car passes, then immediately slows down.",note:"A classic highway mystery costs time.",delay:.5,apply(){}},
- {story:"Emily produces one enormous hiccup.",note:"Everyone waits for another. It never comes.",delay:.1,apply(){state.people[1].condition="One dramatic hiccup"}},
- {story:"A mileage sign makes Newport look impossibly far away.",note:"The odometer keeps moving west.",delay:.2,apply(){}},
- {story:"A billboard starts an argument about what it meant.",note:"Nobody reaches a convincing interpretation.",delay:.3,apply(){state.morale=clamp(state.morale-1,0,100)}},
+ {key:"rumble",story:"The car hits the rumble strips.",note:"Everyone is suddenly awake.",delay:.2,apply(){markSpot("rumble")}},
+ {key:"birds",story:"Birds are eating something in the road.",note:"You slow down until they scatter.",delay:.4,apply(){markSpot("birds")}},
+ {key:"tireParts",story:"A shredded tire tread lies across the lane.",note:"A careful swerve avoids the worst of it.",delay:.5,apply(){markSpot("tireParts");state.tire=clamp(state.tire-8,0,100)}},
+ {key:"passed",story:"A fast car passes, then immediately slows down.",note:"A classic highway mystery costs time.",delay:.5,apply(){markSpot("passed")}},
+ {key:"passCar",story:"The group finally passes a vehicle that has been setting an unpredictable pace.",note:"The open road ahead feels like a victory.",delay:.1,apply(){markSpot("passCar");state.morale=clamp(state.morale+2,0,100)}},
+ {key:"roadkill",story:"A roadside animal casualty is spotted near the shoulder.",note:"The car grows quiet for a moment.",delay:.1,apply(){markSpot("roadkill");state.morale=clamp(state.morale-1,0,100)}},
+ {key:"hiccup",story:"Emily produces one enormous hiccup.",note:"Everyone waits for another. It never comes.",delay:.1,apply(){markSpot("hiccup");state.people[1].condition="One dramatic hiccup"}},
+ {key:"mileage",story:"A mileage sign makes Newport look impossibly far away.",note:"The odometer keeps moving west.",delay:.2,apply(){markSpot("mileage")}},
+ {key:"billboard",story:"A billboard starts an argument about what it meant.",note:"Nobody reaches a convincing interpretation.",delay:.3,apply(){markSpot("billboard");state.morale=clamp(state.morale-1,0,100)}},
  {story:"The tire-pressure light comes on.",note:"The next air pump will help.",delay:.7,apply(){state.tire=clamp(state.tire-18,0,100)}},
  {story:"A truck throws a pebble into the windshield.",note:"A new chip appears.",delay:.6,apply(){state.glass=clamp(state.glass-15,0,100)}},
  {story:"Bug splatter arrives as the washer fluid runs low.",note:"Visibility is safe, but washing the glass would help.",delay:.45,apply(){state.wiper=clamp(state.wiper-22,0,100)}},
@@ -426,31 +560,62 @@ function arrivalBonus(){
  state.visitedSpecial.push(state.routeIndex);
  const name=current().name;
  if(name.startsWith("Seaside")){
-  state.morale=clamp(state.morale+14,0,100);state.souvenirs++;
+  state.morale=clamp(state.morale+14,0,100);state.souvenirs++;state.photos+=3;
   addLog("The group reaches Seaside and sees the Pacific Ocean. Morale rises and a coastal souvenir is collected.");
   return "The Pacific is finally visible. Everyone’s morale rises.";
  }
  if(name.startsWith("Cannon Beach")){
-  state.morale=clamp(state.morale+9,0,100);state.souvenirs++;
+  state.morale=clamp(state.morale+9,0,100);state.souvenirs++;state.photos+=3;
   addLog("A stop near Haystack Rock adds another souvenir and several photographs.");
   return "Haystack Rock makes the short drive worthwhile.";
  }
  if(name.startsWith("Garibaldi")){
-  state.morale=clamp(state.morale+6,0,100);
+  state.morale=clamp(state.morale+6,0,100);state.photos+=2;
   addLog("Fishing boats and the coastal train make Garibaldi a memorable stop.");
   return "The harbor and train lift everyone’s mood.";
  }
  return "";
 }
+function maybeBanter(){
+ if(Math.random()>.38)return;
+ const low=state.morale<40;
+ const lines=low?[
+  "Henry says the next stop had better have a working coffee machine.",
+  "Emily suggests that everyone look out the windows instead of at the clock.",
+  "Frank quietly checks the route for the third time.",
+  "Edna announces that snack complaints are being formally recorded."
+ ]:[
+  "Henry says the car sounds better than it did fifty miles ago.",
+  "Emily points out a cloud shaped like a fish.",
+  "Frank announces the next town before the road sign does.",
+  "Edna asks whether salmon pâté counts as a regional experience."
+ ];
+ addLog(lines[Math.floor(Math.random()*lines.length)]);
+}
+function driverRoadBonus(messages,d,r){
+ if(Math.random()<clamp(d.sight+r.sight,0,.75)){
+  const photos=state.driver==="Emily"?2:1;
+  state.photos+=photos;state.morale=clamp(state.morale+3,0,100);
+  messages.push(`${state.driver} notices a memorable roadside view. ${photos} photo${photos===1?" is":"s are"} added to the journal.`);
+ }
+ if(state.driver==="Henry"&&Math.random()<.22&&(state.tire<90||state.glass<90||state.wiper<80)){
+  state.tire=clamp(state.tire+5,0,100);state.glass=clamp(state.glass+3,0,100);state.wiper=clamp(state.wiper+5,0,100);
+  state.repairs++;messages.push("Henry makes a quick preventive car check.");
+ }
+ if(state.driver==="Edna"&&Math.random()<.18){
+  state.inventory.trailmix++;messages.push("Edna finds another small bag of trail mix in the car.");
+ }
+}
 function drive(){
  if(state.routeIndex>=route.length-1)return finish();
  recover();
- const cfg=paces[state.pace],w=rollWeather();
+ state.encounterCooldown=Math.max(0,state.encounterCooldown-1);
+ const cfg=paces[state.pace],w=rollWeather(),d=drivers[state.driver],r=roadStyles[state.roadStyle];
  const remaining=distanceToNext();
  const travel=Math.min(remaining,cfg.min+Math.floor(Math.random()*(cfg.max-cfg.min+1)));
- let fuelNeed=travel/24*cfg.fuel*w.fuel;
+ let fuelNeed=travel/24*cfg.fuel*w.fuel*d.fuel*r.fuel;
  if(state.tire<35)fuelNeed*=1.12;
- const messages=[`${w.icon} ${w.name}.`];
+ const messages=[`${w.icon} ${w.name}. ${state.driver} is driving on the ${r.name.toLowerCase()}.`];
  if(state.fuel<fuelNeed){
   const emergency=clamp(fuelNeed-state.fuel+1,2,5);
   state.hours+=2.5;state.cash=Math.max(0,state.cash-Math.ceil(emergency*7));state.fuel+=emergency;state.events++;
@@ -458,19 +623,29 @@ function drive(){
   messages.push("Roadside fuel added 2½ hours.");
  }
  state.fuel=clamp(state.fuel-fuelNeed,0,16);
- state.hours+=travel/(cfg.speed*w.speed);state.into+=travel;state.miles+=travel;
- state.wiper=clamp(state.wiper-1-w.wiper,0,100);state.tire=clamp(state.tire-.7,0,100);
- state.morale=clamp(state.morale+cfg.morale,0,100);
+ state.hours+=travel/(cfg.speed*w.speed*d.speed*r.speed);state.into+=travel;state.miles+=travel;
+ state.wiper=clamp(state.wiper-(1+w.wiper)*d.wear*r.wear,0,100);
+ state.tire=clamp(state.tire-.7*d.wear*r.wear,0,100);
+ state.morale=clamp(state.morale+cfg.morale+d.morale+r.morale,0,100);
  state.people.forEach(p=>p.health=clamp(p.health+cfg.health,20,100));
  const supplyMessages=consumeTravelSupplies(travel,w);
  supplyMessages.forEach(m=>{messages.push(m);addLog(m)});
- if(Math.random()<clamp(cfg.event+w.event,0,1)){
+ driverRoadBonus(messages,d,r);
+ let eventChance=clamp(cfg.event+w.event+d.event+r.event,0.18,.98);
+ if(Math.random()<eventChance){
   const e=events[Math.floor(Math.random()*events.length)];
-  const delay=typeof e.delay==="function"?e.delay():e.delay;
-  e.apply();state.hours+=delay;state.events++;
+  let delay=typeof e.delay==="function"?e.delay():e.delay;
+  if(state.driver==="Frank"&&(e.story.includes("wrong")||e.story.includes("route")))delay*=.25;
+  if(r.sick<1&&(e.story.includes("carsick")||e.story.includes("food poisoning"))&&Math.random()>r.sick){
+   delay=.1;messages.push("The easy-road choice prevents a worse sickness stop.");
+  }else{
+   e.apply();
+  }
+  state.hours+=delay;state.events++;
   addLog(`${e.story} Delay: ${delay.toFixed(1)} hours.`);
   messages.push(`${e.note} (+${delay.toFixed(1)}h)`);
  }
+ maybeBanter();
  const struggling=state.people.find(p=>p.health<=25);
  if(struggling){
   state.hours+=2;struggling.health=45;struggling.sick=Math.max(0,struggling.sick-1);
@@ -479,12 +654,12 @@ function drive(){
   messages.push(`${struggling.name} recovered during a two-hour comfort stop.`);
  }
  if(state.tire<15){
-  state.hours+=1;state.tire=35;state.cash=Math.max(0,state.cash-8);state.events++;
+  state.hours+=1;state.tire=35;state.cash=Math.max(0,state.cash-8);state.events++;state.repairs++;
   addLog("Emergency tire air restored enough pressure to continue.");
   messages.push("Emergency tire air added 1 hour and cost $8.");
  }
  if(state.glass<12){
-  state.hours+=1.5;state.glass=40;state.cash=Math.max(0,state.cash-18);state.events++;
+  state.hours+=1.5;state.glass=40;state.cash=Math.max(0,state.cash-18);state.events++;state.repairs++;
   addLog("A roadside windshield stabilization repair kept the trip moving.");
   messages.push("Windshield repair added 1½ hours and cost $18.");
  }
@@ -495,8 +670,10 @@ function drive(){
   const bonus=arrivalBonus();if(bonus)messages.push(bonus);
   if(state.routeIndex===route.length-1){render();return finish()}
  }
+ const triggerEncounter=state.encounterCooldown===0&&Math.random()<.30;
  notice(messages.join(" "),messages.some(x=>x.includes("Emergency")||x.includes("food poisoning"))?"bad":"");
  render();
+ if(triggerEncounter)setTimeout(openRandomEncounter,80);
 }
 
 function eatOneSnack(used){
@@ -527,9 +704,9 @@ function useSupplies(){
  if(state.fatigueShield<1&&state.inventory.coffee>0){
   state.inventory.coffee--;state.fatigueShield+=2;used.push("Coffee will reduce the next two fatigue delays.");
  }
- if(state.wiper<70&&state.inventory.wiper>0){state.inventory.wiper--;state.wiper=100;used.push("Wiper fluid was refilled.")}
- if(state.tire<75&&state.inventory.tire>0){state.inventory.tire--;state.tire=100;used.push("Tire pressure was restored.")}
- if(state.glass<75&&state.inventory.glass>0){state.inventory.glass--;state.glass=clamp(state.glass+45,0,100);used.push("A windshield chip was sealed.")}
+ if(state.wiper<70&&state.inventory.wiper>0){state.inventory.wiper--;state.wiper=100;state.repairs++;used.push("Wiper fluid was refilled.")}
+ if(state.tire<75&&state.inventory.tire>0){state.inventory.tire--;state.tire=100;state.repairs++;used.push("Tire pressure was restored.")}
+ if(state.glass<75&&state.inventory.glass>0){state.inventory.glass--;state.glass=clamp(state.glass+45,0,100);state.repairs++;used.push("A windshield chip was sealed.")}
  if(!used.length){notice("Nothing needs immediate attention, or the needed supply is not in the car.");return}
  state.hours+=.2;used.forEach(addLog);notice(used.join(" "),"good");render();
 }
@@ -603,7 +780,7 @@ function doTownAction(key){
   text=`A diner meal in ${current().name} improved health and morale.`;
   if(Math.random()<.05){const p=person();p.sick=2;p.health=clamp(p.health-10,20,100);p.condition="Food poisoning";text+=` Unfortunately, ${p.name} later felt sick.`}
  }else if(key==="explore"){
-  state.hours+=2;state.morale=clamp(state.morale+12,0,100);state.souvenirs++;
+  state.hours+=2;state.morale=clamp(state.morale+12,0,100);state.souvenirs++;state.photos+=2;
   if(Math.random()<.3){const found=5+Math.floor(Math.random()*8);state.cash+=found;text=`Exploring ${current().name} produced a souvenir and ${money(found)} found in an old coat pocket.`}
   else text=`Exploring ${current().name} produced a souvenir and better morale.`;
  }else{
@@ -614,16 +791,102 @@ function doTownAction(key){
  addLog(text);notice(text,"good");$("townModal").classList.remove("show");render();
 }
 
+const encounters=[
+ {
+  key:"fruit",title:"Roadside Fruit Stand",text:"A hand-painted sign promises cherries, peaches, cold water, and absolutely no chain-store atmosphere.",
+  options:[
+   {label:"Buy a road-food bundle — $7",enabled:()=>state.cash>=7,apply(){state.cash-=7;state.inventory.trailmix+=2;state.inventory.water+=2;state.morale=clamp(state.morale+6,0,100);return "The fruit stand supplies water, snacks, and a happier car."}},
+   {label:"Let Edna inspect the bargain table",apply(){state.hours+=.3;if(Math.random()<.65){state.inventory.trailmix++;state.inventory.water++;return "Edna finds a discounted snack-and-water bundle."}state.morale=clamp(state.morale+2,0,100);return "Edna finds nothing cheap, but the stop is entertaining."}},
+   {label:"Keep driving",apply(){return "The fruit stand disappears in the rearview mirror."}}
+  ]
+ },
+ {
+  key:"overlook",title:"Scenic Overlook",text:"A pullout offers a broad view of mountains, river, or coast depending on how far west the trip has reached.",
+  options:[
+   {label:"Stop for photographs",apply(){const n=state.driver==="Emily"?4:2;state.hours+=.65;state.photos+=n;state.morale=clamp(state.morale+8,0,100);return `${n} photographs are added to the journal.`}},
+   {label:"Take one picture through the window",apply(){state.photos++;state.hours+=.1;state.morale=clamp(state.morale+2,0,100);return "One slightly blurry photograph is added."}},
+   {label:"Keep the schedule",apply(){return "The overlook is admired briefly from the highway."}}
+  ]
+ },
+ {
+  key:"motorist",title:"Stranded Motorist",text:"A vehicle sits on the shoulder with its hazard lights blinking.",
+  options:[
+   {label:"Stop and help",apply(){state.hours+=1;state.morale=clamp(state.morale+9,0,100);state.repairs++;const gift=4+Math.floor(Math.random()*7);state.cash+=gift;return `Henry helps with the problem. The grateful driver gives the group ${money(gift)}.`}},
+   {label:"Call roadside assistance",apply(){state.hours+=.2;state.morale=clamp(state.morale+4,0,100);return "Roadside assistance confirms that help is on the way."}},
+   {label:"Continue safely",apply(){state.morale=clamp(state.morale-1,0,100);return "The car continues, with everyone hoping another driver stops."}}
+  ]
+ },
+ {
+  key:"museum",title:"Unnecessary Roadside Attraction",text:"A sign advertises a tiny museum devoted to a very large object.",
+  options:[
+   {label:"Visit the museum — $4",enabled:()=>state.cash>=4,apply(){state.cash-=4;state.hours+=1.2;state.souvenirs++;state.photos+=3;state.morale=clamp(state.morale+10,0,100);return "The attraction is stranger and better than expected."}},
+   {label:"Photograph the sign",apply(){state.photos++;state.hours+=.1;return "The sign becomes part of the trip journal."}},
+   {label:"Decline culture",apply(){return "The giant object remains a mystery."}}
+  ]
+ },
+ {
+  key:"cooler",title:"Suspicious Cooler",text:"A gas-station cooler contains discounted salmon pâté beside perfectly ordinary sandwiches.",
+  options:[
+   {label:"Buy two pâtés — $8",enabled:()=>state.cash>=8,apply(){state.cash-=8;state.inventory.pate+=2;state.morale=clamp(state.morale+2,0,100);return "Two discounted salmon pâtés join the supplies."}},
+   {label:"Buy a sandwich — $5",enabled:()=>state.cash>=5,apply(){state.cash-=5;state.inventory.sandwich++;return "A less adventurous sandwich joins the supplies."}},
+   {label:"Close the cooler",apply(){return "The cooler door closes before anyone can make a worse decision."}}
+  ]
+ },
+ {
+  key:"fork",title:"Detour at the Fork",text:"Temporary signs point in two directions, and neither route looks entirely convincing.",
+  options:[
+   {label:"Trust Frank",apply(){state.hours+=.1;state.morale=clamp(state.morale+3,0,100);state.people[2].condition="Detour solved";return "Frank reads the signs correctly and keeps the delay small."}},
+   {label:"Take the scenic-looking road",apply(){state.hours+=.8;state.photos+=2;state.morale=clamp(state.morale+5,0,100);return "The detour is longer but photogenic."}},
+   {label:"Follow the largest vehicle",apply(){state.hours+=.45;return "The improvised convoy eventually rejoins the highway."}}
+  ]
+ },
+ {
+  key:"restarea",title:"Rainy Rest Area",text:"Rain intensifies just as a covered rest area appears.",
+  options:[
+   {label:"Wait out the worst rain",apply(){state.hours+=.75;state.people.forEach(p=>p.health=clamp(p.health+3,20,100));state.morale=clamp(state.morale+4,0,100);return "A warm, dry break makes the next stretch easier."}},
+   {label:"Refill washer fluid from supplies",enabled:()=>state.inventory.wiper>0,apply(){state.inventory.wiper--;state.wiper=100;state.repairs++;state.hours+=.15;return "Fresh washer fluid improves visibility."}},
+   {label:"Continue carefully",apply(){state.hours+=.3;state.wiper=clamp(state.wiper-8,0,100);return "The car continues at reduced speed."}}
+  ]
+ }
+];
+function openRandomEncounter(){
+ if($("encounterModal").classList.contains("show")||state.routeIndex>=route.length-1)return;
+ let pool=encounters.filter(e=>e.key!==state.lastEncounter);
+ const encounter=pool[Math.floor(Math.random()*pool.length)];
+ state.lastEncounter=encounter.key;state.encounterCooldown=2;
+ $("encounterTitle").textContent=encounter.title;
+ $("encounterText").textContent=encounter.text;
+ $("encounterChoices").innerHTML=encounter.options.map((o,i)=>`<button class="${i===0?"primary":"light"}" data-i="${i}" ${o.enabled&&!o.enabled()?"disabled":""}>${o.label}</button>`).join("");
+ $("encounterChoices").querySelectorAll("button").forEach(b=>b.onclick=()=>chooseEncounter(encounter,Number(b.dataset.i)));
+ $("encounterModal").classList.add("show");
+}
+function chooseEncounter(encounter,index){
+ const option=encounter.options[index];
+ if(!option||(option.enabled&&!option.enabled()))return;
+ const result=option.apply();
+ state.decisions++;
+ addLog(`${encounter.title}: ${result}`);
+ notice(result,"good");
+ $("encounterModal").classList.remove("show");
+ render();
+}
+
 function finish(){
  save();$("gameArea").classList.add("hidden");$("endScreen").classList.remove("hidden");
  $("endMiles").textContent=totalMiles.toLocaleString()+" miles";$("endTime").textContent=timeText(state.hours);
  $("endCash").textContent=money(state.cash);$("endEvents").textContent=state.events;
- $("endMorale").textContent=Math.round(state.morale)+"%";$("endSouvenirs").textContent=state.souvenirs;$("endCaught").textContent=state.caught;
- const score=Math.round(state.cash+state.people.reduce((s,p)=>s+p.health,0)+state.tire+state.glass+state.wiper+state.morale+state.souvenirs*18-state.hours);
- $("endRating").textContent=score>680?"Pacific Highway Legend":score>540?"Seasoned Road-Tripper":score>400?"Snack-Fueled Survivor":"Made It Anyway";
+ $("endMorale").textContent=Math.round(state.morale)+"%";$("endSouvenirs").textContent=state.souvenirs;
+ $("endPhotos").textContent=state.photos;$("endSpots").textContent=`${spotCount()} / ${spotDefinitions.length}`;
+ $("endAchievements").textContent=state.achievements.length;$("endCaught").textContent=state.caught;
+ const score=Math.round(state.cash+state.people.reduce((s,p)=>s+p.health,0)+state.tire+state.glass+state.wiper+state.morale+state.souvenirs*18+state.photos*3+state.achievements.length*20-state.hours);
+ const rating=score>780?"Pacific Highway Legend":score>620?"Seasoned Road-Tripper":score>460?"Snack-Fueled Survivor":"Made It Anyway";
+ $("endRating").textContent=rating;
+ const best=state.morale>=80?"Everyone reaches Newport still enjoying one another’s company.":state.morale>=50?"The group reaches Newport tired but satisfied.":"The group reaches Newport and agrees that separate hotel rooms might be wise.";
+ const journal=state.photos>=10?`The journal contains ${state.photos} photographs and enough evidence to retell the trip for years.`:`The journal contains ${state.photos} photographs, including several that are only slightly blurry.`;
+ $("endStory").innerHTML=`<b>${rating}</b><br>${best} ${journal} Henry remembers the car repairs, Emily remembers the views, Frank remembers every disputed turn, and Edna remembers which snacks survived.`;
 }
 function restart(){
- localStorage.removeItem(SAVE);localStorage.removeItem(LEGACY_SAVE);state=fresh();
+ localStorage.removeItem(SAVE);LEGACY_SAVES.forEach(k=>localStorage.removeItem(k));state=fresh();
  addLog("Henry, Emily, Frank, and Edna leave Cody for the coast.");
  $("gameArea").classList.remove("hidden");$("endScreen").classList.add("hidden");
  notice("Everyone is packed. The coast is a long way west.");render();
@@ -689,7 +952,7 @@ function endMini(){
  Object.entries(mini.rewards).forEach(([k,q])=>{
   if(k==="gas"){state.fuel=clamp(state.fuel+q*.5,0,16);rewards.push(`${q} small gas can${q===1?"":"s"}`)}
   else if(k==="cash"){state.cash+=q;rewards.push(`${money(q)} in loose change`)}
-  else if(k==="souvenir"){state.souvenirs+=q;state.morale=clamp(state.morale+q*3,0,100);rewards.push(`${q} roadside photograph${q===1?"":"s"}`)}
+  else if(k==="souvenir"){state.souvenirs+=q;state.photos+=q;state.morale=clamp(state.morale+q*3,0,100);rewards.push(`${q} roadside photograph${q===1?"":"s"}`)}
   else{state.inventory[k]=(state.inventory[k]||0)+q;rewards.push(`${q} ${invNames[k]||k}`)}
  });
  if(mini.hits)state.tire=clamp(state.tire-mini.hits*3,0,100);
@@ -701,6 +964,8 @@ function endMini(){
 
 $("driveBtn").onclick=drive;$("stationBtn").onclick=openStore;$("townBtn").onclick=openTown;$("useSupplies").onclick=useSupplies;
 document.querySelectorAll(".paceBtn").forEach(b=>b.onclick=()=>setPace(b.dataset.pace));
+document.querySelectorAll(".driverBtn").forEach(b=>b.onclick=()=>setDriver(b.dataset.driver));
+document.querySelectorAll(".roadBtn").forEach(b=>b.onclick=()=>setRoadStyle(b.dataset.road));
 $("restartBtn").onclick=()=>{if(confirm("Start the whole trip over?"))restart()};$("endRestart").onclick=restart;
 $("closeStore").onclick=()=>$("storeModal").classList.remove("show");$("buyStore").onclick=buyStore;
 $("closeTown").onclick=()=>$("townModal").classList.remove("show");
