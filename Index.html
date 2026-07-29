@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Cody to the Coast v0.1</title>
+<title>Cody to the Coast v0.2</title>
 <style>
 :root{
   --paper:#fff5d7; --ink:#26353a; --blue:#315f72; --orange:#b65b35;
@@ -37,14 +37,14 @@ main{display:grid;gap:12px;padding:12px}
 .progress>div{height:100%;width:0;background:linear-gradient(90deg,#c8753b,#efb35f);transition:width .35s}
 .routeRow{display:flex;justify-content:space-between;gap:8px;margin-top:7px;font-size:.88rem}
 .personTop{display:flex;justify-content:space-between;gap:6px}
-.name{font-weight:900}.health{font-size:.78rem;font-weight:900;padding:2px 7px;border-radius:999px;background:#dcecdf;color:#285639}
+.trait{font-size:.75rem;color:#315f72;font-weight:800;margin-top:4px}.name{font-weight:900}.health{font-size:.78rem;font-weight:900;padding:2px 7px;border-radius:999px;background:#dcecdf;color:#285639}
 .health.sick{background:#f1d7d1;color:#7e2d27}.condition{font-size:.82rem;color:#59676a;min-height:2.2em;margin-top:5px}
 .meter{height:8px;background:#dbe2e3;border-radius:999px;overflow:hidden;margin-top:6px}.meter>div{height:100%;background:#4e875c}
 .carcard .meter>div{background:#4d7e91}.small{font-size:.84rem;color:#5c696c}
 .inventory{display:grid;grid-template-columns:1fr auto;gap:5px 10px}.inventory div{padding:4px 0;border-bottom:1px dotted #a9b7b9}
 .notice{padding:10px;border:1px solid #a7b9bc;border-radius:9px;background:#edf4f5;margin-bottom:8px}
 .notice.good{background:#e2f0e4;border-color:#8db693}.notice.bad{background:#f5dfda;border-color:#c9877a}
-.actions{display:grid;grid-template-columns:1fr;gap:8px}
+.actions{display:grid;grid-template-columns:1fr;gap:8px}.optionGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:10px}.paceBtn{background:#dde7e8;color:#294b58;border:2px solid #9eb1b5;min-height:62px;padding:7px;font-size:.9rem}.paceBtn.active{background:#315f72;color:white;border-color:#244754}.paceBtn small{display:block;font-size:.7rem;font-weight:600;margin-top:2px}.weather{display:flex;justify-content:space-between;gap:10px;align-items:center;background:#eef4f5;border:1px solid #b4c3c5;border-radius:9px;padding:8px;margin-top:8px}.weather b{color:#244754}.townChoices{display:grid;gap:9px}.townChoice{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:white;border:1px solid #bcc9cb;border-radius:10px;padding:10px}.townChoice button{min-width:110px}.badge{display:inline-block;padding:2px 7px;border-radius:999px;background:#e1e9ea;font-size:.75rem;font-weight:800;color:#36535d}
 button{min-height:50px;border:0;border-radius:10px;padding:10px 12px;font-weight:900;cursor:pointer}
 .primary{background:var(--orange);color:white}.secondary{background:var(--blue);color:white}
 .goodbtn{background:var(--green);color:white}.light{background:#e6dfc9;color:var(--ink);border:2px solid #ad9e79}
@@ -64,29 +64,32 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 .end{text-align:center;padding:28px 15px}.end h2{font-size:2rem}.endgrid{display:grid;grid-template-columns:1fr auto;gap:8px 14px;text-align:left;max-width:390px;margin:18px auto}.endgrid div:nth-child(even){font-weight:900;text-align:right}
 @media(min-width:760px){
   main{grid-template-columns:1fr 1fr}
-  .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .stats{grid-template-columns:repeat(6,minmax(0,1fr))}
   .party,.cargrid{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .actions{grid-template-columns:2fr 1fr 1fr}
+  .actions{grid-template-columns:2fr 1fr 1fr 1fr}
 }
 </style>
 </head>
 <body>
 <div class="wrap"><div class="game">
-<header><h1>Cody to the Coast</h1><p>A highway survival comedy — v0.1</p></header>
+<header><h1>Cody to the Coast</h1><p>A highway survival comedy — v0.2</p></header>
 
 <main id="gameArea">
 <section class="panel full">
   <h2 id="locationTitle">Leaving Cody, Wyoming</h2>
+  <div id="weatherBanner" class="weather"><span><b>☀️ Clear skies</b></span><span class="badge">Steady pace</span></div>
   <div class="progress"><div id="progressFill"></div></div>
   <div class="routeRow"><span id="routeFrom">Cody</span><b id="milesText"></b><span>Newport</span></div>
 </section>
 
 <section class="panel full">
   <div class="stats">
-    <div class="stat"><b>Trip time</b><span id="timeStat">0h</span></div>
+    <div class="stat"><b>Day and time</b><span id="timeStat">Day 1</span></div>
     <div class="stat"><b>Cash</b><span id="cashStat">$135</span></div>
     <div class="stat"><b>Fuel</b><span id="fuelStat">14 gal</span></div>
+    <div class="stat"><b>Morale</b><span id="moraleStat">78%</span></div>
     <div class="stat"><b>Next stop</b><span id="nextStat">Bridger</span></div>
+    <div class="stat"><b>Miles to stop</b><span id="nextMilesStat">76</span></div>
   </div>
 </section>
 
@@ -105,15 +108,22 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 <section class="panel">
   <h2>Supplies</h2>
   <div id="inventory" class="inventory"></div>
-  <button id="useSupplies" class="light">Use Helpful Supplies</button>
+  <button id="useSupplies" class="light">Eat / Use Helpful Supplies</button>
 </section>
 
 <section class="panel full">
   <h2>Road Decisions</h2>
+  <div class="small"><b>Driving pace</b></div>
+  <div id="paceControls" class="optionGrid">
+    <button class="paceBtn" data-pace="relaxed">Relaxed<small>safer, slower</small></button>
+    <button class="paceBtn" data-pace="steady">Steady<small>balanced</small></button>
+    <button class="paceBtn" data-pace="push">Push On<small>farther, rougher</small></button>
+  </div>
   <div id="notice" class="notice">Everyone is packed. The coast is a long way west.</div>
   <div class="actions">
     <button id="driveBtn" class="primary">Drive the Next Stretch</button>
     <button id="stationBtn" class="secondary">Gas Station</button>
+    <button id="townBtn" class="secondary">Town Activities</button>
     <button id="miniBtn" class="goodbtn">Road Pickup Run</button>
   </div>
   <p class="small">Travel always moves forward. Problems add time, cost money, or make someone uncomfortable, but the trip cannot permanently stop.</p>
@@ -130,6 +140,8 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
     <div>Total trip time</div><div id="endTime"></div>
     <div>Cash remaining</div><div id="endCash"></div>
     <div>Random events</div><div id="endEvents"></div>
+    <div>Final morale</div><div id="endMorale"></div>
+    <div>Souvenirs</div><div id="endSouvenirs"></div>
     <div>Items collected</div><div id="endCaught"></div>
     <div>Trip rating</div><div id="endRating"></div>
   </div>
@@ -145,6 +157,15 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
   <div class="modalActions"><button id="closeStore" class="light">Keep Driving</button><button id="buyStore" class="goodbtn">Buy Items</button></div>
 </div></div>
 
+
+
+<div id="townModal" class="modal"><div class="box">
+  <h2 id="townTitle">Town Activities</h2>
+  <p id="townBlurb" class="small"></p>
+  <div id="townChoices" class="townChoices"></div>
+  <button id="closeTown" class="light">Return to the Car</button>
+</div></div>
+
 <div id="miniModal" class="modal"><div class="box">
   <h2>Road Pickup Run</h2>
   <p class="small">Move between three lanes. Collect supplies and avoid potholes, cones, and loose tires. The run lasts 20 seconds.</p>
@@ -158,60 +179,108 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 <script>
 (() => {
 "use strict";
-const SAVE="cody_to_coast_v01";
+const SAVE="cody_to_coast_v02",LEGACY_SAVE="cody_to_coast_v01";
 const route=[
- {name:"Cody, Wyoming",miles:0},{name:"Bridger, Montana",miles:76},
- {name:"Laurel, Montana",miles:43},{name:"Bozeman, Montana",miles:141},
- {name:"Missoula, Montana",miles:203},{name:"Coeur d’Alene, Idaho",miles:165},
- {name:"Spokane, Washington",miles:33},{name:"Kennewick, Washington",miles:144},
- {name:"The Dalles, Oregon",miles:128},{name:"Portland, Oregon",miles:84},
- {name:"Seaside, Oregon",miles:80},{name:"Cannon Beach, Oregon",miles:9},
- {name:"Garibaldi, Oregon",miles:38},{name:"Newport, Oregon",miles:143}
+ {name:"Cody, Wyoming",miles:0,blurb:"The trip begins beneath the wide Wyoming sky."},
+ {name:"Bridger, Montana",miles:76,blurb:"A small Montana stop with fuel, food, and room to stretch."},
+ {name:"Laurel, Montana",miles:43,blurb:"A practical highway stop before the long drive west."},
+ {name:"Bozeman, Montana",miles:141,blurb:"Mountain views, busy streets, and many tempting food choices."},
+ {name:"Missoula, Montana",miles:203,blurb:"A river city and a welcome chance to rest after a long section."},
+ {name:"Coeur d’Alene, Idaho",miles:165,blurb:"The lake makes everyone consider stopping longer than planned."},
+ {name:"Spokane, Washington",miles:33,blurb:"A larger city with supplies, traffic, and coffee everywhere."},
+ {name:"Kennewick, Washington",miles:144,blurb:"Dry country, broad roads, and a useful refueling point."},
+ {name:"The Dalles, Oregon",miles:128,blurb:"The Columbia River announces that Oregon is finally under the tires."},
+ {name:"Portland, Oregon",miles:84,blurb:"Traffic, bridges, food carts, and many opportunities to take a wrong lane."},
+ {name:"Seaside, Oregon",miles:80,blurb:"The first sight and smell of the Pacific Ocean lifts the whole car."},
+ {name:"Cannon Beach, Oregon",miles:9,blurb:"Haystack Rock and the beach provide a dramatic coastal break."},
+ {name:"Garibaldi, Oregon",miles:38,blurb:"A harbor town, fishing boats, and the possibility of seeing the coastal train."},
+ {name:"Newport, Oregon",miles:143,blurb:"The final destination: harbor, beaches, shops, and the end of the highway game."}
 ];
 const totalMiles=route.slice(1).reduce((sum,s)=>sum+s.miles,0);
 const peopleBase=[
- {name:"Henry",health:100,condition:"Ready for the road",sick:0},
- {name:"Emily",health:100,condition:"Watching the scenery",sick:0},
- {name:"Frank",health:100,condition:"Ready with directions",sick:0},
- {name:"Edna",health:100,condition:"Snacks organized",sick:0}
+ {name:"Henry",health:100,condition:"Ready for the road",sick:0,trait:"Handy with car problems"},
+ {name:"Emily",health:100,condition:"Watching the scenery",sick:0,trait:"Spots interesting roadside sights"},
+ {name:"Frank",health:100,condition:"Ready with directions",sick:0,trait:"Keeps track of the route"},
+ {name:"Edna",health:100,condition:"Snacks organized",sick:0,trait:"Finds food when it is needed"}
 ];
 const invNames={
  water:"Bottled water",coffee:"Coffee",pate:"Salmon pâté",crackers:"Crackers",
- ginger:"Ginger chews",wiper:"Wiper fluid",tire:"Tire-pressure service",glass:"Windshield repair kit"
+ sandwich:"Deli sandwiches",trailmix:"Trail mix",ginger:"Ginger chews",
+ wiper:"Wiper fluid",tire:"Tire-pressure service",glass:"Windshield repair kit"
 };
 const storeItems=[
  {key:"gas",name:"Gasoline",detail:"Adds 1 gallon",price:4},
- {key:"water",name:"Bottled water",detail:"Helps a sick traveler",price:2},
+ {key:"water",name:"Bottled water",detail:"Hydration for the next stretch",price:2},
  {key:"coffee",name:"Coffee",detail:"Reduces driver-fatigue delays",price:3},
- {key:"pate",name:"Salmon pâté",detail:"An elegant gas-station meal",price:8},
- {key:"crackers",name:"Crackers",detail:"Makes the pâté less reckless",price:4},
+ {key:"pate",name:"Salmon pâté",detail:"An elegant and risky gas-station meal",price:8},
+ {key:"crackers",name:"Crackers",detail:"Makes the pâté more sensible",price:4},
+ {key:"sandwich",name:"Deli sandwich",detail:"A filling road meal",price:6},
+ {key:"trailmix",name:"Trail mix",detail:"A dependable shared snack",price:5},
  {key:"ginger",name:"Ginger chews",detail:"Helps with car sickness",price:5},
  {key:"wiper",name:"Wiper fluid",detail:"Refills the washer reservoir",price:6},
  {key:"tire",name:"Tire-pressure service",detail:"Restores tire pressure",price:3},
  {key:"glass",name:"Windshield repair kit",detail:"Repairs windshield damage",price:12}
 ];
+const paces={
+ relaxed:{name:"Relaxed",min:52,max:76,speed:49,event:.54,fuel:.94,morale:2,health:1},
+ steady:{name:"Steady",min:65,max:96,speed:55,event:.70,fuel:1,morale:0,health:0},
+ push:{name:"Push On",min:86,max:116,speed:63,event:.84,fuel:1.12,morale:-3,health:-1}
+};
+const weatherTypes=[
+ {key:"clear",name:"Clear skies",icon:"☀️",speed:1,fuel:1,event:0,wiper:0},
+ {key:"rain",name:"Steady rain",icon:"🌧️",speed:.88,fuel:1.02,event:.08,wiper:10},
+ {key:"fog",name:"Morning fog",icon:"🌫️",speed:.82,fuel:1,event:.06,wiper:4},
+ {key:"wind",name:"Strong side wind",icon:"💨",speed:.91,fuel:1.09,event:.05,wiper:0},
+ {key:"heat",name:"Hot dry highway",icon:"🌡️",speed:.96,fuel:1.05,event:.03,wiper:0}
+];
 const $=id=>document.getElementById(id);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const money=v=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(v);
 const timeText=h=>{const d=Math.floor(h/24),r=Math.round(h%24);return d?`${d}d ${r}h`:`${Math.round(h)}h`};
+const clockText=h=>{
+ const total=8+h,day=Math.floor(total/24)+1,hour=Math.floor(total%24),minute=Math.round((total-Math.floor(total))*60/15)*15;
+ let hr=hour+(minute===60?1:0),min=minute===60?0:minute;hr%=24;
+ const ap=hr>=12?"PM":"AM",display=hr%12||12;
+ return `Day ${day} • ${display}:${String(min).padStart(2,"0")} ${ap}`;
+};
 
 function fresh(){
  return {
   routeIndex:0,into:0,miles:0,hours:0,cash:135,fuel:14,tire:100,glass:100,wiper:75,
+  morale:78,pace:"steady",weatherKey:"clear",weatherName:"Clear skies",souvenirs:0,
   people:JSON.parse(JSON.stringify(peopleBase)),
-  inventory:{water:3,coffee:1,pate:1,crackers:2,ginger:1,wiper:0,tire:0,glass:0},
-  fatigueShield:0,events:0,caught:0,log:[]
+  inventory:{water:4,coffee:1,pate:1,crackers:2,sandwich:2,trailmix:1,ginger:1,wiper:0,tire:0,glass:0},
+  fatigueShield:0,events:0,caught:0,foodClock:0,waterClock:0,lastTownAction:-1,lastMiniAt:-1,
+  visitedSpecial:[],log:[]
  };
 }
-function load(){try{return JSON.parse(localStorage.getItem(SAVE))}catch(e){return null}}
+function migrate(s){
+ const b=fresh(),out={...b,...(s||{})};
+ out.inventory={...b.inventory,...((s&&s.inventory)||{})};
+ out.people=b.people.map(base=>({...base,...(((s&&s.people)||[]).find(p=>p.name===base.name)||{})}));
+ out.visitedSpecial=Array.isArray(out.visitedSpecial)?out.visitedSpecial:[];
+ if(!paces[out.pace])out.pace="steady";
+ return out;
+}
+function load(){
+ try{
+  const current=localStorage.getItem(SAVE);
+  if(current)return migrate(JSON.parse(current));
+  const old=localStorage.getItem(LEGACY_SAVE);
+  if(old)return migrate(JSON.parse(old));
+ }catch(e){}
+ return null;
+}
 let state=load()||fresh(),cart={};
 function save(){localStorage.setItem(SAVE,JSON.stringify(state))}
 function current(){return route[state.routeIndex]}
 function next(){return route[Math.min(state.routeIndex+1,route.length-1)]}
 function atStop(){return state.into===0}
-function addLog(text){state.log.unshift({t:timeText(state.hours),text});state.log=state.log.slice(0,80)}
+function addLog(text){state.log.unshift({t:clockText(state.hours),text});state.log=state.log.slice(0,100)}
 function label(v,words){return v>=75?words[0]:v>=45?words[1]:v>=20?words[2]:words[3]}
 function notice(text,type=""){const n=$("notice");n.className="notice"+(type?" "+type:"");n.textContent=text}
+function distanceToNext(){return state.routeIndex>=route.length-1?0:Math.max(0,next().miles-state.into)}
+function weather(){return weatherTypes.find(w=>w.key===state.weatherKey)||weatherTypes[0]}
 
 function render(){
  const pct=clamp(state.miles/totalMiles*100,0,100);
@@ -219,13 +288,17 @@ function render(){
  $("milesText").textContent=`${Math.round(state.miles)} / ${totalMiles.toLocaleString()} miles`;
  $("routeFrom").textContent=current().name.split(",")[0];
  $("locationTitle").textContent=atStop()?`Stopped in ${current().name}`:`Driving toward ${next().name}`;
- $("timeStat").textContent=timeText(state.hours);
+ $("weatherBanner").innerHTML=`<span><b>${weather().icon} ${state.weatherName}</b></span><span class="badge">${paces[state.pace].name} pace</span>`;
+ $("timeStat").textContent=clockText(state.hours);
  $("cashStat").textContent=money(state.cash);
  $("fuelStat").textContent=state.fuel.toFixed(1)+" gal";
- $("nextStat").textContent=next().name.split(",")[0];
+ $("moraleStat").textContent=Math.round(state.morale)+"%";
+ $("nextStat").textContent=state.routeIndex>=route.length-1?"Arrived":next().name.split(",")[0];
+ $("nextMilesStat").textContent=Math.round(distanceToNext());
  $("partyGrid").innerHTML=state.people.map(p=>`
   <div class="person">
    <div class="personTop"><span class="name">${p.name}</span><span class="health ${p.sick>0?"sick":""}">${Math.round(p.health)}%</span></div>
+   <div class="trait">${p.trait}</div>
    <div class="condition">${p.condition}</div>
    <div class="meter"><div style="width:${p.health}%"></div></div>
   </div>`).join("");
@@ -239,7 +312,19 @@ function render(){
  $("inventory").innerHTML=Object.keys(invNames).map(k=>`<div>${invNames[k]}</div><div><b>${state.inventory[k]||0}</b></div>`).join("");
  $("log").innerHTML=state.log.length?state.log.map(x=>`<div class="entry"><b>${x.t}</b> — ${x.text}</div>`).join(""):'<div class="entry">No road stories yet.</div>';
  $("stationBtn").disabled=!atStop();
+ $("townBtn").disabled=!atStop()||state.lastTownAction===state.routeIndex;
+ $("townBtn").textContent=state.lastTownAction===state.routeIndex?"Town Activity Used":"Town Activities";
+ const miniUsed=state.lastMiniAt===state.routeIndex;
+ $("miniBtn").disabled=miniUsed;
+ $("miniBtn").textContent=miniUsed?"Pickup Run Used":"Road Pickup Run";
+ document.querySelectorAll(".paceBtn").forEach(b=>b.classList.toggle("active",b.dataset.pace===state.pace));
  save();
+}
+function setPace(key){
+ if(!paces[key])return;
+ state.pace=key;
+ notice(`${paces[key].name} pace selected.`);
+ render();
 }
 function person(preferEmily=false){
  if(preferEmily&&Math.random()<.55)return state.people[1];
@@ -247,56 +332,151 @@ function person(preferEmily=false){
 }
 function recover(){
  state.people.forEach(p=>{
-  if(p.sick>0){p.sick--;p.health=clamp(p.health+4,0,100);if(p.sick===0){p.condition="Feeling better";p.health=clamp(p.health+8,0,100)}}
-  else{p.health=clamp(p.health+2,0,100);if(p.health>92)p.condition="Doing well"}
+  if(p.sick>0){
+   p.sick--;p.health=clamp(p.health+3,20,100);
+   if(p.sick===0){p.condition="Feeling better";p.health=clamp(p.health+8,20,100)}
+  }else{
+   p.health=clamp(p.health+1,20,100);
+   if(p.health>92)p.condition="Doing well";
+  }
  });
+}
+function rollWeather(){
+ let pool=[...weatherTypes];
+ if(state.routeIndex>=8)pool.push(weatherTypes[1],weatherTypes[1],weatherTypes[2]);
+ if(state.routeIndex<=4)pool.push(weatherTypes[4],weatherTypes[3]);
+ const w=pool[Math.floor(Math.random()*pool.length)];
+ state.weatherKey=w.key;state.weatherName=w.name;
+ return w;
+}
+function consumeTravelSupplies(travel,w){
+ const messages=[];
+ state.foodClock+=travel/145;
+ state.waterClock+=travel/(w.key==="heat"?65:105);
+ if(state.waterClock>=1){
+  state.waterClock-=1;
+  if(state.inventory.water>0){
+   state.inventory.water--;messages.push("The group used one bottled water.");
+  }else{
+   state.morale=clamp(state.morale-4,0,100);
+   state.people.forEach(p=>p.health=clamp(p.health-2,20,100));
+   messages.push("There was no bottled water left, making the stretch harder.");
+  }
+ }
+ if(state.foodClock>=1){
+  state.foodClock-=1;
+  if(state.inventory.sandwich>0){
+   state.inventory.sandwich--;state.morale=clamp(state.morale+3,0,100);
+   messages.push("A deli sandwich became the shared road meal.");
+  }else if(state.inventory.trailmix>0){
+   state.inventory.trailmix--;state.morale=clamp(state.morale+2,0,100);
+   messages.push("Trail mix kept everyone reasonably cheerful.");
+  }else if(state.inventory.pate>0&&state.inventory.crackers>0){
+   state.inventory.pate--;state.inventory.crackers--;state.morale=clamp(state.morale+5,0,100);
+   messages.push("Salmon pâté and crackers became an unexpectedly formal highway lunch.");
+   if(Math.random()<.06)makeFoodSick(messages);
+  }else if(state.inventory.crackers>0){
+   state.inventory.crackers--;state.morale=clamp(state.morale-1,0,100);
+   messages.push("Plain crackers counted as lunch, technically.");
+  }else if(state.inventory.pate>0){
+   state.inventory.pate--;state.morale=clamp(state.morale+1,0,100);
+   messages.push("The salmon pâté was eaten without crackers. This was a choice.");
+   if(Math.random()<.18)makeFoodSick(messages);
+  }else{
+   state.morale=clamp(state.morale-6,0,100);
+   state.people.forEach(p=>p.health=clamp(p.health-2,20,100));
+   messages.push("No road food remained, so everyone became hungry and irritable.");
+  }
+ }
+ return messages;
+}
+function makeFoodSick(messages){
+ const p=person();p.health=clamp(p.health-14,20,100);p.sick=Math.max(p.sick,2);p.condition="Food poisoning";
+ messages.push(`${p.name} developed food poisoning, adding an uncomfortable stop.`);
+ state.hours+=1.5;state.events++;
 }
 const events=[
  {story:"The car hits the rumble strips.",note:"Everyone is suddenly awake.",delay:.2,apply(){}},
  {story:"Birds are eating something in the road.",note:"You slow down until they scatter.",delay:.4,apply(){}},
  {story:"A shredded tire tread lies across the lane.",note:"A careful swerve avoids the worst of it.",delay:.5,apply(){state.tire=clamp(state.tire-8,0,100)}},
- {story:"A fast car passes, then slows down in front of you.",note:"A classic highway mystery costs time.",delay:.5,apply(){}},
+ {story:"A fast car passes, then immediately slows down.",note:"A classic highway mystery costs time.",delay:.5,apply(){}},
  {story:"Emily produces one enormous hiccup.",note:"Everyone waits for another. It never comes.",delay:.1,apply(){state.people[1].condition="One dramatic hiccup"}},
  {story:"A mileage sign makes Newport look impossibly far away.",note:"The odometer keeps moving west.",delay:.2,apply(){}},
- {story:"A billboard starts an argument about what it meant.",note:"Nobody reaches a convincing interpretation.",delay:.25,apply(){}},
+ {story:"A billboard starts an argument about what it meant.",note:"Nobody reaches a convincing interpretation.",delay:.3,apply(){state.morale=clamp(state.morale-1,0,100)}},
  {story:"The tire-pressure light comes on.",note:"The next air pump will help.",delay:.7,apply(){state.tire=clamp(state.tire-18,0,100)}},
  {story:"A truck throws a pebble into the windshield.",note:"A new chip appears.",delay:.6,apply(){state.glass=clamp(state.glass-15,0,100)}},
  {story:"Bug splatter arrives as the washer fluid runs low.",note:"Visibility is safe, but washing the glass would help.",delay:.45,apply(){state.wiper=clamp(state.wiper-22,0,100)}},
  {story:"Road construction funnels everyone into one lane.",note:"Progress continues at orange-cone speed.",delay:1.2,apply(){}},
- {story:"A wrong exit adds a scenic neighborhood loop.",note:"No distance is lost, but the clock notices.",delay:.8,apply(){}},
+ {story:"A wrong exit adds a scenic neighborhood loop.",note:"No distance is lost, but the clock notices.",delay:.8,apply(){state.morale=clamp(state.morale-2,0,100)}},
  {story:"The driver gets tired on a long straight stretch.",note:"Coffee would make the next fatigue delay easier.",delay:()=>state.fatigueShield>0?(state.fatigueShield--,.2):.9,apply(){}},
  {story:"Someone opens the salmon pâté without warning.",note:"The windows come down immediately.",delay:.5,apply(){person().condition="Questioning the car’s air quality"}},
- {story:"A traveler gets carsick on a winding section.",note:"The car pulls over briefly, then continues.",delay:1.3,apply(){const p=person(true);p.health=clamp(p.health-12,0,100);p.sick=2;p.condition="Carsick"}},
- {story:"A gas-station snack causes food poisoning.",note:"An unpleasant rest stop adds time, not defeat.",delay:2.2,apply(){const p=person();p.health=clamp(p.health-18,0,100);p.sick=3;p.condition="Food poisoning"}},
- {story:"A coffee lid pops loose over a rough patch.",note:"Cleanup requires napkins and patience.",delay:.6,apply(){}},
+ {story:"A traveler gets carsick on a winding section.",note:"The car pulls over briefly, then continues.",delay:1.3,apply(){const p=person(true);p.health=clamp(p.health-12,20,100);p.sick=2;p.condition="Carsick"}},
+ {story:"A questionable snack causes food poisoning.",note:"An unpleasant rest stop adds time, not defeat.",delay:2.2,apply(){const p=person();p.health=clamp(p.health-18,20,100);p.sick=3;p.condition="Food poisoning"}},
+ {story:"A coffee lid pops loose over a rough patch.",note:"Cleanup requires napkins and patience.",delay:.6,apply(){state.morale=clamp(state.morale-1,0,100)}},
  {story:"A sudden rain shower tests the wipers.",note:"The shower passes and the road remains open.",delay:()=>state.wiper<25?1.4:.35,apply(){state.wiper=clamp(state.wiper-8,0,100)}},
- {story:"A strong side wind makes the car wander.",note:"Slower speed keeps everyone comfortable.",delay:.7,apply(){}}
+ {story:"A strong side wind makes the car wander.",note:"Slower speed keeps everyone comfortable.",delay:.7,apply(){}},
+ {story:"Henry hears a faint rattle before it becomes serious.",note:"A quick roadside check prevents a larger repair.",delay:.25,apply(){state.tire=clamp(state.tire+7,0,100);state.glass=clamp(state.glass+3,0,100);state.people[0].condition="Pleased with the repair"}},
+ {story:"Emily spots a viewpoint that everyone else missed.",note:"The stop improves morale and produces several photographs.",delay:.45,apply(){state.morale=clamp(state.morale+7,0,100);state.people[1].condition="Enjoying the view"}},
+ {story:"Frank catches the wrong turn before the car commits to it.",note:"The route is corrected with almost no delay.",delay:.1,apply(){state.morale=clamp(state.morale+2,0,100);state.people[2].condition="Route confirmed"}},
+ {story:"Edna produces a forgotten bag of snacks.",note:"Nobody asks how long it had been there.",delay:.1,apply(){state.inventory.trailmix++;state.morale=clamp(state.morale+4,0,100);state.people[3].condition="Snack hero"}}
 ];
 
+function arrivalBonus(){
+ if(state.visitedSpecial.includes(state.routeIndex))return "";
+ state.visitedSpecial.push(state.routeIndex);
+ const name=current().name;
+ if(name.startsWith("Seaside")){
+  state.morale=clamp(state.morale+14,0,100);state.souvenirs++;
+  addLog("The group reaches Seaside and sees the Pacific Ocean. Morale rises and a coastal souvenir is collected.");
+  return "The Pacific is finally visible. Everyone’s morale rises.";
+ }
+ if(name.startsWith("Cannon Beach")){
+  state.morale=clamp(state.morale+9,0,100);state.souvenirs++;
+  addLog("A stop near Haystack Rock adds another souvenir and several photographs.");
+  return "Haystack Rock makes the short drive worthwhile.";
+ }
+ if(name.startsWith("Garibaldi")){
+  state.morale=clamp(state.morale+6,0,100);
+  addLog("Fishing boats and the coastal train make Garibaldi a memorable stop.");
+  return "The harbor and train lift everyone’s mood.";
+ }
+ return "";
+}
 function drive(){
  if(state.routeIndex>=route.length-1)return finish();
  recover();
- const remaining=next().miles-state.into;
- const travel=Math.min(remaining,65+Math.floor(Math.random()*36));
- let fuelNeed=travel/24;
+ const cfg=paces[state.pace],w=rollWeather();
+ const remaining=distanceToNext();
+ const travel=Math.min(remaining,cfg.min+Math.floor(Math.random()*(cfg.max-cfg.min+1)));
+ let fuelNeed=travel/24*cfg.fuel*w.fuel;
  if(state.tire<35)fuelNeed*=1.12;
- const messages=[];
+ const messages=[`${w.icon} ${w.name}.`];
  if(state.fuel<fuelNeed){
   const emergency=clamp(fuelNeed-state.fuel+1,2,5);
-  state.hours+=2.5; state.cash=Math.max(0,state.cash-Math.ceil(emergency*7)); state.fuel+=emergency; state.events++;
+  state.hours+=2.5;state.cash=Math.max(0,state.cash-Math.ceil(emergency*7));state.fuel+=emergency;state.events++;
   addLog("Fuel ran low. Roadside fuel arrived at a high price, adding 2½ hours.");
   messages.push("Roadside fuel added 2½ hours.");
  }
  state.fuel=clamp(state.fuel-fuelNeed,0,16);
- state.hours+=travel/55; state.into+=travel; state.miles+=travel;
- state.wiper=clamp(state.wiper-1,0,100); state.tire=clamp(state.tire-.7,0,100);
-
- if(Math.random()<.72){
+ state.hours+=travel/(cfg.speed*w.speed);state.into+=travel;state.miles+=travel;
+ state.wiper=clamp(state.wiper-1-w.wiper,0,100);state.tire=clamp(state.tire-.7,0,100);
+ state.morale=clamp(state.morale+cfg.morale,0,100);
+ state.people.forEach(p=>p.health=clamp(p.health+cfg.health,20,100));
+ const supplyMessages=consumeTravelSupplies(travel,w);
+ supplyMessages.forEach(m=>{messages.push(m);addLog(m)});
+ if(Math.random()<clamp(cfg.event+w.event,0,1)){
   const e=events[Math.floor(Math.random()*events.length)];
   const delay=typeof e.delay==="function"?e.delay():e.delay;
-  e.apply(); state.hours+=delay; state.events++;
+  e.apply();state.hours+=delay;state.events++;
   addLog(`${e.story} Delay: ${delay.toFixed(1)} hours.`);
   messages.push(`${e.note} (+${delay.toFixed(1)}h)`);
+ }
+ const struggling=state.people.find(p=>p.health<=25);
+ if(struggling){
+  state.hours+=2;struggling.health=45;struggling.sick=Math.max(0,struggling.sick-1);
+  struggling.condition="Recovered after a comfort stop";state.morale=clamp(state.morale+2,0,100);
+  addLog(`${struggling.name} needed a longer comfort stop. After two hours, the trip continued.`);
+  messages.push(`${struggling.name} recovered during a two-hour comfort stop.`);
  }
  if(state.tire<15){
   state.hours+=1;state.tire=35;state.cash=Math.max(0,state.cash-8);state.events++;
@@ -311,23 +491,47 @@ function drive(){
  if(state.into>=next().miles-.01){
   state.routeIndex++;state.into=0;state.hours+=.25;
   addLog(`Arrived in ${current().name}.`);
-  messages.push(`Arrived in ${current().name}. The gas station is available.`);
+  messages.push(`Arrived in ${current().name}. Gas and town activities are available.`);
+  const bonus=arrivalBonus();if(bonus)messages.push(bonus);
   if(state.routeIndex===route.length-1){render();return finish()}
  }
- notice(messages.join(" ")||"The stretch passes without trouble.",messages.some(x=>x.includes("Emergency"))?"bad":"");
+ notice(messages.join(" "),messages.some(x=>x.includes("Emergency")||x.includes("food poisoning"))?"bad":"");
  render();
 }
 
+function eatOneSnack(used){
+ if(state.inventory.sandwich>0){
+  state.inventory.sandwich--;state.morale=clamp(state.morale+7,0,100);
+  state.people.forEach(p=>p.health=clamp(p.health+3,20,100));used.push("A deli sandwich improved health and morale.");
+ }else if(state.inventory.trailmix>0){
+  state.inventory.trailmix--;state.morale=clamp(state.morale+5,0,100);
+  used.push("Trail mix improved morale.");
+ }else if(state.inventory.pate>0&&state.inventory.crackers>0){
+  state.inventory.pate--;state.inventory.crackers--;state.morale=clamp(state.morale+8,0,100);
+  used.push("Salmon pâté and crackers became a proper roadside meal.");
+  if(Math.random()<.05)makeFoodSick(used);
+ }else if(state.inventory.crackers>0){
+  state.inventory.crackers--;state.morale=clamp(state.morale+2,0,100);used.push("Crackers provided a small morale boost.");
+ }
+}
 function useSupplies(){
  const used=[],sick=state.people.filter(p=>p.sick>0).sort((a,b)=>a.health-b.health);
- if(sick.length&&state.inventory.ginger>0){const p=sick[0];state.inventory.ginger--;p.sick=Math.max(0,p.sick-1);p.health=clamp(p.health+10,0,100);p.condition="Ginger is helping";used.push(`Ginger helped ${p.name}.`)}
- if(sick.length&&state.inventory.water>0){const p=sick[0];state.inventory.water--;p.health=clamp(p.health+7,0,100);used.push(`Water helped ${p.name}.`)}
- if(state.inventory.coffee>0){state.inventory.coffee--;state.fatigueShield+=2;used.push("Coffee will reduce the next two fatigue delays.")}
+ if(sick.length&&state.inventory.ginger>0){
+  const p=sick[0];state.inventory.ginger--;p.sick=Math.max(0,p.sick-1);p.health=clamp(p.health+10,20,100);
+  p.condition="Ginger is helping";used.push(`Ginger chews helped ${p.name}.`);
+ }
+ if(sick.length&&state.inventory.water>0){
+  const p=sick[0];state.inventory.water--;p.health=clamp(p.health+7,20,100);used.push(`Bottled water helped ${p.name}.`);
+ }
+ if((state.morale<80||state.people.some(p=>p.health<75)))eatOneSnack(used);
+ if(state.fatigueShield<1&&state.inventory.coffee>0){
+  state.inventory.coffee--;state.fatigueShield+=2;used.push("Coffee will reduce the next two fatigue delays.");
+ }
  if(state.wiper<70&&state.inventory.wiper>0){state.inventory.wiper--;state.wiper=100;used.push("Wiper fluid was refilled.")}
  if(state.tire<75&&state.inventory.tire>0){state.inventory.tire--;state.tire=100;used.push("Tire pressure was restored.")}
  if(state.glass<75&&state.inventory.glass>0){state.inventory.glass--;state.glass=clamp(state.glass+45,0,100);used.push("A windshield chip was sealed.")}
  if(!used.length){notice("Nothing needs immediate attention, or the needed supply is not in the car.");return}
- state.hours+=.15;used.forEach(addLog);notice(used.join(" "),"good");render();
+ state.hours+=.2;used.forEach(addLog);notice(used.join(" "),"good");render();
 }
 
 function openStore(){
@@ -370,23 +574,69 @@ function buyStore(){
  $("storeModal").classList.remove("show");render();
 }
 
+const townActions=[
+ {key:"motel",name:"Get a Motel Room",detail:"Rest 9 hours. Everyone heals and morale rises.",cost:28},
+ {key:"diner",name:"Eat at a Local Diner",detail:"Spend 1½ hours on a hot meal and conversation.",cost:16},
+ {key:"explore",name:"Explore the Town",detail:"Spend 2 hours, gain morale, and collect a souvenir.",cost:6},
+ {key:"break",name:"Take a Free Rest Break",detail:"Spend 45 minutes stretching and reorganizing the car.",cost:0}
+];
+function openTown(){
+ $("townTitle").textContent=`Town Activities — ${current().name}`;
+ $("townBlurb").textContent=current().blurb;
+ $("townChoices").innerHTML=townActions.map(a=>`
+  <div class="townChoice"><div><b>${a.name}</b> <span class="badge">${a.cost?money(a.cost):"Free"}</span><div class="small">${a.detail}</div></div>
+  <button class="${a.cost?"secondary":"goodbtn"}" data-action="${a.key}" ${state.cash<a.cost?"disabled":""}>Choose</button></div>`).join("");
+ $("townChoices").querySelectorAll("button").forEach(b=>b.onclick=()=>doTownAction(b.dataset.action));
+ $("townModal").classList.add("show");
+}
+function doTownAction(key){
+ const a=townActions.find(x=>x.key===key);if(!a||state.cash<a.cost)return;
+ state.cash-=a.cost;state.lastTownAction=state.routeIndex;
+ let text="";
+ if(key==="motel"){
+  state.hours+=9;state.morale=clamp(state.morale+14,0,100);
+  state.people.forEach(p=>{p.health=clamp(p.health+20,20,100);p.sick=Math.max(0,p.sick-1);p.condition="Rested"});
+  text=`A motel room in ${current().name} restored the group.`;
+ }else if(key==="diner"){
+  state.hours+=1.5;state.morale=clamp(state.morale+10,0,100);
+  state.people.forEach(p=>p.health=clamp(p.health+6,20,100));
+  text=`A diner meal in ${current().name} improved health and morale.`;
+  if(Math.random()<.05){const p=person();p.sick=2;p.health=clamp(p.health-10,20,100);p.condition="Food poisoning";text+=` Unfortunately, ${p.name} later felt sick.`}
+ }else if(key==="explore"){
+  state.hours+=2;state.morale=clamp(state.morale+12,0,100);state.souvenirs++;
+  if(Math.random()<.3){const found=5+Math.floor(Math.random()*8);state.cash+=found;text=`Exploring ${current().name} produced a souvenir and ${money(found)} found in an old coat pocket.`}
+  else text=`Exploring ${current().name} produced a souvenir and better morale.`;
+ }else{
+  state.hours+=.75;state.morale=clamp(state.morale+4,0,100);
+  state.people.forEach(p=>p.health=clamp(p.health+4,20,100));
+  text=`A free rest break in ${current().name} helped everyone stretch and reorganize.`;
+ }
+ addLog(text);notice(text,"good");$("townModal").classList.remove("show");render();
+}
+
 function finish(){
  save();$("gameArea").classList.add("hidden");$("endScreen").classList.remove("hidden");
  $("endMiles").textContent=totalMiles.toLocaleString()+" miles";$("endTime").textContent=timeText(state.hours);
- $("endCash").textContent=money(state.cash);$("endEvents").textContent=state.events;$("endCaught").textContent=state.caught;
- const score=Math.round(state.cash+state.people.reduce((s,p)=>s+p.health,0)+state.tire+state.glass+state.wiper-state.hours);
- $("endRating").textContent=score>550?"Pacific Highway Legend":score>430?"Seasoned Road-Tripper":score>320?"Snack-Fueled Survivor":"Made It Anyway";
+ $("endCash").textContent=money(state.cash);$("endEvents").textContent=state.events;
+ $("endMorale").textContent=Math.round(state.morale)+"%";$("endSouvenirs").textContent=state.souvenirs;$("endCaught").textContent=state.caught;
+ const score=Math.round(state.cash+state.people.reduce((s,p)=>s+p.health,0)+state.tire+state.glass+state.wiper+state.morale+state.souvenirs*18-state.hours);
+ $("endRating").textContent=score>680?"Pacific Highway Legend":score>540?"Seasoned Road-Tripper":score>400?"Snack-Fueled Survivor":"Made It Anyway";
 }
 function restart(){
- localStorage.removeItem(SAVE);state=fresh();addLog("Henry, Emily, Frank, and Edna leave Cody for the coast.");
+ localStorage.removeItem(SAVE);localStorage.removeItem(LEGACY_SAVE);state=fresh();
+ addLog("Henry, Emily, Frank, and Edna leave Cody for the coast.");
  $("gameArea").classList.remove("hidden");$("endScreen").classList.add("hidden");
  notice("Everyone is packed. The coast is a long way west.");render();
 }
 
 /* Three-lane pickup mini-game */
 const canvas=$("canvas"),ctx=canvas.getContext("2d"),lanes=[105,210,315];
-const pickups=[{icon:"💧",key:"water"},{icon:"☕",key:"coffee"},{icon:"🐟",key:"pate"},{icon:"⛽",key:"gas"},{icon:"🧴",key:"wiper"},{icon:"🪙",key:"cash"}];
-const hazards=[{icon:"🕳️"},{icon:"🚧"},{icon:"🛞"}];
+const pickups=[
+ {icon:"💧",key:"water"},{icon:"☕",key:"coffee"},{icon:"🐟",key:"pate"},
+ {icon:"⛽",key:"gas"},{icon:"🧴",key:"wiper"},{icon:"🪙",key:"cash"},
+ {icon:"📸",key:"souvenir"},{icon:"🥪",key:"sandwich"}
+];
+const hazards=[{icon:"🕳️"},{icon:"🚧"},{icon:"🛞"},{icon:"🧳"}];
 let mini;
 function miniReset(){
  cancelAnimationFrame(mini?.raf);
@@ -434,11 +684,12 @@ function drawMini(){
  ctx.fillRect(lanes[mini.lane]-36,466,8,22);ctx.fillRect(lanes[mini.lane]+28,466,8,22);
 }
 function endMini(){
- mini.running=false;cancelAnimationFrame(mini.raf);state.caught+=mini.score;state.hours+=.35+mini.hits*.2;
+ mini.running=false;cancelAnimationFrame(mini.raf);state.caught+=mini.score;state.hours+=.35+mini.hits*.2;state.lastMiniAt=state.routeIndex;
  const rewards=[];
  Object.entries(mini.rewards).forEach(([k,q])=>{
   if(k==="gas"){state.fuel=clamp(state.fuel+q*.5,0,16);rewards.push(`${q} small gas can${q===1?"":"s"}`)}
   else if(k==="cash"){state.cash+=q;rewards.push(`${money(q)} in loose change`)}
+  else if(k==="souvenir"){state.souvenirs+=q;state.morale=clamp(state.morale+q*3,0,100);rewards.push(`${q} roadside photograph${q===1?"":"s"}`)}
   else{state.inventory[k]=(state.inventory[k]||0)+q;rewards.push(`${q} ${invNames[k]||k}`)}
  });
  if(mini.hits)state.tire=clamp(state.tire-mini.hits*3,0,100);
@@ -448,9 +699,11 @@ function endMini(){
  $("startMini").disabled=false;render();drawMini();
 }
 
-$("driveBtn").onclick=drive;$("stationBtn").onclick=openStore;$("useSupplies").onclick=useSupplies;
+$("driveBtn").onclick=drive;$("stationBtn").onclick=openStore;$("townBtn").onclick=openTown;$("useSupplies").onclick=useSupplies;
+document.querySelectorAll(".paceBtn").forEach(b=>b.onclick=()=>setPace(b.dataset.pace));
 $("restartBtn").onclick=()=>{if(confirm("Start the whole trip over?"))restart()};$("endRestart").onclick=restart;
 $("closeStore").onclick=()=>$("storeModal").classList.remove("show");$("buyStore").onclick=buyStore;
+$("closeTown").onclick=()=>$("townModal").classList.remove("show");
 $("miniBtn").onclick=openMini;$("startMini").onclick=startMini;
 $("closeMini").onclick=()=>{if(!mini.running)$("miniModal").classList.remove("show")};
 $("leftBtn").onclick=()=>moveMini(-1);$("rightBtn").onclick=()=>moveMini(1);
