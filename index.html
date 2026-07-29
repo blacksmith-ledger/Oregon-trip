@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Cody to the Coast v0.3</title>
+<title>Cody to the Coast v0.4</title>
 <style>
 :root{
   --paper:#fff5d7; --ink:#26353a; --blue:#315f72; --orange:#b65b35;
@@ -39,7 +39,7 @@ main{display:grid;gap:12px;padding:12px}
 .personTop{display:flex;justify-content:space-between;gap:6px}
 .trait{font-size:.75rem;color:#315f72;font-weight:800;margin-top:4px}.name{font-weight:900}.health{font-size:.78rem;font-weight:900;padding:2px 7px;border-radius:999px;background:#dcecdf;color:#285639}
 .health.sick{background:#f1d7d1;color:#7e2d27}.condition{font-size:.82rem;color:#59676a;min-height:2.2em;margin-top:5px}
-.meter{height:8px;background:#dbe2e3;border-radius:999px;overflow:hidden;margin-top:6px}.meter>div{height:100%;background:#4e875c}
+.meterLabel{display:flex;justify-content:space-between;gap:6px;margin-top:7px;font-size:.72rem;font-weight:800;color:#657174}.meter{height:9px;background:#dbe2e3;border-radius:999px;overflow:hidden;margin-top:3px}.meter>div{height:100%;background:#4e875c;transition:width .3s}.energyMeter>div{background:#d28a32}.stressMeter>div{background:#b54b43}.catCard{background:#fffaf0}.humanCard{background:#fff}.role{font-size:.72rem;font-weight:900;text-transform:uppercase;color:#7a6a50;margin-top:2px}
 .carcard .meter>div{background:#4d7e91}.small{font-size:.84rem;color:#5c696c}
 .inventory{display:grid;grid-template-columns:1fr auto;gap:5px 10px}.inventory div{padding:4px 0;border-bottom:1px dotted #a9b7b9}
 .notice{padding:10px;border:1px solid #a7b9bc;border-radius:9px;background:#edf4f5;margin-bottom:8px}
@@ -67,7 +67,7 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
   .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
   .party,.cargrid{grid-template-columns:repeat(4,minmax(0,1fr))}
   .actions{grid-template-columns:2fr 1fr 1fr 1fr}
-  .optionGrid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .optionGrid.four{grid-template-columns:repeat(2,minmax(0,1fr))}
   .journalStats{grid-template-columns:repeat(4,minmax(0,1fr))}
   .spotGrid{grid-template-columns:repeat(5,minmax(0,1fr))}
 }
@@ -75,7 +75,7 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 </head>
 <body>
 <div class="wrap"><div class="game">
-<header><h1>Cody to the Coast</h1><p>A highway survival comedy — v0.3</p></header>
+<header><h1>Cody to the Coast</h1><p>A highway survival comedy — v0.4</p></header>
 
 <main id="gameArea">
 <section class="panel full">
@@ -137,12 +137,10 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
     <button class="paceBtn" data-pace="steady">Steady<small>balanced</small></button>
     <button class="paceBtn" data-pace="push">Push On<small>farther, rougher</small></button>
   </div>
-  <div class="small"><b>Driver for the next stretch</b></div>
+  <div class="small"><b>Driver for the next stretch</b> — Henry is the main driver; Emily takes shorter turns while Henry rests.</div>
   <div id="driverControls" class="optionGrid four">
-    <button class="driverBtn" data-driver="Henry">Henry<small>reduces car wear</small></button>
-    <button class="driverBtn" data-driver="Emily">Emily<small>finds sights and photos</small></button>
-    <button class="driverBtn" data-driver="Frank">Frank<small>avoids route delays</small></button>
-    <button class="driverBtn" data-driver="Edna">Edna<small>conserves road food</small></button>
+    <button class="driverBtn" data-driver="Henry">Henry<small>main driver • slower energy drain</small></button>
+    <button class="driverBtn" data-driver="Emily">Emily<small>shorter turns • more scenery</small></button>
   </div>
   <div class="small"><b>Road choice</b></div>
   <div id="roadControls" class="optionGrid">
@@ -165,7 +163,7 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 
 <section id="endScreen" class="end hidden">
   <h2>You Reached Newport!</h2>
-  <p>Henry, Emily, Frank, and Edna made it from Cody to the Oregon Coast.</p>
+  <p>Henry and Emily drove Frank and Edna from Cody to the Oregon Coast.</p>
   <div class="endgrid">
     <div>Total distance</div><div id="endMiles"></div>
     <div>Total trip time</div><div id="endTime"></div>
@@ -209,7 +207,7 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 
 <div id="miniModal" class="modal"><div class="box">
   <h2>Road Pickup Run</h2>
-  <p class="small">Move between three lanes. Collect supplies and avoid potholes, cones, and loose tires. The run lasts 20 seconds.</p>
+  <p class="small">Move between three lanes. Collect large supplies—including roadkill for the cats—and avoid potholes, cones, and loose tires. The run lasts 20 seconds.</p>
   <div class="minibar"><span id="miniTime">Time: 20</span><span id="miniScore">Collected: 0</span></div>
   <canvas id="canvas" width="420" height="520"></canvas>
   <div class="gameControls"><button id="leftBtn">◀</button><button id="rightBtn">▶</button></div>
@@ -220,7 +218,7 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 <script>
 (() => {
 "use strict";
-const SAVE="cody_to_coast_v03",LEGACY_SAVES=["cody_to_coast_v02","cody_to_coast_v01"];
+const SAVE="cody_to_coast_v04",LEGACY_SAVES=["cody_to_coast_v03","cody_to_coast_v02","cody_to_coast_v01"];
 const route=[
  {name:"Cody, Wyoming",miles:0,blurb:"The trip begins beneath the wide Wyoming sky."},
  {name:"Bridger, Montana",miles:76,blurb:"A small Montana stop with fuel, food, and room to stretch."},
@@ -239,21 +237,21 @@ const route=[
 ];
 const totalMiles=route.slice(1).reduce((sum,s)=>sum+s.miles,0);
 const peopleBase=[
- {name:"Henry",health:100,condition:"Ready for the road",sick:0,trait:"Handy with car problems"},
- {name:"Emily",health:100,condition:"Watching the scenery",sick:0,trait:"Spots interesting roadside sights"},
- {name:"Frank",health:100,condition:"Ready with directions",sick:0,trait:"Keeps track of the route"},
- {name:"Edna",health:100,condition:"Snacks organized",sick:0,trait:"Finds food when it is needed"}
+ {name:"Henry",health:100,condition:"Ready for the road",sick:0,trait:"Main driver • human",role:"Main driver"},
+ {name:"Emily",health:100,condition:"Watching the scenery",sick:0,trait:"Relief driver • human",role:"Relief driver"},
+ {name:"Frank",health:100,condition:"Calm in the car",sick:0,trait:"Girl cat • cannot drive",role:"Girl cat"},
+ {name:"Edna",health:100,condition:"Watching the snack bag",sick:0,trait:"Boy cat • cannot drive",role:"Boy cat"}
 ];
 const invNames={
- water:"Bottled water",coffee:"Coffee",pate:"Salmon pâté",crackers:"Crackers",
- sandwich:"Deli sandwiches",trailmix:"Trail mix",ginger:"Ginger chews",
+ water:"Bottled water",coffee:"Coffee",pate:"Salmon pâté",roadkill:"Roadkill",
+ crackers:"Crackers",sandwich:"Deli sandwiches",trailmix:"Trail mix",ginger:"Ginger chews",
  wiper:"Wiper fluid",tire:"Tire-pressure service",glass:"Windshield repair kit"
 };
 const storeItems=[
  {key:"gas",name:"Gasoline",detail:"Adds 1 gallon",price:4},
  {key:"water",name:"Bottled water",detail:"Hydration for the next stretch",price:2},
  {key:"coffee",name:"Coffee",detail:"Reduces driver-fatigue delays",price:3},
- {key:"pate",name:"Salmon pâté",detail:"An elegant and risky gas-station meal",price:8},
+ {key:"pate",name:"Salmon pâté",detail:"Calms Frank and Edna when travel stress rises",price:8},
  {key:"crackers",name:"Crackers",detail:"Makes the pâté more sensible",price:4},
  {key:"sandwich",name:"Deli sandwich",detail:"A filling road meal",price:6},
  {key:"trailmix",name:"Trail mix",detail:"A dependable shared snack",price:5},
@@ -268,10 +266,8 @@ const paces={
  push:{name:"Push On",min:86,max:116,speed:63,event:.84,fuel:1.12,morale:-3,health:-1}
 };
 const drivers={
- Henry:{name:"Henry",speed:1,event:0,fuel:1,wear:.62,morale:0,supply:1,sight:.04},
- Emily:{name:"Emily",speed:.98,event:.02,fuel:1,wear:1,morale:2,supply:1,sight:.28},
- Frank:{name:"Frank",speed:1.06,event:-.10,fuel:.98,wear:.94,morale:0,supply:1,sight:.07},
- Edna:{name:"Edna",speed:.98,event:-.02,fuel:1,wear:.95,morale:1,supply:.68,sight:.08}
+ Henry:{name:"Henry",speed:1,event:0,fuel:1,wear:.62,morale:0,sight:.05,maxStretch:100,drain:.42,recovery:.25,maxEnergy:100},
+ Emily:{name:"Emily",speed:.96,event:.02,fuel:1,wear:.94,morale:2,sight:.30,maxStretch:62,drain:.68,recovery:.42,maxEnergy:100}
 };
 const roadStyles={
  direct:{name:"Direct Route",speed:1,event:0,fuel:1,wear:1,morale:0,sight:.04,sick:1},
@@ -290,7 +286,7 @@ const achievementDefinitions={
  spotter:{name:"Sharp Eyes"},fullSpot:{name:"Road-Trip Bingo"},
  coast:{name:"Pacific Reached"},collector:{name:"Souvenir Collector"},
  photographer:{name:"Trip Photographer"},decider:{name:"Roadside Diplomat"},
- sharedWheel:{name:"Everybody Gets a Turn"}
+ sharedWheel:{name:"Both Drivers Take a Turn"}
 };
 const weatherTypes=[
  {key:"clear",name:"Clear skies",icon:"☀️",speed:1,fuel:1,event:0,wiper:0},
@@ -315,7 +311,8 @@ function fresh(){
   routeIndex:0,into:0,miles:0,hours:0,cash:135,fuel:14,tire:100,glass:100,wiper:75,
   morale:78,pace:"steady",driver:"Henry",roadStyle:"direct",weatherKey:"clear",weatherName:"Clear skies",
   souvenirs:0,photos:0,people:JSON.parse(JSON.stringify(peopleBase)),
-  inventory:{water:4,coffee:1,pate:1,crackers:2,sandwich:2,trailmix:1,ginger:1,wiper:0,tire:0,glass:0},
+  energy:{Henry:100,Emily:100},catStress:{Frank:12,Edna:10},needs:{Henry:"",Emily:""},
+  inventory:{water:4,coffee:1,pate:1,roadkill:0,crackers:2,sandwich:2,trailmix:1,ginger:1,wiper:0,tire:0,glass:0},
   fatigueShield:0,events:0,caught:0,foodClock:0,waterClock:0,lastTownAction:-1,lastMiniAt:-1,
   lastEncounter:"",encounterCooldown:0,decisions:0,repairs:0,driverChanges:0,driversUsed:["Henry"],
   spots:{},achievements:[],visitedSpecial:[],log:[]
@@ -327,7 +324,11 @@ function migrate(s){
  out.people=b.people.map(base=>({...base,...(((s&&s.people)||[]).find(p=>p.name===base.name)||{})}));
  out.visitedSpecial=Array.isArray(out.visitedSpecial)?out.visitedSpecial:[];
  out.achievements=Array.isArray(out.achievements)?out.achievements:[];
- out.driversUsed=Array.isArray(out.driversUsed)&&out.driversUsed.length?out.driversUsed:["Henry"];
+ out.driversUsed=Array.isArray(out.driversUsed)&&out.driversUsed.length?out.driversUsed.filter(n=>n==="Henry"||n==="Emily"):["Henry"];
+ if(!out.driversUsed.length)out.driversUsed=["Henry"];
+ out.energy={...b.energy,...((s&&s.energy)||{})};
+ out.catStress={...b.catStress,...((s&&s.catStress)||{})};
+ out.needs={...b.needs,...((s&&s.needs)||{})};
  out.spots=out.spots&&typeof out.spots==="object"?out.spots:{};
  if(!paces[out.pace])out.pace="steady";
  if(!drivers[out.driver])out.driver="Henry";
@@ -381,7 +382,7 @@ function checkAchievements(){
  if(state.souvenirs>=4)unlock("collector");
  if(state.photos>=8)unlock("photographer");
  if(state.decisions>=4)unlock("decider");
- if(new Set(state.driversUsed).size===4)unlock("sharedWheel");
+ if(new Set(state.driversUsed).size===2)unlock("sharedWheel");
 }
 
 function render(){
@@ -399,13 +400,21 @@ function render(){
  $("nextMilesStat").textContent=Math.round(distanceToNext());
  $("driverStat").textContent=state.driver;
  $("spotsStat").textContent=`${spotCount()} / ${spotDefinitions.length}`;
- $("partyGrid").innerHTML=state.people.map(p=>`
-  <div class="person">
-   <div class="personTop"><span class="name">${p.name}</span><span class="health ${p.sick>0?"sick":""}">${Math.round(p.health)}%</span></div>
-   <div class="trait">${p.trait}</div>
-   <div class="condition">${p.condition}</div>
-   <div class="meter"><div style="width:${p.health}%"></div></div>
-  </div>`).join("");
+ $("partyGrid").innerHTML=state.people.map(p=>{
+  const human=p.name==="Henry"||p.name==="Emily";
+  const value=human?state.energy[p.name]:state.catStress[p.name];
+  const meterText=human?`Driving energy ${Math.round(value)}%`:`Travel stress ${Math.round(value)}%`;
+  const roleClass=human?"humanCard":"catCard";
+  const meterClass=human?"energyMeter":"stressMeter";
+  const need=human&&state.needs[p.name]?` • Needs ${invNames[state.needs[p.name]]||state.needs[p.name]}`:"";
+  return `<div class="person ${roleClass}">
+   <div class="personTop"><span class="name">${p.name}</span><span class="health ${p.sick>0?"sick":""}">${human?"Human":"Cat"}</span></div>
+   <div class="role">${p.role||p.trait}</div>
+   <div class="condition">${p.condition}${need}</div>
+   <div class="meterLabel"><span>${meterText}</span><span>${human?(state.driver===p.name?"Driving":"Resting"):(value<35?"Calm":value<70?"Uneasy":"Stressed")}</span></div>
+   <div class="meter ${meterClass}"><div style="width:${clamp(value,0,100)}%"></div></div>
+  </div>`;
+ }).join("");
  const fuelPct=clamp(state.fuel/16*100,0,100);
  [["fuelMeter",fuelPct],["tireMeter",state.tire],["glassMeter",state.glass],["wiperMeter",state.wiper]]
   .forEach(([id,v])=>$(id).style.width=v+"%");
@@ -448,7 +457,8 @@ function setDriver(name){
   state.morale=clamp(state.morale+1,0,100);
   addLog(`${name} takes a turn driving.`);
  }
- notice(`${name} will drive the next stretch.`);
+ const energy=Math.round(state.energy[name]);
+ notice(`${name} will drive the next stretch. Current driving energy: ${energy}%.`);
  render();
 }
 function setRoadStyle(key){
@@ -458,8 +468,13 @@ function setRoadStyle(key){
  render();
 }
 function person(preferEmily=false){
- if(preferEmily&&Math.random()<.55)return state.people[1];
- return state.people[Math.floor(Math.random()*state.people.length)];
+ const humans=state.people.filter(p=>p.name==="Henry"||p.name==="Emily");
+ if(preferEmily&&Math.random()<.55)return humans.find(p=>p.name==="Emily");
+ return humans[Math.floor(Math.random()*humans.length)];
+}
+function cat(){
+ const cats=state.people.filter(p=>p.name==="Frank"||p.name==="Edna");
+ return cats[Math.floor(Math.random()*cats.length)];
 }
 function recover(){
  state.people.forEach(p=>{
@@ -482,7 +497,7 @@ function rollWeather(){
 }
 function consumeTravelSupplies(travel,w){
  const messages=[];
- const supplyMult=drivers[state.driver].supply;
+ const supplyMult=1;
  state.foodClock+=travel/145*supplyMult;
  state.waterClock+=travel/(w.key==="heat"?65:105)*supplyMult;
  if(state.waterClock>=1){
@@ -503,17 +518,9 @@ function consumeTravelSupplies(travel,w){
   }else if(state.inventory.trailmix>0){
    state.inventory.trailmix--;state.morale=clamp(state.morale+2,0,100);
    messages.push("Trail mix kept everyone reasonably cheerful.");
-  }else if(state.inventory.pate>0&&state.inventory.crackers>0){
-   state.inventory.pate--;state.inventory.crackers--;state.morale=clamp(state.morale+5,0,100);
-   messages.push("Salmon pâté and crackers became an unexpectedly formal highway lunch.");
-   if(Math.random()<.06)makeFoodSick(messages);
   }else if(state.inventory.crackers>0){
    state.inventory.crackers--;state.morale=clamp(state.morale-1,0,100);
    messages.push("Plain crackers counted as lunch, technically.");
-  }else if(state.inventory.pate>0){
-   state.inventory.pate--;state.morale=clamp(state.morale+1,0,100);
-   messages.push("The salmon pâté was eaten without crackers. This was a choice.");
-   if(Math.random()<.18)makeFoodSick(messages);
   }else{
    state.morale=clamp(state.morale-6,0,100);
    state.people.forEach(p=>p.health=clamp(p.health-2,20,100));
@@ -551,8 +558,10 @@ const events=[
  {story:"A strong side wind makes the car wander.",note:"Slower speed keeps everyone comfortable.",delay:.7,apply(){}},
  {story:"Henry hears a faint rattle before it becomes serious.",note:"A quick roadside check prevents a larger repair.",delay:.25,apply(){state.tire=clamp(state.tire+7,0,100);state.glass=clamp(state.glass+3,0,100);state.people[0].condition="Pleased with the repair"}},
  {story:"Emily spots a viewpoint that everyone else missed.",note:"The stop improves morale and produces several photographs.",delay:.45,apply(){state.morale=clamp(state.morale+7,0,100);state.people[1].condition="Enjoying the view"}},
- {story:"Frank catches the wrong turn before the car commits to it.",note:"The route is corrected with almost no delay.",delay:.1,apply(){state.morale=clamp(state.morale+2,0,100);state.people[2].condition="Route confirmed"}},
- {story:"Edna produces a forgotten bag of snacks.",note:"Nobody asks how long it had been there.",delay:.1,apply(){state.inventory.trailmix++;state.morale=clamp(state.morale+4,0,100);state.people[3].condition="Snack hero"}}
+ {story:"Frank the girl cat yowls exactly as the GPS announces a turn.",note:"The timing startles everyone but the correct lane is chosen.",delay:.1,apply(){state.morale=clamp(state.morale+2,0,100);state.catStress.Frank=clamp(state.catStress.Frank+4,0,100);state.people[2].condition="Alert after the turn"}},
+ {story:"Edna the boy cat paws at a forgotten snack bag.",note:"The bag contains usable trail mix and one very interested cat.",delay:.1,apply(){state.inventory.trailmix++;state.morale=clamp(state.morale+4,0,100);state.catStress.Edna=clamp(state.catStress.Edna-4,0,100);state.people[3].condition="Proud of the discovery"}},
+ {story:"A loud motorcycle passes close to the car.",note:"Frank and Edna both become more anxious.",delay:.2,apply(){state.catStress.Frank=clamp(state.catStress.Frank+12,0,100);state.catStress.Edna=clamp(state.catStress.Edna+10,0,100)}},
+ {story:"A rough patch rattles the cat carriers.",note:"A calm stop helps, but the cats remain uneasy.",delay:.35,apply(){const c=cat();state.catStress[c.name]=clamp(state.catStress[c.name]+16,0,100);c.condition="Unhappy with the rough road"}}
 ];
 
 function arrivalBonus(){
@@ -582,13 +591,13 @@ function maybeBanter(){
  const lines=low?[
   "Henry says the next stop had better have a working coffee machine.",
   "Emily suggests that everyone look out the windows instead of at the clock.",
-  "Frank quietly checks the route for the third time.",
-  "Edna announces that snack complaints are being formally recorded."
+  "Frank gives a long unhappy meow from her carrier.",
+  "Edna paws at the salmon-pâté bag with increasing determination."
  ]:[
   "Henry says the car sounds better than it did fifty miles ago.",
   "Emily points out a cloud shaped like a fish.",
-  "Frank announces the next town before the road sign does.",
-  "Edna asks whether salmon pâté counts as a regional experience."
+  "Frank watches traffic from her carrier with suspicious concentration.",
+  "Edna settles down after noticing the salmon pâté is still in the car."
  ];
  addLog(lines[Math.floor(Math.random()*lines.length)]);
 }
@@ -602,20 +611,120 @@ function driverRoadBonus(messages,d,r){
   state.tire=clamp(state.tire+5,0,100);state.glass=clamp(state.glass+3,0,100);state.wiper=clamp(state.wiper+5,0,100);
   state.repairs++;messages.push("Henry makes a quick preventive car check.");
  }
- if(state.driver==="Edna"&&Math.random()<.18){
-  state.inventory.trailmix++;messages.push("Edna finds another small bag of trail mix in the car.");
+}
+function otherDriver(name){return name==="Henry"?"Emily":"Henry"}
+function ensureDriverEnergy(messages){
+ const chosen=state.driver,other=otherDriver(chosen);
+ if(state.energy[chosen]>=14)return;
+ if(state.energy[other]>=18){
+  state.driver=other;
+  if(!state.driversUsed.includes(other))state.driversUsed.push(other);
+  state.driverChanges++;markSpot("changeDrivers");
+  messages.push(`${chosen} is too tired to drive safely, so ${other} takes over.`);
+  addLog(`${other} automatically takes the wheel while ${chosen} rests.`);
+  return;
+ }
+ state.hours+=2.5;
+ state.energy.Henry=clamp(state.energy.Henry+32,0,100);
+ state.energy.Emily=clamp(state.energy.Emily+30,0,100);
+ state.catStress.Frank=clamp(state.catStress.Frank-5,0,100);
+ state.catStress.Edna=clamp(state.catStress.Edna-5,0,100);
+ messages.push("Both drivers were tired, so the group took a 2½-hour rest before continuing.");
+ addLog("A safety rest restored Henry and Emily’s driving energy.");
+}
+function updateDriverEnergy(travel,messages){
+ const active=state.driver,resting=otherDriver(active),d=drivers[active],r=drivers[resting];
+ const drain=travel*d.drain*(state.pace==="push"?1.16:state.pace==="relaxed"?.88:1);
+ state.energy[active]=clamp(state.energy[active]-drain,0,d.maxEnergy);
+ const recovery=travel*r.recovery+(state.pace==="relaxed"?5:2);
+ state.energy[resting]=clamp(state.energy[resting]+recovery,0,r.maxEnergy);
+ messages.push(`${active} uses ${Math.round(drain)}% driving energy; ${resting} recovers while resting.`);
+ if(state.energy[active]<18){
+  const p=state.people.find(x=>x.name===active);
+  p.condition="Needs a driving break";
+ }
+}
+function updateCatStress(travel,w,r,messages){
+ const weatherStress=w.key==="rain"||w.key==="wind"?5:w.key==="fog"?3:0;
+ const roadMult=r===roadStyles.easy ? .65 : r===roadStyles.scenic ? .88 : 1;
+ const frankGain=(travel/16+weatherStress)*roadMult;
+ const ednaGain=(travel/19+weatherStress*.8)*roadMult;
+ state.catStress.Frank=clamp(state.catStress.Frank+frankGain,0,100);
+ state.catStress.Edna=clamp(state.catStress.Edna+ednaGain,0,100);
+ ["Frank","Edna"].forEach(name=>{
+  const p=state.people.find(x=>x.name===name),stress=state.catStress[name];
+  p.condition=stress<35?"Calm in the car":stress<70?"Getting uneasy":stress<90?"Very stressed":"Needs a comfort stop";
+ });
+ const maxStress=Math.max(state.catStress.Frank,state.catStress.Edna);
+ if(maxStress>=95){
+  state.hours+=1;
+  state.catStress.Frank=clamp(state.catStress.Frank-18,0,100);
+  state.catStress.Edna=clamp(state.catStress.Edna-18,0,100);
+  messages.push("The cats became overwhelmed, so a one-hour comfort stop calmed them enough to continue.");
+  addLog("Frank and Edna needed a quiet comfort stop.");
+ }
+}
+const needOptions={
+ Henry:[{key:"coffee",text:"coffee",boost:34},{key:"water",text:"bottled water",boost:18},{key:"sandwich",text:"a sandwich",boost:22}],
+ Emily:[{key:"water",text:"bottled water",boost:30},{key:"trailmix",text:"trail mix",boost:24},{key:"ginger",text:"ginger chews",boost:20}]
+};
+function maybeCreateNeed(messages){
+ if(Math.random()>.34)return;
+ const name=Math.random()<.58?"Henry":"Emily";
+ if(state.needs[name])return;
+ const options=needOptions[name],need=options[Math.floor(Math.random()*options.length)];
+ state.needs[name]=need.key;
+ const p=state.people.find(x=>x.name===name);
+ p.condition=`Would benefit from ${need.text}`;
+ state.energy[name]=clamp(state.energy[name]-5,0,drivers[name].maxEnergy);
+ messages.push(`${name} now needs ${need.text} for the best energy recovery.`);
+}
+function satisfyHumanNeeds(used){
+ ["Henry","Emily"].forEach(name=>{
+  const key=state.needs[name];
+  if(!key||!state.inventory[key])return;
+  const need=needOptions[name].find(n=>n.key===key);
+  state.inventory[key]--;
+  state.energy[name]=clamp(state.energy[name]+need.boost,0,drivers[name].maxEnergy);
+  state.needs[name]="";
+  state.people.find(x=>x.name===name).condition="Energy restored";
+  used.push(`${name} used ${need.text} and recovered ${need.boost}% driving energy.`);
+ });
+}
+function calmCats(used){
+ const maxStress=Math.max(state.catStress.Frank,state.catStress.Edna);
+ if(maxStress<28)return;
+ let fed=false;
+ if(state.inventory.pate>0){
+  state.inventory.pate--;
+  state.catStress.Frank=clamp(state.catStress.Frank-34,0,100);
+  state.catStress.Edna=clamp(state.catStress.Edna-34,0,100);
+  used.push("Salmon pâté calmed Frank and Edna.");fed=true;
+ }else if(state.inventory.roadkill>0){
+  state.inventory.roadkill--;
+  state.catStress.Frank=clamp(state.catStress.Frank-26,0,100);
+  state.catStress.Edna=clamp(state.catStress.Edna-26,0,100);
+  used.push("The collected roadkill calmed Frank and Edna.");fed=true;
+ }
+ if(fed){
+  state.people.find(x=>x.name==="Frank").condition="Calmer after a treat";
+  state.people.find(x=>x.name==="Edna").condition="Calmer after a treat";
  }
 }
 function drive(){
  if(state.routeIndex>=route.length-1)return finish();
  recover();
  state.encounterCooldown=Math.max(0,state.encounterCooldown-1);
+ const messages=[];
+ ensureDriverEnergy(messages);
  const cfg=paces[state.pace],w=rollWeather(),d=drivers[state.driver],r=roadStyles[state.roadStyle];
  const remaining=distanceToNext();
- const travel=Math.min(remaining,cfg.min+Math.floor(Math.random()*(cfg.max-cfg.min+1)));
+ const desired=cfg.min+Math.floor(Math.random()*(cfg.max-cfg.min+1));
+ const energyMiles=Math.max(24,Math.floor(state.energy[state.driver]/d.drain*.82));
+ const travel=Math.min(remaining,desired,d.maxStretch,energyMiles);
  let fuelNeed=travel/24*cfg.fuel*w.fuel*d.fuel*r.fuel;
  if(state.tire<35)fuelNeed*=1.12;
- const messages=[`${w.icon} ${w.name}. ${state.driver} is driving on the ${r.name.toLowerCase()}.`];
+ messages.unshift(`${w.icon} ${w.name}. ${state.driver} is driving on the ${r.name.toLowerCase()}.`);
  if(state.fuel<fuelNeed){
   const emergency=clamp(fuelNeed-state.fuel+1,2,5);
   state.hours+=2.5;state.cash=Math.max(0,state.cash-Math.ceil(emergency*7));state.fuel+=emergency;state.events++;
@@ -627,7 +736,9 @@ function drive(){
  state.wiper=clamp(state.wiper-(1+w.wiper)*d.wear*r.wear,0,100);
  state.tire=clamp(state.tire-.7*d.wear*r.wear,0,100);
  state.morale=clamp(state.morale+cfg.morale+d.morale+r.morale,0,100);
- state.people.forEach(p=>p.health=clamp(p.health+cfg.health,20,100));
+ state.people.filter(p=>p.name==="Henry"||p.name==="Emily").forEach(p=>p.health=clamp(p.health+cfg.health,20,100));
+ updateDriverEnergy(travel,messages);
+ updateCatStress(travel,w,r,messages);
  const supplyMessages=consumeTravelSupplies(travel,w);
  supplyMessages.forEach(m=>{messages.push(m);addLog(m)});
  driverRoadBonus(messages,d,r);
@@ -635,16 +746,18 @@ function drive(){
  if(Math.random()<eventChance){
   const e=events[Math.floor(Math.random()*events.length)];
   let delay=typeof e.delay==="function"?e.delay():e.delay;
-  if(state.driver==="Frank"&&(e.story.includes("wrong")||e.story.includes("route")))delay*=.25;
   if(r.sick<1&&(e.story.includes("carsick")||e.story.includes("food poisoning"))&&Math.random()>r.sick){
    delay=.1;messages.push("The easy-road choice prevents a worse sickness stop.");
   }else{
    e.apply();
   }
   state.hours+=delay;state.events++;
+  state.catStress.Frank=clamp(state.catStress.Frank+2,0,100);
+  state.catStress.Edna=clamp(state.catStress.Edna+2,0,100);
   addLog(`${e.story} Delay: ${delay.toFixed(1)} hours.`);
   messages.push(`${e.note} (+${delay.toFixed(1)}h)`);
  }
+ maybeCreateNeed(messages);
  maybeBanter();
  const struggling=state.people.find(p=>p.health<=25);
  if(struggling){
@@ -683,16 +796,14 @@ function eatOneSnack(used){
  }else if(state.inventory.trailmix>0){
   state.inventory.trailmix--;state.morale=clamp(state.morale+5,0,100);
   used.push("Trail mix improved morale.");
- }else if(state.inventory.pate>0&&state.inventory.crackers>0){
-  state.inventory.pate--;state.inventory.crackers--;state.morale=clamp(state.morale+8,0,100);
-  used.push("Salmon pâté and crackers became a proper roadside meal.");
-  if(Math.random()<.05)makeFoodSick(used);
  }else if(state.inventory.crackers>0){
   state.inventory.crackers--;state.morale=clamp(state.morale+2,0,100);used.push("Crackers provided a small morale boost.");
  }
 }
 function useSupplies(){
- const used=[],sick=state.people.filter(p=>p.sick>0).sort((a,b)=>a.health-b.health);
+ const used=[],sick=state.people.filter(p=>(p.name==="Henry"||p.name==="Emily")&&p.sick>0).sort((a,b)=>a.health-b.health);
+ satisfyHumanNeeds(used);
+ calmCats(used);
  if(sick.length&&state.inventory.ginger>0){
   const p=sick[0];state.inventory.ginger--;p.sick=Math.max(0,p.sick-1);p.health=clamp(p.health+10,20,100);
   p.condition="Ginger is helping";used.push(`Ginger chews helped ${p.name}.`);
@@ -701,8 +812,13 @@ function useSupplies(){
   const p=sick[0];state.inventory.water--;p.health=clamp(p.health+7,20,100);used.push(`Bottled water helped ${p.name}.`);
  }
  if((state.morale<80||state.people.some(p=>p.health<75)))eatOneSnack(used);
- if(state.fatigueShield<1&&state.inventory.coffee>0){
-  state.inventory.coffee--;state.fatigueShield+=2;used.push("Coffee will reduce the next two fatigue delays.");
+ if(state.fatigueShield<1&&state.inventory.coffee>0&&state.energy.Henry<72){
+  state.inventory.coffee--;state.fatigueShield+=2;state.energy.Henry=clamp(state.energy.Henry+24,0,100);
+  used.push("Coffee restored Henry’s energy and will reduce the next two fatigue delays.");
+ }
+ if(state.inventory.water>0&&state.energy.Emily<45&&!state.needs.Emily){
+  state.inventory.water--;state.energy.Emily=clamp(state.energy.Emily+18,0,100);
+  used.push("Bottled water restored some of Emily’s driving energy.");
  }
  if(state.wiper<70&&state.inventory.wiper>0){state.inventory.wiper--;state.wiper=100;state.repairs++;used.push("Wiper fluid was refilled.")}
  if(state.tire<75&&state.inventory.tire>0){state.inventory.tire--;state.tire=100;state.repairs++;used.push("Tire pressure was restored.")}
@@ -773,11 +889,13 @@ function doTownAction(key){
  if(key==="motel"){
   state.hours+=9;state.morale=clamp(state.morale+14,0,100);
   state.people.forEach(p=>{p.health=clamp(p.health+20,20,100);p.sick=Math.max(0,p.sick-1);p.condition="Rested"});
-  text=`A motel room in ${current().name} restored the group.`;
+  state.energy.Henry=100;state.energy.Emily=100;state.catStress.Frank=clamp(state.catStress.Frank-35,0,100);state.catStress.Edna=clamp(state.catStress.Edna-35,0,100);
+  text=`A motel room in ${current().name} fully restored the drivers and calmed the cats.`;
  }else if(key==="diner"){
   state.hours+=1.5;state.morale=clamp(state.morale+10,0,100);
-  state.people.forEach(p=>p.health=clamp(p.health+6,20,100));
-  text=`A diner meal in ${current().name} improved health and morale.`;
+  state.people.filter(p=>p.name==="Henry"||p.name==="Emily").forEach(p=>p.health=clamp(p.health+6,20,100));
+  state.energy.Henry=clamp(state.energy.Henry+24,0,100);state.energy.Emily=clamp(state.energy.Emily+18,0,100);
+  text=`A diner meal in ${current().name} improved health, morale, and driver energy.`;
   if(Math.random()<.05){const p=person();p.sick=2;p.health=clamp(p.health-10,20,100);p.condition="Food poisoning";text+=` Unfortunately, ${p.name} later felt sick.`}
  }else if(key==="explore"){
   state.hours+=2;state.morale=clamp(state.morale+12,0,100);state.souvenirs++;state.photos+=2;
@@ -785,8 +903,10 @@ function doTownAction(key){
   else text=`Exploring ${current().name} produced a souvenir and better morale.`;
  }else{
   state.hours+=.75;state.morale=clamp(state.morale+4,0,100);
-  state.people.forEach(p=>p.health=clamp(p.health+4,20,100));
-  text=`A free rest break in ${current().name} helped everyone stretch and reorganize.`;
+  state.people.filter(p=>p.name==="Henry"||p.name==="Emily").forEach(p=>p.health=clamp(p.health+4,20,100));
+  state.energy.Henry=clamp(state.energy.Henry+12,0,100);state.energy.Emily=clamp(state.energy.Emily+12,0,100);
+  state.catStress.Frank=clamp(state.catStress.Frank-8,0,100);state.catStress.Edna=clamp(state.catStress.Edna-8,0,100);
+  text=`A free rest break in ${current().name} restored some driver energy and calmed the cats.`;
  }
  addLog(text);notice(text,"good");$("townModal").classList.remove("show");render();
 }
@@ -878,7 +998,7 @@ function finish(){
  $("endMorale").textContent=Math.round(state.morale)+"%";$("endSouvenirs").textContent=state.souvenirs;
  $("endPhotos").textContent=state.photos;$("endSpots").textContent=`${spotCount()} / ${spotDefinitions.length}`;
  $("endAchievements").textContent=state.achievements.length;$("endCaught").textContent=state.caught;
- const score=Math.round(state.cash+state.people.reduce((s,p)=>s+p.health,0)+state.tire+state.glass+state.wiper+state.morale+state.souvenirs*18+state.photos*3+state.achievements.length*20-state.hours);
+ const score=Math.round(state.cash+state.people.reduce((s,p)=>s+p.health,0)+state.tire+state.glass+state.wiper+state.morale+state.souvenirs*18+state.photos*3+state.achievements.length*20+state.energy.Henry+state.energy.Emily-(state.catStress.Frank+state.catStress.Edna)/2-state.hours);
  const rating=score>780?"Pacific Highway Legend":score>620?"Seasoned Road-Tripper":score>460?"Snack-Fueled Survivor":"Made It Anyway";
  $("endRating").textContent=rating;
  const best=state.morale>=80?"Everyone reaches Newport still enjoying one another’s company.":state.morale>=50?"The group reaches Newport tired but satisfied.":"The group reaches Newport and agrees that separate hotel rooms might be wise.";
@@ -887,7 +1007,7 @@ function finish(){
 }
 function restart(){
  localStorage.removeItem(SAVE);LEGACY_SAVES.forEach(k=>localStorage.removeItem(k));state=fresh();
- addLog("Henry, Emily, Frank, and Edna leave Cody for the coast.");
+ addLog("Henry takes the wheel while Emily, Frank, and Edna leave Cody for the coast.");
  $("gameArea").classList.remove("hidden");$("endScreen").classList.add("hidden");
  notice("Everyone is packed. The coast is a long way west.");render();
 }
@@ -896,8 +1016,8 @@ function restart(){
 const canvas=$("canvas"),ctx=canvas.getContext("2d"),lanes=[105,210,315];
 const pickups=[
  {icon:"💧",key:"water"},{icon:"☕",key:"coffee"},{icon:"🐟",key:"pate"},
- {icon:"⛽",key:"gas"},{icon:"🧴",key:"wiper"},{icon:"🪙",key:"cash"},
- {icon:"📸",key:"souvenir"},{icon:"🥪",key:"sandwich"}
+ {icon:"🦴",key:"roadkill"},{icon:"⛽",key:"gas"},{icon:"🧴",key:"wiper"},
+ {icon:"🪙",key:"cash"},{icon:"📸",key:"souvenir"},{icon:"🥪",key:"sandwich"}
 ];
 const hazards=[{icon:"🕳️"},{icon:"🚧"},{icon:"🛞"},{icon:"🧳"}];
 let mini;
@@ -911,14 +1031,14 @@ function moveMini(d){if(mini.running)mini.lane=clamp(mini.lane+d,0,2)}
 function startMini(){if(mini.running)return;mini.running=true;mini.last=performance.now();$("startMini").disabled=true;mini.raf=requestAnimationFrame(miniLoop)}
 function spawn(){
  const good=Math.random()<.72,src=good?pickups[Math.floor(Math.random()*pickups.length)]:hazards[Math.floor(Math.random()*hazards.length)];
- mini.objects.push({lane:Math.floor(Math.random()*3),y:-35,good,...src});
+ mini.objects.push({lane:Math.floor(Math.random()*3),y:-48,good,...src});
 }
 function miniLoop(now){
  const dt=Math.min(.05,(now-mini.last)/1000);mini.last=now;mini.time-=dt;mini.spawn+=dt;
  if(mini.spawn>.55){mini.spawn=0;spawn()}
  mini.objects.forEach(o=>o.y+=230*dt);
  mini.objects.forEach(o=>{
-  if(!o.done&&o.lane===mini.lane&&o.y>395&&o.y<480){
+  if(!o.done&&o.lane===mini.lane&&o.y>380&&o.y<490){
    o.done=true;
    if(o.good){mini.score++;mini.rewards[o.key]=(mini.rewards[o.key]||0)+1}
    else{mini.hits++;mini.score=Math.max(0,mini.score-1)}
@@ -941,10 +1061,10 @@ function drawMini(){
  ctx.clearRect(0,0,420,520);ctx.fillStyle="#596269";ctx.fillRect(0,0,420,520);
  ctx.strokeStyle="#f4d35e";ctx.lineWidth=5;ctx.setLineDash([24,22]);
  [157.5,262.5].forEach(x=>{ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,520);ctx.stroke()});ctx.setLineDash([]);
- ctx.font="31px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";mini.objects.forEach(o=>ctx.fillText(o.icon,lanes[o.lane],o.y));
- roundRect(lanes[mini.lane]-30,410,60,85,13,"#d95f3b");roundRect(lanes[mini.lane]-21,421,42,25,7,"#b9e4ef");
- ctx.fillStyle="#222";ctx.fillRect(lanes[mini.lane]-36,430,8,22);ctx.fillRect(lanes[mini.lane]+28,430,8,22);
- ctx.fillRect(lanes[mini.lane]-36,466,8,22);ctx.fillRect(lanes[mini.lane]+28,466,8,22);
+ ctx.font="48px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";mini.objects.forEach(o=>ctx.fillText(o.icon,lanes[o.lane],o.y));
+ roundRect(lanes[mini.lane]-32,407,64,90,13,"#2f6fb2");roundRect(lanes[mini.lane]-22,419,44,27,7,"#b9e4ef");
+ ctx.fillStyle="#222";ctx.fillRect(lanes[mini.lane]-38,430,8,22);ctx.fillRect(lanes[mini.lane]+30,430,8,22);
+ ctx.fillRect(lanes[mini.lane]-38,468,8,22);ctx.fillRect(lanes[mini.lane]+30,468,8,22);
 }
 function endMini(){
  mini.running=false;cancelAnimationFrame(mini.raf);state.caught+=mini.score;state.hours+=.35+mini.hits*.2;state.lastMiniAt=state.routeIndex;
@@ -975,7 +1095,7 @@ $("leftBtn").onclick=()=>moveMini(-1);$("rightBtn").onclick=()=>moveMini(1);
 window.addEventListener("keydown",e=>{if(e.key==="ArrowLeft")moveMini(-1);if(e.key==="ArrowRight")moveMini(1)});
 canvas.addEventListener("pointerdown",e=>{const r=canvas.getBoundingClientRect();moveMini(e.clientX-r.left<r.width/2?-1:1)});
 
-if(!state.log.length)addLog("Henry, Emily, Frank, and Edna leave Cody for the coast.");
+if(!state.log.length)addLog("Henry takes the wheel while Emily, Frank, and Edna leave Cody for the coast.");
 if(state.routeIndex>=route.length-1)finish();else render();
 })();
 </script>
