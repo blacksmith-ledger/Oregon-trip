@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cody to the Coast v0.1</title>
+<style>
+:root{
+  --paper:#fff5d7; --ink:#26353a; --blue:#315f72; --orange:#b65b35;
+  --green:#3f704d; --red:#9d3b35; --line:#92a9ad; --road:#4d555b;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; color:var(--ink);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:repeating-linear-gradient(135deg,#91b7be 0 24px,#86adb5 24px 48px);
+}
+button,input{font:inherit}
+button{touch-action:manipulation}
+.wrap{max-width:980px;margin:auto;padding:10px 10px calc(20px + env(safe-area-inset-bottom))}
+.game{
+  overflow:hidden;background:var(--paper);border:4px solid #294b58;border-radius:18px;
+  box-shadow:0 14px 35px rgba(0,0,0,.25)
+}
+header{padding:18px 12px;text-align:center;background:linear-gradient(#315f72,#244754);color:white}
+h1{margin:0;font-size:clamp(1.8rem,8vw,3rem)}
+header p{margin:5px 0 0;opacity:.9}
+main{display:grid;gap:12px;padding:12px}
+.panel{background:rgba(255,255,255,.56);border:2px solid var(--line);border-radius:12px;padding:12px}
+.panel h2{margin:0 0 10px;color:#244754;font-size:1.12rem;border-bottom:1px solid #aab9bb;padding-bottom:6px}
+.full{grid-column:1/-1}
+.stats,.party,.cargrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.stat,.person,.carcard{background:white;border:1px solid #c5d0d1;border-radius:9px;padding:9px}
+.stat b{display:block;text-transform:uppercase;font-size:.72rem;color:#667478}
+.stat span{font-size:1.12rem;font-weight:900}
+.progress{height:18px;border:2px solid #71878c;border-radius:999px;background:#d2dcde;overflow:hidden}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,#c8753b,#efb35f);transition:width .35s}
+.routeRow{display:flex;justify-content:space-between;gap:8px;margin-top:7px;font-size:.88rem}
+.personTop{display:flex;justify-content:space-between;gap:6px}
+.name{font-weight:900}.health{font-size:.78rem;font-weight:900;padding:2px 7px;border-radius:999px;background:#dcecdf;color:#285639}
+.health.sick{background:#f1d7d1;color:#7e2d27}.condition{font-size:.82rem;color:#59676a;min-height:2.2em;margin-top:5px}
+.meter{height:8px;background:#dbe2e3;border-radius:999px;overflow:hidden;margin-top:6px}.meter>div{height:100%;background:#4e875c}
+.carcard .meter>div{background:#4d7e91}.small{font-size:.84rem;color:#5c696c}
+.inventory{display:grid;grid-template-columns:1fr auto;gap:5px 10px}.inventory div{padding:4px 0;border-bottom:1px dotted #a9b7b9}
+.notice{padding:10px;border:1px solid #a7b9bc;border-radius:9px;background:#edf4f5;margin-bottom:8px}
+.notice.good{background:#e2f0e4;border-color:#8db693}.notice.bad{background:#f5dfda;border-color:#c9877a}
+.actions{display:grid;grid-template-columns:1fr;gap:8px}
+button{min-height:50px;border:0;border-radius:10px;padding:10px 12px;font-weight:900;cursor:pointer}
+.primary{background:var(--orange);color:white}.secondary{background:var(--blue);color:white}
+.goodbtn{background:var(--green);color:white}.light{background:#e6dfc9;color:var(--ink);border:2px solid #ad9e79}
+button:disabled{opacity:.45}
+.log{max-height:260px;overflow:auto;background:#202b2f;color:#edf6f7;border-radius:10px;padding:8px;font:13px ui-monospace,SFMono-Regular,Menlo,monospace}
+.entry{padding:6px 4px;border-bottom:1px solid rgba(255,255,255,.12)}.entry b{color:#ffd27a}
+.hidden{display:none!important}
+.modal{position:fixed;inset:0;z-index:20;background:rgba(11,18,21,.7);display:none;align-items:center;justify-content:center;padding:12px}
+.modal.show{display:flex}.box{width:min(620px,100%);max-height:92vh;overflow:auto;background:var(--paper);border:4px solid #294b58;border-radius:16px;padding:14px}
+.box h2{margin:0 0 8px;color:#244754}.storeRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #c3cecf}
+.storeRow small{display:block;color:#657174}.stepper{display:grid;grid-template-columns:42px 48px 42px;gap:4px}
+.stepper button{min-height:42px;padding:0;font-size:1.35rem;background:#dbe5e6;color:#20383f}
+.stepper input{width:48px;height:42px;text-align:center;border:2px solid #81969b;border-radius:8px;background:white;font-weight:900}
+.modalActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+canvas{display:block;width:100%;height:auto;background:var(--road);border:3px solid #233d47;border-radius:12px;touch-action:none}
+.minibar{display:flex;justify-content:space-between;font-weight:900;margin:7px 0}.gameControls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.gameControls button{font-size:1.5rem;background:var(--blue);color:white}
+.end{text-align:center;padding:28px 15px}.end h2{font-size:2rem}.endgrid{display:grid;grid-template-columns:1fr auto;gap:8px 14px;text-align:left;max-width:390px;margin:18px auto}.endgrid div:nth-child(even){font-weight:900;text-align:right}
+@media(min-width:760px){
+  main{grid-template-columns:1fr 1fr}
+  .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .party,.cargrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .actions{grid-template-columns:2fr 1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="game">
+<header><h1>Cody to the Coast</h1><p>A highway survival comedy — v0.1</p></header>
+
+<main id="gameArea">
+<section class="panel full">
+  <h2 id="locationTitle">Leaving Cody, Wyoming</h2>
+  <div class="progress"><div id="progressFill"></div></div>
+  <div class="routeRow"><span id="routeFrom">Cody</span><b id="milesText"></b><span>Newport</span></div>
+</section>
+
+<section class="panel full">
+  <div class="stats">
+    <div class="stat"><b>Trip time</b><span id="timeStat">0h</span></div>
+    <div class="stat"><b>Cash</b><span id="cashStat">$135</span></div>
+    <div class="stat"><b>Fuel</b><span id="fuelStat">14 gal</span></div>
+    <div class="stat"><b>Next stop</b><span id="nextStat">Bridger</span></div>
+  </div>
+</section>
+
+<section class="panel full"><h2>The Travelers</h2><div id="partyGrid" class="party"></div></section>
+
+<section class="panel">
+  <h2>The Car</h2>
+  <div class="cargrid">
+    <div class="carcard"><b>Fuel</b><div class="meter"><div id="fuelMeter"></div></div><span id="fuelLabel" class="small"></span></div>
+    <div class="carcard"><b>Tire pressure</b><div class="meter"><div id="tireMeter"></div></div><span id="tireLabel" class="small"></span></div>
+    <div class="carcard"><b>Windshield</b><div class="meter"><div id="glassMeter"></div></div><span id="glassLabel" class="small"></span></div>
+    <div class="carcard"><b>Wiper fluid</b><div class="meter"><div id="wiperMeter"></div></div><span id="wiperLabel" class="small"></span></div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Supplies</h2>
+  <div id="inventory" class="inventory"></div>
+  <button id="useSupplies" class="light">Use Helpful Supplies</button>
+</section>
+
+<section class="panel full">
+  <h2>Road Decisions</h2>
+  <div id="notice" class="notice">Everyone is packed. The coast is a long way west.</div>
+  <div class="actions">
+    <button id="driveBtn" class="primary">Drive the Next Stretch</button>
+    <button id="stationBtn" class="secondary">Gas Station</button>
+    <button id="miniBtn" class="goodbtn">Road Pickup Run</button>
+  </div>
+  <p class="small">Travel always moves forward. Problems add time, cost money, or make someone uncomfortable, but the trip cannot permanently stop.</p>
+</section>
+
+<section class="panel full"><h2>Trip Log</h2><div id="log" class="log"></div><button id="restartBtn" class="light">Start Over</button></section>
+</main>
+
+<section id="endScreen" class="end hidden">
+  <h2>You Reached Newport!</h2>
+  <p>Henry, Emily, Frank, and Edna made it from Cody to the Oregon Coast.</p>
+  <div class="endgrid">
+    <div>Total distance</div><div id="endMiles"></div>
+    <div>Total trip time</div><div id="endTime"></div>
+    <div>Cash remaining</div><div id="endCash"></div>
+    <div>Random events</div><div id="endEvents"></div>
+    <div>Items collected</div><div id="endCaught"></div>
+    <div>Trip rating</div><div id="endRating"></div>
+  </div>
+  <button id="endRestart" class="primary">Take the Trip Again</button>
+</section>
+</div></div>
+
+<div id="storeModal" class="modal"><div class="box">
+  <h2 id="storeTitle">Highway Gas Station</h2>
+  <p class="small">Fuel, useful supplies, and increasingly questionable food.</p>
+  <div id="storeList"></div>
+  <div class="notice"><b>Cart:</b> <span id="cartTotal">$0</span> &nbsp; <b>Cash after:</b> <span id="cashAfter">$135</span></div>
+  <div class="modalActions"><button id="closeStore" class="light">Keep Driving</button><button id="buyStore" class="goodbtn">Buy Items</button></div>
+</div></div>
+
+<div id="miniModal" class="modal"><div class="box">
+  <h2>Road Pickup Run</h2>
+  <p class="small">Move between three lanes. Collect supplies and avoid potholes, cones, and loose tires. The run lasts 20 seconds.</p>
+  <div class="minibar"><span id="miniTime">Time: 20</span><span id="miniScore">Collected: 0</span></div>
+  <canvas id="canvas" width="420" height="520"></canvas>
+  <div class="gameControls"><button id="leftBtn">◀</button><button id="rightBtn">▶</button></div>
+  <button id="startMini" class="primary">Start the Run</button>
+  <button id="closeMini" class="light">Return to the Trip</button>
+</div></div>
+
+<script>
+(() => {
+"use strict";
+const SAVE="cody_to_coast_v01";
+const route=[
+ {name:"Cody, Wyoming",miles:0},{name:"Bridger, Montana",miles:76},
+ {name:"Laurel, Montana",miles:43},{name:"Bozeman, Montana",miles:141},
+ {name:"Missoula, Montana",miles:203},{name:"Coeur d’Alene, Idaho",miles:165},
+ {name:"Spokane, Washington",miles:33},{name:"Kennewick, Washington",miles:144},
+ {name:"The Dalles, Oregon",miles:128},{name:"Portland, Oregon",miles:84},
+ {name:"Seaside, Oregon",miles:80},{name:"Cannon Beach, Oregon",miles:9},
+ {name:"Garibaldi, Oregon",miles:38},{name:"Newport, Oregon",miles:143}
+];
+const totalMiles=route.slice(1).reduce((sum,s)=>sum+s.miles,0);
+const peopleBase=[
+ {name:"Henry",health:100,condition:"Ready for the road",sick:0},
+ {name:"Emily",health:100,condition:"Watching the scenery",sick:0},
+ {name:"Frank",health:100,condition:"Ready with directions",sick:0},
+ {name:"Edna",health:100,condition:"Snacks organized",sick:0}
+];
+const invNames={
+ water:"Bottled water",coffee:"Coffee",pate:"Salmon pâté",crackers:"Crackers",
+ ginger:"Ginger chews",wiper:"Wiper fluid",tire:"Tire-pressure service",glass:"Windshield repair kit"
+};
+const storeItems=[
+ {key:"gas",name:"Gasoline",detail:"Adds 1 gallon",price:4},
+ {key:"water",name:"Bottled water",detail:"Helps a sick traveler",price:2},
+ {key:"coffee",name:"Coffee",detail:"Reduces driver-fatigue delays",price:3},
+ {key:"pate",name:"Salmon pâté",detail:"An elegant gas-station meal",price:8},
+ {key:"crackers",name:"Crackers",detail:"Makes the pâté less reckless",price:4},
+ {key:"ginger",name:"Ginger chews",detail:"Helps with car sickness",price:5},
+ {key:"wiper",name:"Wiper fluid",detail:"Refills the washer reservoir",price:6},
+ {key:"tire",name:"Tire-pressure service",detail:"Restores tire pressure",price:3},
+ {key:"glass",name:"Windshield repair kit",detail:"Repairs windshield damage",price:12}
+];
+const $=id=>document.getElementById(id);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const money=v=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(v);
+const timeText=h=>{const d=Math.floor(h/24),r=Math.round(h%24);return d?`${d}d ${r}h`:`${Math.round(h)}h`};
+
+function fresh(){
+ return {
+  routeIndex:0,into:0,miles:0,hours:0,cash:135,fuel:14,tire:100,glass:100,wiper:75,
+  people:JSON.parse(JSON.stringify(peopleBase)),
+  inventory:{water:3,coffee:1,pate:1,crackers:2,ginger:1,wiper:0,tire:0,glass:0},
+  fatigueShield:0,events:0,caught:0,log:[]
+ };
+}
+function load(){try{return JSON.parse(localStorage.getItem(SAVE))}catch(e){return null}}
+let state=load()||fresh(),cart={};
+function save(){localStorage.setItem(SAVE,JSON.stringify(state))}
+function current(){return route[state.routeIndex]}
+function next(){return route[Math.min(state.routeIndex+1,route.length-1)]}
+function atStop(){return state.into===0}
+function addLog(text){state.log.unshift({t:timeText(state.hours),text});state.log=state.log.slice(0,80)}
+function label(v,words){return v>=75?words[0]:v>=45?words[1]:v>=20?words[2]:words[3]}
+function notice(text,type=""){const n=$("notice");n.className="notice"+(type?" "+type:"");n.textContent=text}
+
+function render(){
+ const pct=clamp(state.miles/totalMiles*100,0,100);
+ $("progressFill").style.width=pct+"%";
+ $("milesText").textContent=`${Math.round(state.miles)} / ${totalMiles.toLocaleString()} miles`;
+ $("routeFrom").textContent=current().name.split(",")[0];
+ $("locationTitle").textContent=atStop()?`Stopped in ${current().name}`:`Driving toward ${next().name}`;
+ $("timeStat").textContent=timeText(state.hours);
+ $("cashStat").textContent=money(state.cash);
+ $("fuelStat").textContent=state.fuel.toFixed(1)+" gal";
+ $("nextStat").textContent=next().name.split(",")[0];
+ $("partyGrid").innerHTML=state.people.map(p=>`
+  <div class="person">
+   <div class="personTop"><span class="name">${p.name}</span><span class="health ${p.sick>0?"sick":""}">${Math.round(p.health)}%</span></div>
+   <div class="condition">${p.condition}</div>
+   <div class="meter"><div style="width:${p.health}%"></div></div>
+  </div>`).join("");
+ const fuelPct=clamp(state.fuel/16*100,0,100);
+ [["fuelMeter",fuelPct],["tireMeter",state.tire],["glassMeter",state.glass],["wiperMeter",state.wiper]]
+  .forEach(([id,v])=>$(id).style.width=v+"%");
+ $("fuelLabel").textContent=label(fuelPct,["Plenty","Half tank","Getting low","Almost empty"]);
+ $("tireLabel").textContent=label(state.tire,["Good","A little low","Needs air","Very low"]);
+ $("glassLabel").textContent=label(state.glass,["Clear","Chipped","Cracked","Badly cracked"]);
+ $("wiperLabel").textContent=label(state.wiper,["Full","Adequate","Low","Empty"]);
+ $("inventory").innerHTML=Object.keys(invNames).map(k=>`<div>${invNames[k]}</div><div><b>${state.inventory[k]||0}</b></div>`).join("");
+ $("log").innerHTML=state.log.length?state.log.map(x=>`<div class="entry"><b>${x.t}</b> — ${x.text}</div>`).join(""):'<div class="entry">No road stories yet.</div>';
+ $("stationBtn").disabled=!atStop();
+ save();
+}
+function person(preferEmily=false){
+ if(preferEmily&&Math.random()<.55)return state.people[1];
+ return state.people[Math.floor(Math.random()*state.people.length)];
+}
+function recover(){
+ state.people.forEach(p=>{
+  if(p.sick>0){p.sick--;p.health=clamp(p.health+4,0,100);if(p.sick===0){p.condition="Feeling better";p.health=clamp(p.health+8,0,100)}}
+  else{p.health=clamp(p.health+2,0,100);if(p.health>92)p.condition="Doing well"}
+ });
+}
+const events=[
+ {story:"The car hits the rumble strips.",note:"Everyone is suddenly awake.",delay:.2,apply(){}},
+ {story:"Birds are eating something in the road.",note:"You slow down until they scatter.",delay:.4,apply(){}},
+ {story:"A shredded tire tread lies across the lane.",note:"A careful swerve avoids the worst of it.",delay:.5,apply(){state.tire=clamp(state.tire-8,0,100)}},
+ {story:"A fast car passes, then slows down in front of you.",note:"A classic highway mystery costs time.",delay:.5,apply(){}},
+ {story:"Emily produces one enormous hiccup.",note:"Everyone waits for another. It never comes.",delay:.1,apply(){state.people[1].condition="One dramatic hiccup"}},
+ {story:"A mileage sign makes Newport look impossibly far away.",note:"The odometer keeps moving west.",delay:.2,apply(){}},
+ {story:"A billboard starts an argument about what it meant.",note:"Nobody reaches a convincing interpretation.",delay:.25,apply(){}},
+ {story:"The tire-pressure light comes on.",note:"The next air pump will help.",delay:.7,apply(){state.tire=clamp(state.tire-18,0,100)}},
+ {story:"A truck throws a pebble into the windshield.",note:"A new chip appears.",delay:.6,apply(){state.glass=clamp(state.glass-15,0,100)}},
+ {story:"Bug splatter arrives as the washer fluid runs low.",note:"Visibility is safe, but washing the glass would help.",delay:.45,apply(){state.wiper=clamp(state.wiper-22,0,100)}},
+ {story:"Road construction funnels everyone into one lane.",note:"Progress continues at orange-cone speed.",delay:1.2,apply(){}},
+ {story:"A wrong exit adds a scenic neighborhood loop.",note:"No distance is lost, but the clock notices.",delay:.8,apply(){}},
+ {story:"The driver gets tired on a long straight stretch.",note:"Coffee would make the next fatigue delay easier.",delay:()=>state.fatigueShield>0?(state.fatigueShield--,.2):.9,apply(){}},
+ {story:"Someone opens the salmon pâté without warning.",note:"The windows come down immediately.",delay:.5,apply(){person().condition="Questioning the car’s air quality"}},
+ {story:"A traveler gets carsick on a winding section.",note:"The car pulls over briefly, then continues.",delay:1.3,apply(){const p=person(true);p.health=clamp(p.health-12,0,100);p.sick=2;p.condition="Carsick"}},
+ {story:"A gas-station snack causes food poisoning.",note:"An unpleasant rest stop adds time, not defeat.",delay:2.2,apply(){const p=person();p.health=clamp(p.health-18,0,100);p.sick=3;p.condition="Food poisoning"}},
+ {story:"A coffee lid pops loose over a rough patch.",note:"Cleanup requires napkins and patience.",delay:.6,apply(){}},
+ {story:"A sudden rain shower tests the wipers.",note:"The shower passes and the road remains open.",delay:()=>state.wiper<25?1.4:.35,apply(){state.wiper=clamp(state.wiper-8,0,100)}},
+ {story:"A strong side wind makes the car wander.",note:"Slower speed keeps everyone comfortable.",delay:.7,apply(){}}
+];
+
+function drive(){
+ if(state.routeIndex>=route.length-1)return finish();
+ recover();
+ const remaining=next().miles-state.into;
+ const travel=Math.min(remaining,65+Math.floor(Math.random()*36));
+ let fuelNeed=travel/24;
+ if(state.tire<35)fuelNeed*=1.12;
+ const messages=[];
+ if(state.fuel<fuelNeed){
+  const emergency=clamp(fuelNeed-state.fuel+1,2,5);
+  state.hours+=2.5; state.cash=Math.max(0,state.cash-Math.ceil(emergency*7)); state.fuel+=emergency; state.events++;
+  addLog("Fuel ran low. Roadside fuel arrived at a high price, adding 2½ hours.");
+  messages.push("Roadside fuel added 2½ hours.");
+ }
+ state.fuel=clamp(state.fuel-fuelNeed,0,16);
+ state.hours+=travel/55; state.into+=travel; state.miles+=travel;
+ state.wiper=clamp(state.wiper-1,0,100); state.tire=clamp(state.tire-.7,0,100);
+
+ if(Math.random()<.72){
+  const e=events[Math.floor(Math.random()*events.length)];
+  const delay=typeof e.delay==="function"?e.delay():e.delay;
+  e.apply(); state.hours+=delay; state.events++;
+  addLog(`${e.story} Delay: ${delay.toFixed(1)} hours.`);
+  messages.push(`${e.note} (+${delay.toFixed(1)}h)`);
+ }
+ if(state.tire<15){
+  state.hours+=1;state.tire=35;state.cash=Math.max(0,state.cash-8);state.events++;
+  addLog("Emergency tire air restored enough pressure to continue.");
+  messages.push("Emergency tire air added 1 hour and cost $8.");
+ }
+ if(state.glass<12){
+  state.hours+=1.5;state.glass=40;state.cash=Math.max(0,state.cash-18);state.events++;
+  addLog("A roadside windshield stabilization repair kept the trip moving.");
+  messages.push("Windshield repair added 1½ hours and cost $18.");
+ }
+ if(state.into>=next().miles-.01){
+  state.routeIndex++;state.into=0;state.hours+=.25;
+  addLog(`Arrived in ${current().name}.`);
+  messages.push(`Arrived in ${current().name}. The gas station is available.`);
+  if(state.routeIndex===route.length-1){render();return finish()}
+ }
+ notice(messages.join(" ")||"The stretch passes without trouble.",messages.some(x=>x.includes("Emergency"))?"bad":"");
+ render();
+}
+
+function useSupplies(){
+ const used=[],sick=state.people.filter(p=>p.sick>0).sort((a,b)=>a.health-b.health);
+ if(sick.length&&state.inventory.ginger>0){const p=sick[0];state.inventory.ginger--;p.sick=Math.max(0,p.sick-1);p.health=clamp(p.health+10,0,100);p.condition="Ginger is helping";used.push(`Ginger helped ${p.name}.`)}
+ if(sick.length&&state.inventory.water>0){const p=sick[0];state.inventory.water--;p.health=clamp(p.health+7,0,100);used.push(`Water helped ${p.name}.`)}
+ if(state.inventory.coffee>0){state.inventory.coffee--;state.fatigueShield+=2;used.push("Coffee will reduce the next two fatigue delays.")}
+ if(state.wiper<70&&state.inventory.wiper>0){state.inventory.wiper--;state.wiper=100;used.push("Wiper fluid was refilled.")}
+ if(state.tire<75&&state.inventory.tire>0){state.inventory.tire--;state.tire=100;used.push("Tire pressure was restored.")}
+ if(state.glass<75&&state.inventory.glass>0){state.inventory.glass--;state.glass=clamp(state.glass+45,0,100);used.push("A windshield chip was sealed.")}
+ if(!used.length){notice("Nothing needs immediate attention, or the needed supply is not in the car.");return}
+ state.hours+=.15;used.forEach(addLog);notice(used.join(" "),"good");render();
+}
+
+function openStore(){
+ cart={};storeItems.forEach(i=>cart[i.key]=0);
+ $("storeTitle").textContent=`Gas Station — ${current().name}`;
+ $("storeList").innerHTML=storeItems.map(i=>`
+ <div class="storeRow">
+  <div><b>${i.name}</b> — ${money(i.price)}<small>${i.detail}</small></div>
+  <div class="stepper">
+   <button data-k="${i.key}" data-d="-1">−</button>
+   <input id="cart_${i.key}" value="0" readonly>
+   <button data-k="${i.key}" data-d="1">+</button>
+  </div>
+ </div>`).join("");
+ $("storeList").querySelectorAll("button").forEach(b=>b.onclick=()=>changeCart(b.dataset.k,Number(b.dataset.d)));
+ updateCart();$("storeModal").classList.add("show");
+}
+function cartTotal(){return storeItems.reduce((s,i)=>s+(cart[i.key]||0)*i.price,0)}
+function changeCart(key,delta){
+ const max=key==="gas"?Math.floor(16-state.fuel):9;
+ cart[key]=clamp((cart[key]||0)+delta,0,max);
+ if(cartTotal()>state.cash&&delta>0)cart[key]--;
+ $("cart_"+key).value=cart[key];updateCart();
+}
+function updateCart(){
+ const total=cartTotal();$("cartTotal").textContent=money(total);$("cashAfter").textContent=money(state.cash-total);
+ $("buyStore").disabled=total>state.cash;
+}
+function buyStore(){
+ const total=cartTotal();if(total>state.cash)return;
+ const bought=[];
+ storeItems.forEach(i=>{
+  const q=cart[i.key]||0;if(!q)return;
+  if(i.key==="gas")state.fuel=clamp(state.fuel+q,0,16);
+  else state.inventory[i.key]=(state.inventory[i.key]||0)+q;
+  bought.push(`${q} ${i.name}`);
+ });
+ state.cash-=total;
+ if(bought.length){state.hours+=.2;addLog(`Bought ${bought.join(", ")} for ${money(total)}.`);notice("The car is stocked and ready.","good")}
+ $("storeModal").classList.remove("show");render();
+}
+
+function finish(){
+ save();$("gameArea").classList.add("hidden");$("endScreen").classList.remove("hidden");
+ $("endMiles").textContent=totalMiles.toLocaleString()+" miles";$("endTime").textContent=timeText(state.hours);
+ $("endCash").textContent=money(state.cash);$("endEvents").textContent=state.events;$("endCaught").textContent=state.caught;
+ const score=Math.round(state.cash+state.people.reduce((s,p)=>s+p.health,0)+state.tire+state.glass+state.wiper-state.hours);
+ $("endRating").textContent=score>550?"Pacific Highway Legend":score>430?"Seasoned Road-Tripper":score>320?"Snack-Fueled Survivor":"Made It Anyway";
+}
+function restart(){
+ localStorage.removeItem(SAVE);state=fresh();addLog("Henry, Emily, Frank, and Edna leave Cody for the coast.");
+ $("gameArea").classList.remove("hidden");$("endScreen").classList.add("hidden");
+ notice("Everyone is packed. The coast is a long way west.");render();
+}
+
+/* Three-lane pickup mini-game */
+const canvas=$("canvas"),ctx=canvas.getContext("2d"),lanes=[105,210,315];
+const pickups=[{icon:"💧",key:"water"},{icon:"☕",key:"coffee"},{icon:"🐟",key:"pate"},{icon:"⛽",key:"gas"},{icon:"🧴",key:"wiper"},{icon:"🪙",key:"cash"}];
+const hazards=[{icon:"🕳️"},{icon:"🚧"},{icon:"🛞"}];
+let mini;
+function miniReset(){
+ cancelAnimationFrame(mini?.raf);
+ mini={running:false,lane:1,objects:[],time:20,score:0,last:0,spawn:0,raf:0,rewards:{},hits:0};
+ drawMini();miniText();$("startMini").disabled=false;
+}
+function openMini(){miniReset();$("miniModal").classList.add("show")}
+function moveMini(d){if(mini.running)mini.lane=clamp(mini.lane+d,0,2)}
+function startMini(){if(mini.running)return;mini.running=true;mini.last=performance.now();$("startMini").disabled=true;mini.raf=requestAnimationFrame(miniLoop)}
+function spawn(){
+ const good=Math.random()<.72,src=good?pickups[Math.floor(Math.random()*pickups.length)]:hazards[Math.floor(Math.random()*hazards.length)];
+ mini.objects.push({lane:Math.floor(Math.random()*3),y:-35,good,...src});
+}
+function miniLoop(now){
+ const dt=Math.min(.05,(now-mini.last)/1000);mini.last=now;mini.time-=dt;mini.spawn+=dt;
+ if(mini.spawn>.55){mini.spawn=0;spawn()}
+ mini.objects.forEach(o=>o.y+=230*dt);
+ mini.objects.forEach(o=>{
+  if(!o.done&&o.lane===mini.lane&&o.y>395&&o.y<480){
+   o.done=true;
+   if(o.good){mini.score++;mini.rewards[o.key]=(mini.rewards[o.key]||0)+1}
+   else{mini.hits++;mini.score=Math.max(0,mini.score-1)}
+  }
+ });
+ mini.objects=mini.objects.filter(o=>!o.done&&o.y<560);
+ drawMini();miniText();
+ if(mini.time<=0)return endMini();
+ mini.raf=requestAnimationFrame(miniLoop);
+}
+function miniText(){
+ $("miniTime").textContent=`Time: ${Math.max(0,Math.ceil(mini.time))}`;
+ $("miniScore").textContent=`Collected: ${mini.score}`;
+}
+function roundRect(x,y,w,h,r,fill){
+ ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);
+ ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();ctx.fillStyle=fill;ctx.fill();
+}
+function drawMini(){
+ ctx.clearRect(0,0,420,520);ctx.fillStyle="#596269";ctx.fillRect(0,0,420,520);
+ ctx.strokeStyle="#f4d35e";ctx.lineWidth=5;ctx.setLineDash([24,22]);
+ [157.5,262.5].forEach(x=>{ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,520);ctx.stroke()});ctx.setLineDash([]);
+ ctx.font="31px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";mini.objects.forEach(o=>ctx.fillText(o.icon,lanes[o.lane],o.y));
+ roundRect(lanes[mini.lane]-30,410,60,85,13,"#d95f3b");roundRect(lanes[mini.lane]-21,421,42,25,7,"#b9e4ef");
+ ctx.fillStyle="#222";ctx.fillRect(lanes[mini.lane]-36,430,8,22);ctx.fillRect(lanes[mini.lane]+28,430,8,22);
+ ctx.fillRect(lanes[mini.lane]-36,466,8,22);ctx.fillRect(lanes[mini.lane]+28,466,8,22);
+}
+function endMini(){
+ mini.running=false;cancelAnimationFrame(mini.raf);state.caught+=mini.score;state.hours+=.35+mini.hits*.2;
+ const rewards=[];
+ Object.entries(mini.rewards).forEach(([k,q])=>{
+  if(k==="gas"){state.fuel=clamp(state.fuel+q*.5,0,16);rewards.push(`${q} small gas can${q===1?"":"s"}`)}
+  else if(k==="cash"){state.cash+=q;rewards.push(`${money(q)} in loose change`)}
+  else{state.inventory[k]=(state.inventory[k]||0)+q;rewards.push(`${q} ${invNames[k]||k}`)}
+ });
+ if(mini.hits)state.tire=clamp(state.tire-mini.hits*3,0,100);
+ const summary=rewards.length?`Collected ${rewards.join(", ")}.`:"No useful items were collected.";
+ addLog(`Road Pickup Run: ${summary} ${mini.hits} hazard${mini.hits===1?"":"s"} hit.`);
+ notice(summary+(mini.hits?` ${mini.hits} hazard hit${mini.hits===1?"":"s"} added delay.`:""),mini.hits?"bad":"good");
+ $("startMini").disabled=false;render();drawMini();
+}
+
+$("driveBtn").onclick=drive;$("stationBtn").onclick=openStore;$("useSupplies").onclick=useSupplies;
+$("restartBtn").onclick=()=>{if(confirm("Start the whole trip over?"))restart()};$("endRestart").onclick=restart;
+$("closeStore").onclick=()=>$("storeModal").classList.remove("show");$("buyStore").onclick=buyStore;
+$("miniBtn").onclick=openMini;$("startMini").onclick=startMini;
+$("closeMini").onclick=()=>{if(!mini.running)$("miniModal").classList.remove("show")};
+$("leftBtn").onclick=()=>moveMini(-1);$("rightBtn").onclick=()=>moveMini(1);
+window.addEventListener("keydown",e=>{if(e.key==="ArrowLeft")moveMini(-1);if(e.key==="ArrowRight")moveMini(1)});
+canvas.addEventListener("pointerdown",e=>{const r=canvas.getBoundingClientRect();moveMini(e.clientX-r.left<r.width/2?-1:1)});
+
+if(!state.log.length)addLog("Henry, Emily, Frank, and Edna leave Cody for the coast.");
+if(state.routeIndex>=route.length-1)finish();else render();
+})();
+</script>
+</body>
+</html>
