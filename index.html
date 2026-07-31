@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Cody to the Coast v0.91</title>
+<title>Cody to the Coast v0.96</title>
 <style>
 :root{
   --paper:#fff5d7; --ink:#26353a; --blue:#315f72; --orange:#b65b35;
@@ -86,6 +86,15 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 .atlasMini:after,.atlasLarge:after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(circle at 14% 17%,rgba(91,66,26,.12) 0 2px,transparent 3px),radial-gradient(circle at 83% 76%,rgba(91,66,26,.1) 0 3px,transparent 4px);mix-blend-mode:multiply}
 .atlasMini svg,.atlasLarge svg{display:block;width:100%;height:auto;background:transparent;border:0;border-radius:0}
 .atlasPaper{fill:#f4e6b8}.atlasState{fill:#d9d2a2;stroke:#7e866b;stroke-width:1.4}.atlasState.oregon{fill:#b9cfa3}.atlasState.washington{fill:#c8d7ae}.atlasState.idaho{fill:#d7caa0}.atlasState.montana{fill:#d9c49f}.atlasState.wyoming{fill:#d8c7a8}.atlasOcean{fill:#8dbac2}.atlasRiver{fill:none;stroke:#5d9cab;stroke-width:3.2;opacity:.86}.atlasHighway{fill:none;stroke:#b1a88d;stroke-width:2;stroke-dasharray:5 5;opacity:.75}.atlasMountains{fill:none;stroke:#8d7b54;stroke-width:2;opacity:.58}.atlasForest{fill:#72936c;opacity:.7}.atlasRouteShadow{fill:none;stroke:#fff7dc;stroke-width:15;stroke-linecap:round;stroke-linejoin:round}.atlasRoute{fill:none;stroke:#af4932;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}.atlasRouteDone{fill:none;stroke:#3f7951;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}.atlasTown{fill:#fff7d6;stroke:#5e4225;stroke-width:2}.atlasTown.done{fill:#6f9b70}.atlasTown.current{fill:#f1b14e;stroke-width:4}.atlasTownLabel{font:700 9px system-ui,sans-serif;fill:#263c42;paint-order:stroke;stroke:#f4e6b8;stroke-width:3.5px;stroke-linejoin:round}.atlasStateLabel{font:800 12px Georgia,serif;letter-spacing:1.8px;fill:#546150;opacity:.72}.atlasEndpoint{font:900 14px system-ui,sans-serif;fill:#26353a;paint-order:stroke;stroke:#f4e6b8;stroke-width:4px}.atlasCompass{font:900 12px Georgia,serif;fill:#513e26}.atlasCarMarker{font-size:25px;filter:drop-shadow(0 2px 1px rgba(0,0,0,.42));transition:transform .45s ease}.atlasMapTitle{font:900 18px Georgia,serif;fill:#553f27;letter-spacing:1px}.atlasMapSubtitle{font:700 8px system-ui,sans-serif;fill:#6f5c3b;letter-spacing:1.5px}.atlasDetails b{display:block;color:#4e391f;font-size:1.02rem}.atlasDetails span{display:block;margin-top:5px}.atlasOpen{min-width:140px;background:#664b29;color:white;border:2px solid #3f2c17}.atlasLarge{position:relative;border:3px solid #5c4326;border-radius:12px;overflow:hidden;background:#efe0ab;box-shadow:inset 0 0 28px rgba(78,53,24,.26),0 5px 12px rgba(38,25,12,.22);margin:10px 0 14px}.atlasRouteList{display:grid;gap:7px;margin-top:12px}.atlasStop{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;padding:8px;border-radius:9px;background:#f6edcf;border:1px solid #b9a36f}.atlasStop.done{background:#dcecdf}.atlasStop.current{border:3px solid #b65b35;background:#fff4c4}.atlasDot{font-size:1.2rem;text-align:center}.dashboardDecor{display:flex;gap:8px;margin-top:10px}.decorSlot{flex:1;min-height:44px;border:2px dashed #8f7850;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.72rem;color:#6d5c3f;background:rgba(255,255,255,.34)}
+
+.atlasLarge{transform-origin:50% 12%;animation:atlasUnfold .42s ease-out both}
+@keyframes atlasUnfold{0%{opacity:.15;transform:perspective(900px) rotateX(-24deg) scaleY(.72)}100%{opacity:1;transform:perspective(900px) rotateX(0) scaleY(1)}}
+.atlasTownPin{cursor:pointer;outline:none}.atlasTownPin .atlasHit{fill:transparent;stroke:transparent}.atlasTownPin:hover .atlasTown,.atlasTownPin:focus .atlasTown{stroke:#173f55;stroke-width:5;filter:drop-shadow(0 2px 2px rgba(0,0,0,.32))}.atlasTownPin.locked{opacity:.58}.atlasMemoryMark{font:900 12px system-ui,sans-serif;fill:#8c4b2d;paint-order:stroke;stroke:#f4e6b8;stroke-width:3px}
+.atlasToolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}.atlasToolbar button{background:#315f72;color:white}.atlasTapHint{font-size:.8rem;font-weight:800;color:#654c2e}
+.atlasStop{width:100%;font:inherit;color:inherit;text-align:left;cursor:pointer}.atlasStop:hover,.atlasStop.selected{box-shadow:inset 0 0 0 3px #315f72}.atlasStop.ahead{opacity:.72}
+.atlasMemoryPanel{margin:12px 0;padding:14px;border:3px solid #76572f;border-radius:13px;background:linear-gradient(135deg,#fff9e3,#ead9aa);box-shadow:inset 0 0 20px rgba(92,65,26,.12)}
+.atlasMemoryHead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.atlasMemoryHead h3{margin:0;color:#51391f}.atlasStatusPill{white-space:nowrap;border-radius:999px;padding:4px 9px;background:#d7e7d8;color:#29593a;font-size:.75rem;font-weight:900}.atlasStatusPill.ahead{background:#ded8ca;color:#665f53}.atlasMemoryGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.atlasMemoryBox{background:rgba(255,255,255,.57);border:1px solid #b99e69;border-radius:10px;padding:10px;min-height:90px}.atlasMemoryBox h4{margin:0 0 6px;color:#5d4325}.atlasNotePaper{font-family:"Comic Sans MS","Bradley Hand",cursive;font-size:1rem;line-height:1.35;transform:rotate(-.35deg);background:#fff7b9!important}.atlasPhotoChips{display:flex;flex-wrap:wrap;gap:6px}.atlasPhotoChip{display:inline-flex;align-items:center;gap:4px;background:#fff8df;border:1px solid #a98249;border-radius:999px;padding:4px 8px;font-size:.76rem;font-weight:800}.atlasLockedMemory{color:#746d61;font-style:italic}.atlasReplayCar{font-size:25px;filter:drop-shadow(0 2px 1px rgba(0,0,0,.42))}
+@media(max-width:650px){.atlasMemoryGrid{grid-template-columns:1fr}.atlasMemoryHead{display:block}.atlasStatusPill{display:inline-block;margin-top:6px}}
 @media(max-width:650px){.dashboardAtlas{grid-template-columns:1fr}.atlasDetails{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}.atlasDetails .atlasOpen{grid-column:1/-1}.atlasMini{min-height:155px}}
 </style>
 </head>
@@ -93,7 +102,7 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 <div class="wrap"><div class="game">
 <header>
   <h1>Cody to the Coast</h1>
-  <p>A highway survival comedy — v0.94</p>
+  <p>A highway survival comedy — v0.96</p>
   <div class="audioControls">
     <button id="musicBtn" class="audioBtn" type="button" aria-pressed="false">♫ Music Off</button>
     <button id="prevTuneBtn" class="audioBtn smallAudioBtn" type="button">◀ Prev Tune</button>
@@ -257,7 +266,9 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
   <h2>Emily’s Road Atlas</h2>
   <p class="small">Emily keeps the route marked here. Cody begins on the right; the car travels westward toward Newport on the left.</p>
   <div class="notice"><b id="atlasModalSummary">Current location</b></div>
-  <div class="atlasLarge"><svg id="atlasLargeSvg" viewBox="0 0 760 360" role="img" aria-label="Emily's marked road atlas"></svg></div>
+  <div class="atlasLarge"><svg id="atlasLargeSvg" viewBox="0 0 760 360" role="img" aria-label="Emily's interactive marked road atlas"></svg></div>
+  <div class="atlasToolbar"><button id="atlasReplayBtn" type="button">Replay Journey So Far</button><span class="atlasTapHint">Tap a town pin or route-list stop to open its memories.</span></div>
+  <div id="atlasStopDetails" class="atlasMemoryPanel" aria-live="polite"></div>
   <div id="atlasRouteList" class="atlasRouteList"></div>
   <button id="closeAtlas" class="light">Fold the Atlas</button>
 </div></div>
@@ -310,7 +321,7 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 <script>
 (() => {
 "use strict";
-const SAVE="cody_to_coast_v095",LEGACY_SAVES=["cody_to_coast_v094","cody_to_coast_v093","cody_to_coast_v092","cody_to_coast_v091","cody_to_coast_v09","cody_to_coast_v08","cody_to_coast_v07","cody_to_coast_v06","cody_to_coast_v05","cody_to_coast_v04","cody_to_coast_v03","cody_to_coast_v02","cody_to_coast_v01"];
+const BUILD_VERSION="0.96",SAVE="cody_to_coast_v096",LEGACY_SAVES=["cody_to_coast_v095","cody_to_coast_v094","cody_to_coast_v093","cody_to_coast_v092","cody_to_coast_v091","cody_to_coast_v09","cody_to_coast_v08","cody_to_coast_v07","cody_to_coast_v06","cody_to_coast_v05","cody_to_coast_v04","cody_to_coast_v03","cody_to_coast_v02","cody_to_coast_v01"];
 const route=[
  {name:"Cody, Wyoming",miles:0,blurb:"The trip begins beneath the wide Wyoming sky."},
  {name:"Bridger, Montana",miles:76,blurb:"A small Montana stop with fuel, food, and room to stretch."},
@@ -341,6 +352,27 @@ const routeMapControls=[
  [{x:348,y:119},{x:329,y:145}],[{x:288,y:181},{x:269,y:190}],[{x:223,y:187},{x:202,y:178}],
  [{x:156,y:150},{x:133,y:119}],[{x:110,y:112},{x:106,y:121}],[{x:96,y:144},{x:91,y:159}],
  [{x:69,y:194},{x:59,y:220}]
+];
+const atlasPhotoMap={
+ 0:["leavingCody","bigSky"],1:["bigSky"],2:["coffeeStop"],3:["giantTrout"],4:["weirdBillboard"],
+ 5:["birdsRoad"],6:["coffeeStop"],7:["museumSign"],8:["giantTrout"],9:["museumSign"],
+ 10:["firstOcean","seagullLunch"],11:["haystackRock"],12:["fruitStand"],13:["firstOcean","haystackRock"]
+};
+const atlasNoteTemplates=[
+ "Packed the car in Cody. The coast still feels impossibly far away.",
+ "A small Montana stop and our first real chance to stretch.",
+ "Laurel was practical: fuel, food, and another mark on the route.",
+ "Bozeman brought mountain views and far too many tempting places to stop.",
+ "Missoula felt like a reward after a long western stretch.",
+ "The lake at Coeur d’Alene nearly convinced everyone to stay.",
+ "Spokane meant traffic, supplies, and coffee everywhere.",
+ "Kennewick was dry, broad, and useful for regrouping.",
+ "The Columbia River made Oregon finally feel real.",
+ "Portland required maps, patience, and several opinions about lanes.",
+ "We smelled the Pacific before we properly saw it.",
+ "Haystack Rock deserved more photographs than anyone admitted taking.",
+ "Garibaldi had boats, harbor air, and talk of the coastal train.",
+ "Newport at last. The route is finished, but the memories are not."
 ];
 const peopleBase=[
  {name:"Henry",health:100,condition:"Ready for the road",sick:0,trait:"Main driver • practical",role:"Driver"},
@@ -655,7 +687,7 @@ function fresh(){
   inventory:{water:4,coffee:1,pate:1,roadkill:0,crackers:2,sandwich:2,trailmix:1,ginger:1,handcream:0,wiper:0,tire:0,glass:0},
   fatigueShield:0,fatigueIncidents:0,swerves:0,events:0,caught:0,foodClock:0,waterClock:0,lastTownAction:-1,lastMiniAt:-1,
   lastEncounter:"",encounterCooldown:0,decisions:0,repairs:0,driverChanges:0,driversUsed:["Henry"],
-  spots:{},photoAlbum:{},achievements:[],visitedSpecial:[],log:[]
+  spots:{},photoAlbum:{},atlasNotes:{},atlasSouvenirs:{},atlasPhotos:{},achievements:[],visitedSpecial:[],log:[]
  };
 }
 function migrate(s){
@@ -671,6 +703,9 @@ function migrate(s){
  out.needs={...b.needs,...((s&&s.needs)||{})};
  out.spots=out.spots&&typeof out.spots==="object"?out.spots:{};
  out.photoAlbum=out.photoAlbum&&typeof out.photoAlbum==="object"?out.photoAlbum:{};
+ out.atlasNotes=out.atlasNotes&&typeof out.atlasNotes==="object"?out.atlasNotes:{};
+ out.atlasSouvenirs=out.atlasSouvenirs&&typeof out.atlasSouvenirs==="object"?out.atlasSouvenirs:{};
+ out.atlasPhotos=out.atlasPhotos&&typeof out.atlasPhotos==="object"?out.atlasPhotos:{};
  if(!paces[out.pace])out.pace="steady";
  if(!drivers[out.driver])out.driver="Henry";
  if(!roadStyles[out.roadStyle])out.roadStyle="direct";
@@ -703,6 +738,23 @@ function markSpot(key){
  state.spots[key]=true;
  return true;
 }
+function recordAtlasNote(index=state.routeIndex){
+ if(state.atlasNotes[index])return state.atlasNotes[index];
+ let extra="";
+ if(state.fatigueIncidents>0&&Math.random()<.42)extra=" Frank was especially firm about taking proper rest breaks.";
+ else if(state.morale>=85)extra=" Everyone was in unusually good spirits.";
+ else if(state.morale<45)extra=" We were tired enough that even the scenery had to work for our attention.";
+ else if(state.weatherKey==="rain"||state.weatherKey==="storm")extra=" Rain marked this part of the atlas with a few wrinkled drops.";
+ const note={text:(atlasNoteTemplates[index]||route[index]?.blurb||"Another mark westward.")+extra,time:clockText(state.hours),driver:state.driver,weather:state.weatherName};
+ state.atlasNotes[index]=note;return note;
+}
+function ensureAtlasNotes(){for(let i=0;i<=state.routeIndex;i++)recordAtlasNote(i)}
+function recordSouvenir(label,index=state.routeIndex,count=1){
+ state.souvenirs+=count;
+ if(!Array.isArray(state.atlasSouvenirs[index]))state.atlasSouvenirs[index]=[];
+ for(let i=0;i<count;i++)state.atlasSouvenirs[index].push(label);
+}
+
 function unlock(key){
  if(state.achievements.includes(key))return;
  state.achievements.push(key);
@@ -715,6 +767,8 @@ function collectAlbum(key,silent=false){
  const item=photoAlbumDefinitions.find(p=>p.key===key);
  if(!item)return false;
  state.photoAlbum[key]=true;
+ if(!Array.isArray(state.atlasPhotos?.[state.routeIndex])){state.atlasPhotos=state.atlasPhotos&&typeof state.atlasPhotos==="object"?state.atlasPhotos:{};state.atlasPhotos[state.routeIndex]=[]}
+ if(!state.atlasPhotos[state.routeIndex].includes(key))state.atlasPhotos[state.routeIndex].push(key);
  addLog(`Photo album updated: ${item.name}.`);
  if(!silent)notice(`Photo album updated: ${item.name}.`,"good");
  return true;
@@ -879,11 +933,17 @@ function landmarkIcons(large){
  ];
  return icons.map(([x,y,icon,label])=>`<g opacity=".82"><text x="${x}" y="${y}" text-anchor="middle" font-size="17">${icon}</text><text class="atlasTownLabel" x="${x}" y="${y+12}" text-anchor="middle">${label}</text></g>`).join('');
 }
+let atlasSelectedStop=0,atlasReplayTimer=0,atlasReplayActive=false;
 function renderAtlasMap(id,large){
  const svg=$(id);if(!svg)return;
  const pos=mapPosition(),h=large?360:260,fullPath=routePathTo();
  const donePath=routePathTo(pos.index,pos.fraction);
- const labels=large?route.map((stop,i)=>{const p=routeMapPoints[i],dy=[-14,19,-12,-14,20,-14,21,21,22,-15,-13,21,21,21][i],short=stop.name.split(',')[0];return `<circle class="atlasTown ${i<state.routeIndex?'done':i===state.routeIndex?'current':''}" cx="${p.x}" cy="${p.y}" r="${i===state.routeIndex?7:5}"/><text class="atlasTownLabel" x="${p.x}" y="${p.y+dy}" text-anchor="middle">${short}</text>`;}).join(''):routeMapPoints.map((p,i)=>`<circle class="atlasTown ${i<state.routeIndex?'done':i===state.routeIndex?'current':''}" cx="${p.x}" cy="${p.y}" r="${i===state.routeIndex?6:4}"/>`).join('');
+ const labels=large?route.map((stop,i)=>{
+  const p=routeMapPoints[i],dy=[-14,19,-12,-14,20,-14,21,21,22,-15,-13,21,21,21][i],short=stop.name.split(',')[0];
+  const memory=(state.atlasNotes[i]||(state.atlasSouvenirs[i]||[]).length||(atlasPhotoMap[i]||[]).some(k=>state.photoAlbum[k]))?'★':'';
+  return `<g class="atlasTownPin ${i>state.routeIndex?'locked':''}" data-stop="${i}" tabindex="0" role="button" aria-label="Open memories for ${stop.name}"><circle class="atlasHit" cx="${p.x}" cy="${p.y}" r="17"/><circle class="atlasTown ${i<state.routeIndex?'done':i===state.routeIndex?'current':''}" cx="${p.x}" cy="${p.y}" r="${i===state.routeIndex?7:5}"/><text class="atlasTownLabel" x="${p.x}" y="${p.y+dy}" text-anchor="middle">${short}</text>${memory?`<text class="atlasMemoryMark" x="${p.x+9}" y="${p.y-8}">${memory}</text>`:''}</g>`;
+ }).join(''):routeMapPoints.map((p,i)=>`<circle class="atlasTown ${i<state.routeIndex?'done':i===state.routeIndex?'current':''}" cx="${p.x}" cy="${p.y}" r="${i===state.routeIndex?6:4}"/>`).join('');
+ const replayCar=large&&atlasReplayActive&&state.miles>0?`<g class="atlasReplayCar" transform="translate(-14 -15)"><text x="0" y="22">🚙</text><animateMotion dur="4.8s" fill="freeze" rotate="auto" path="${donePath}"/></g>`:`<g class="atlasCarMarker" transform="translate(${pos.x} ${pos.y}) rotate(${pos.angle}) translate(-14 -15)"><text x="0" y="22">🚙</text></g>`;
  svg.setAttribute('viewBox',`0 0 760 ${h}`);
  svg.innerHTML=`<defs><filter id="paperNoise"><feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="2" seed="8" result="noise"/><feColorMatrix in="noise" type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .055"/></feComponentTransfer></filter></defs>
  <rect class="atlasPaper" width="760" height="${h}"/><rect width="760" height="${h}" filter="url(#paperNoise)" opacity=".55"/>
@@ -899,21 +959,46 @@ function renderAtlasMap(id,large){
  <path class="atlasMountains" d="M166 206l17-24 15 21 20-31 19 28 17-20 17 24M387 146l17-25 16 22 20-30 18 27 19-17 18 26M536 108l15-20 15 19 17-25 16 22"/>
  <g>${Array.from({length:8},(_,i)=>`<path class="atlasForest" d="M${135+i*12} ${145+(i%2)*8}l6-13 6 13h-4l5 9h-13l5-9z"/>`).join('')}</g>
  <text class="atlasStateLabel" x="116" y="88">OREGON</text><text class="atlasStateLabel" x="260" y="74">WASHINGTON</text><text class="atlasStateLabel" x="423" y="83">IDAHO</text><text class="atlasStateLabel" x="606" y="86">MONTANA</text><text class="atlasStateLabel" x="625" y="181">WYOMING</text>
- ${large?`<text class="atlasMapTitle" x="28" y="31">EMILY'S WESTBOUND ROAD ATLAS</text><text class="atlasMapSubtitle" x="30" y="46">CODY, WYOMING → NEWPORT, OREGON</text>`:''}
+ ${large?`<text class="atlasMapTitle" x="28" y="31">EMILY'S LIVING ROAD ATLAS</text><text class="atlasMapSubtitle" x="30" y="46">TAP A TOWN TO REOPEN THE TRIP'S MEMORIES</text>`:''}
  <path class="atlasRouteShadow" d="${fullPath}"/><path class="atlasRoute" d="${fullPath}"/><path class="atlasRouteDone" d="${donePath}"/>
  ${landmarkIcons(large)}${labels}
  <text class="atlasEndpoint" x="704" y="235" text-anchor="middle">CODY</text><text class="atlasEndpoint" x="52" y="252" text-anchor="middle">NEWPORT</text>
  <text class="atlasCompass" x="719" y="28" text-anchor="middle">N</text><path d="M719 34l-7 20 7-5 7 5z" fill="#513e26"/>
- <g class="atlasCarMarker" transform="translate(${pos.x} ${pos.y}) rotate(${pos.angle}) translate(-14 -15)"><text x="0" y="22">🚙</text></g>
- <text class="atlasTownLabel" x="88" y="24">PACIFIC OCEAN</text>`;
+ ${replayCar}<text class="atlasTownLabel" x="88" y="24">PACIFIC OCEAN</text>`;
+ if(large)svg.querySelectorAll('.atlasTownPin').forEach(pin=>{
+  const choose=()=>selectAtlasStop(Number(pin.dataset.stop));pin.addEventListener('click',choose);pin.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose()}});
+ });
+}
+function atlasPhotosFor(index){
+ const linked=new Set([...(atlasPhotoMap[index]||[]),...((state.atlasPhotos&&state.atlasPhotos[index])||[])]);
+ return photoAlbumDefinitions.filter(p=>linked.has(p.key)&&state.photoAlbum[p.key]);
+}
+function selectAtlasStop(index){atlasSelectedStop=clamp(index,0,route.length-1);renderAtlasStopDetails();document.querySelectorAll('.atlasStop').forEach(b=>b.classList.toggle('selected',Number(b.dataset.stop)===atlasSelectedStop))}
+function renderAtlasStopDetails(){
+ const i=atlasSelectedStop,stop=route[i],reached=i<=state.routeIndex,status=i<state.routeIndex?'Visited':i===state.routeIndex?'Current stop':'Still ahead';
+ const photos=reached?atlasPhotosFor(i):[],souvenirs=reached?(state.atlasSouvenirs[i]||[]):[],note=reached?recordAtlasNote(i):null;
+ const related=state.log.filter(entry=>entry.text.includes(stop.name)||entry.text.includes(stop.name.split(',')[0])).slice(0,3);
+ $("atlasStopDetails").innerHTML=`<div class="atlasMemoryHead"><div><h3>${stop.name}</h3><div class="small">${stop.blurb}</div></div><span class="atlasStatusPill ${reached?'':'ahead'}">${status}</span></div>
+ <div class="atlasMemoryGrid"><div class="atlasMemoryBox atlasNotePaper"><h4>Emily's note</h4>${reached?`“${note.text}”<div class="small">${note.time} · ${note.weather} · ${note.driver} driving</div>`:`<span class="atlasLockedMemory">This page stays blank until the car reaches the stop.</span>`}</div>
+ <div class="atlasMemoryBox"><h4>Photographs</h4>${reached?(photos.length?`<div class="atlasPhotoChips">${photos.map(p=>`<span class="atlasPhotoChip">📷 ${p.name}</span>`).join('')}</div>`:`<span class="small">No album card has been collected here yet.</span>`):`<span class="atlasLockedMemory">Photographs will appear after visiting.</span>`}</div>
+ <div class="atlasMemoryBox"><h4>Souvenirs</h4>${reached?(souvenirs.length?souvenirs.map(s=>`<div>🎁 ${s}</div>`).join(''):`<span class="small">No location-tagged souvenir yet.</span>`):`<span class="atlasLockedMemory">Souvenirs will appear after visiting.</span>`}</div>
+ <div class="atlasMemoryBox"><h4>Road journal</h4>${reached?(related.length?related.map(e=>`<div class="small"><b>${e.t}</b> — ${e.text}</div>`).join(''):`<span class="small">${i===state.routeIndex?'The car is here now.':'The arrival is marked on Emily’s map.'}</span>`):`<span class="atlasLockedMemory">Journal memories are still ahead.</span>`}</div></div>`;
+}
+function replayAtlas(){
+ if(state.miles<=0||atlasReplayActive)return;
+ atlasReplayActive=true;$("atlasReplayBtn").disabled=true;$("atlasReplayBtn").textContent="Replaying…";renderAtlasMap("atlasLargeSvg",true);
+ clearTimeout(atlasReplayTimer);atlasReplayTimer=setTimeout(()=>{atlasReplayActive=false;$("atlasReplayBtn").disabled=false;$("atlasReplayBtn").textContent="Replay Journey So Far";renderAtlasMap("atlasLargeSvg",true)},5000);
 }
 function renderAtlas(){
+ ensureAtlasNotes();atlasSelectedStop=Math.min(atlasSelectedStop,state.routeIndex);
  const list=$("atlasRouteList");
  $("atlasModalSummary").textContent=state.routeIndex>=route.length-1?"Newport reached — the route is complete.":`${current().name} → ${next().name} • ${Math.round(distanceToNext())} miles remaining`;
- renderAtlasMap("atlasLargeSvg",true);
- list.innerHTML=route.map((stop,i)=>`<div class="atlasStop ${i<state.routeIndex?"done":i===state.routeIndex?"current":""}"><div class="atlasDot">${i<state.routeIndex?"✓":i===state.routeIndex?"🚙":"○"}</div><div><b>${stop.name}</b><div class="small">${i===0?"Starting point":stop.miles+" miles from previous stop"}</div></div><div>${i<state.routeIndex?"Visited":i===state.routeIndex?"Here":"Ahead"}</div></div>`).join("");
+ renderAtlasMap("atlasLargeSvg",true);renderAtlasStopDetails();
+ list.innerHTML=route.map((stop,i)=>`<button type="button" data-stop="${i}" class="atlasStop ${i<state.routeIndex?"done":i===state.routeIndex?"current":"ahead"} ${i===atlasSelectedStop?'selected':''}"><div class="atlasDot">${i<state.routeIndex?"✓":i===state.routeIndex?"🚙":"○"}</div><div><b>${stop.name}</b><div class="small">${i===0?"Starting point":stop.miles+" miles from previous stop"}</div></div><div>${i<state.routeIndex?"Visited":i===state.routeIndex?"Here":"Ahead"}</div></button>`).join("");
+ list.querySelectorAll('.atlasStop').forEach(button=>button.addEventListener('click',()=>selectAtlasStop(Number(button.dataset.stop))));
+ $("atlasReplayBtn").disabled=state.miles<=0;$("atlasReplayBtn").textContent=state.miles<=0?"Drive First to Replay":"Replay Journey So Far";
 }
-function openAtlas(){renderAtlas();$("atlasModal").classList.add("show");}
+function openAtlas(){atlasSelectedStop=state.routeIndex;renderAtlas();$("atlasModal").classList.add("show");}
 function navigatorChatter(messages){
  const remaining=Math.round(distanceToNext());
  const lines=remaining<18?[`Emily checks the atlas: “Our turn is coming up.”`]:remaining<45?[`Emily says, “The next town is only ${remaining} miles away.”`]:[`Emily traces the route with her finger: “We’re making good progress.”`];
@@ -1049,13 +1134,13 @@ function arrivalBonus(){
  const name=current().name;
  if(name.startsWith("Seaside")){
   collectAlbum("firstOcean",true);
-  state.morale=clamp(state.morale+14,0,100);state.souvenirs++;state.photos+=3;
+  state.morale=clamp(state.morale+14,0,100);recordSouvenir("Pacific Coast keepsake");state.photos+=3;
   addLog("The group reaches Seaside and sees the Pacific Ocean. Morale rises and a coastal souvenir is collected.");
   return "The Pacific is finally visible. Everyone’s morale rises.";
  }
  if(name.startsWith("Cannon Beach")){
   collectAlbum("haystackRock",true);
-  state.morale=clamp(state.morale+9,0,100);state.souvenirs++;state.photos+=3;
+  state.morale=clamp(state.morale+9,0,100);recordSouvenir("Haystack Rock keepsake");state.photos+=3;
   addLog("A stop near Haystack Rock adds another souvenir and several photographs.");
   return "Haystack Rock makes the short drive worthwhile.";
  }
@@ -1327,6 +1412,7 @@ function drive(){
  }
  if(state.into>=next().miles-.01){
   state.routeIndex++;state.into=0;state.hours+=.25;
+  recordAtlasNote(state.routeIndex);
   addLog(`Arrived in ${current().name}.`);
   messages.push(`Arrived in ${current().name}. Gas and town activities are available.`);
   const bonus=arrivalBonus();if(bonus)messages.push(bonus);
@@ -1454,7 +1540,7 @@ function doTownAction(key){
   text=`A diner meal in ${current().name} improved health, morale, and driver energy.`;
   if(Math.random()<.05){const p=person();p.sick=2;p.health=clamp(p.health-10,20,100);p.condition="Food poisoning";text+=` Unfortunately, ${p.name} later felt sick.`}
  }else if(key==="explore"){
-  state.hours+=2;state.morale=clamp(state.morale+12,0,100);state.souvenirs++;state.photos+=2;collectAlbum("giantTrout",true);
+  state.hours+=2;state.morale=clamp(state.morale+12,0,100);recordSouvenir(`${current().name.split(",")[0]} keepsake`);state.photos+=2;collectAlbum("giantTrout",true);
   if(Math.random()<.3){const found=5+Math.floor(Math.random()*8);state.cash+=found;text=`Exploring ${current().name} produced a souvenir and ${money(found)} found in an old coat pocket.`}
   else text=`Exploring ${current().name} produced a souvenir and better morale.`;
  }else{
@@ -1495,7 +1581,7 @@ const encounters=[
  {
   key:"museum",title:"Unnecessary Roadside Attraction",text:"A sign advertises a tiny museum devoted to a very large object.",
   options:[
-   {label:"Visit the museum — $4",enabled:()=>state.cash>=4,apply(){state.cash-=4;state.hours+=1.2;state.souvenirs++;state.photos+=3;state.morale=clamp(state.morale+10,0,100);return "The attraction is stranger and better than expected."}},
+   {label:"Visit the museum — $4",enabled:()=>state.cash>=4,apply(){state.cash-=4;state.hours+=1.2;recordSouvenir("Odd museum souvenir");state.photos+=3;state.morale=clamp(state.morale+10,0,100);return "The attraction is stranger and better than expected."}},
    {label:"Photograph the sign",apply(){state.photos++;state.hours+=.1;return "The sign becomes part of the trip journal."}},
    {label:"Decline culture",apply(){return "The giant object remains a mystery."}}
   ]
@@ -1651,7 +1737,7 @@ function endMini(){
  Object.entries(mini.rewards).forEach(([k,q])=>{
   if(k==="gas"){state.fuel=clamp(state.fuel+q*.5,0,16);rewards.push(`${q} small gas can${q===1?"":"s"}`)}
   else if(k==="cash"){state.cash+=q;rewards.push(`${money(q)} in loose change`)}
-  else if(k==="souvenir"){state.souvenirs+=q;state.photos+=q;state.morale=clamp(state.morale+q*3,0,100);rewards.push(`${q} roadside photograph${q===1?"":"s"}`)}
+  else if(k==="souvenir"){recordSouvenir("Roadside photo find",state.routeIndex,q);state.photos+=q;state.morale=clamp(state.morale+q*3,0,100);rewards.push(`${q} roadside photograph${q===1?"":"s"}`)}
   else{state.inventory[k]=(state.inventory[k]||0)+q;rewards.push(`${q} ${invNames[k]||k}`)}
  });
  if(mini.hits)state.tire=clamp(state.tire-mini.hits*3,0,100);
@@ -1661,7 +1747,7 @@ function endMini(){
  $("startMini").disabled=false;$("dragHint").textContent="Drag anywhere on the road to steer";render();drawMini();
 }
 
-$("atlasBtn").onclick=openAtlas;$("closeAtlas").onclick=()=>$("atlasModal").classList.remove("show");
+$("atlasBtn").onclick=openAtlas;$("atlasReplayBtn").onclick=replayAtlas;$("closeAtlas").onclick=()=>{clearTimeout(atlasReplayTimer);atlasReplayActive=false;$("atlasModal").classList.remove("show")};
 $("driveBtn").onclick=drive;$("stationBtn").onclick=openStore;$("townBtn").onclick=openTown;$("useSupplies").onclick=useSupplies;$("albumBtn").onclick=()=>openAlbum(false);
 document.querySelectorAll(".paceBtn").forEach(b=>b.onclick=()=>setPace(b.dataset.pace));
 document.querySelectorAll(".driverBtn").forEach(b=>b.onclick=()=>setDriver(b.dataset.driver));
