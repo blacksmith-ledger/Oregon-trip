@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Cody to the Coast v0.97</title>
+<title>Cody to the Coast v0.98</title>
 <style>
 :root{
   --paper:#fff5d7; --ink:#26353a; --blue:#315f72; --orange:#b65b35;
@@ -81,61 +81,75 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 }
 
 
-/* v0.97 — Living windshield */
-.windshieldPanel{padding:12px;background:linear-gradient(180deg,#e8dfc8,#c6b58d);border-color:#745a38}
+/* v0.98 — Windshield cleanup */
+.windshieldPanel{padding:12px;background:linear-gradient(180deg,#e8dfc8,#cdb68d);border-color:#745a38}
 .windshieldHeading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}
 .windshieldHeading h2{margin:0}.windshieldRegionBadge{padding:5px 10px;border-radius:999px;background:#264b58;color:#fff;font-size:.76rem;font-weight:900;letter-spacing:.03em;text-transform:uppercase}
-.windshieldScene{--skyTop:#77b8df;--skyBottom:#d9eef7;--landFar:#789b74;--landNear:#496b48;position:relative;height:clamp(270px,48vw,410px);overflow:hidden;border:8px solid #20282c;border-bottom-width:16px;border-radius:46px 46px 20px 20px;background:linear-gradient(var(--skyTop),var(--skyBottom) 58%,#c9d5ba 58%);box-shadow:inset 0 0 0 3px #566168,inset 0 0 45px #0007,0 8px 20px #3c2b1d55;isolation:isolate}
-.windshieldScene:before{content:"";position:absolute;inset:0;z-index:40;pointer-events:none;background:linear-gradient(112deg,#fff5 0 8%,transparent 18% 74%,#fff2 88% 100%);mix-blend-mode:screen}
-.wsWorld{position:absolute;inset:0;transform-origin:50% 80%;will-change:transform}
-.wsSky{position:absolute;inset:0;background:linear-gradient(var(--skyTop),var(--skyBottom) 62%,transparent 62%)}
-.wsSun{position:absolute;width:54px;height:54px;border-radius:50%;right:12%;top:13%;background:#ffe389;box-shadow:0 0 28px #ffd35b;transition:.4s}
+.windshieldScene{--skyTop:#77b8df;--skyBottom:#e5f1f8;--landFar:#7f9a78;--landNear:#5b7552;--road:#50555a;--roadEdge:#e4d7b1;position:relative;height:clamp(250px,56vw,380px);overflow:hidden;border:6px solid #20282c;border-bottom-width:14px;border-radius:28px 28px 16px 16px;background:linear-gradient(var(--skyTop),var(--skyBottom) 56%,#c3cfac 56%);box-shadow:inset 0 0 0 2px #566168,inset 0 0 20px rgba(0,0,0,.18),0 8px 18px rgba(60,43,29,.28);isolation:isolate}
+.windshieldScene:before{content:"";position:absolute;inset:0;z-index:40;pointer-events:none;background:linear-gradient(110deg,rgba(255,255,255,.16) 0 8%,transparent 17% 81%,rgba(255,255,255,.08) 93% 100%)}
+.wsWorld{position:absolute;inset:0;transform-origin:50% 78%;will-change:transform}
+.wsSky{position:absolute;inset:0;background:linear-gradient(var(--skyTop),var(--skyBottom) 61%,transparent 61%)}
+.wsSun{position:absolute;width:40px;height:40px;border-radius:50%;right:12%;top:14%;background:#ffe18a;box-shadow:0 0 18px rgba(255,211,91,.45)}
 .wsStars{position:absolute;inset:0;opacity:0;background-image:radial-gradient(circle at 12% 20%,#fff 0 1px,transparent 2px),radial-gradient(circle at 30% 12%,#fff 0 1px,transparent 2px),radial-gradient(circle at 58% 24%,#fff 0 1px,transparent 2px),radial-gradient(circle at 83% 11%,#fff 0 1px,transparent 2px),radial-gradient(circle at 72% 34%,#fff 0 1px,transparent 2px)}
-.time-dawn{--skyTop:#6b78a5;--skyBottom:#f4b58b}.time-sunset{--skyTop:#5a7395;--skyBottom:#f08b62}.time-night{--skyTop:#071a32;--skyBottom:#294c64}.time-night .wsStars{opacity:.9}.time-night .wsSun{width:42px;height:42px;background:#f4f0d1;box-shadow:0 0 17px #d8e3ff;right:16%;top:11%}.time-sunset .wsSun{top:34%;background:#ffbf5d;box-shadow:0 0 36px #ff7d45}.time-dawn .wsSun{top:28%;left:13%;right:auto}
-.wsCloud{position:absolute;width:100px;height:24px;border-radius:999px;background:#fff9;filter:drop-shadow(0 4px 3px #46647733)}
-.wsCloud:before,.wsCloud:after{content:"";position:absolute;border-radius:50%;background:inherit}.wsCloud:before{width:43px;height:43px;left:18px;bottom:0}.wsCloud:after{width:55px;height:55px;right:14px;bottom:0}.wsCloud.c1{left:8%;top:14%;transform:scale(.72)}.wsCloud.c2{right:24%;top:23%;transform:scale(.48);opacity:.7}
-.wsLandFar{position:absolute;left:-4%;right:-4%;bottom:37%;height:33%;background:var(--landFar);clip-path:polygon(0 74%,8% 51%,15% 67%,24% 33%,33% 66%,43% 18%,51% 61%,60% 29%,72% 69%,81% 42%,91% 65%,100% 38%,100% 100%,0 100%)}
-.wsLandNear{position:absolute;left:-5%;right:-5%;bottom:24%;height:27%;background:var(--landNear);clip-path:polygon(0 51%,9% 29%,18% 62%,29% 37%,42% 69%,56% 22%,68% 55%,80% 34%,91% 61%,100% 26%,100% 100%,0 100%)}
-.wsMesa{display:none;position:absolute;bottom:38%;left:4%;width:33%;height:20%;background:#9b6847;clip-path:polygon(9% 100%,19% 35%,70% 35%,79% 0,90% 0,100% 100%)}
-.wsForest{position:absolute;left:-2%;right:-2%;bottom:28%;height:26%;opacity:.9;background:repeating-linear-gradient(72deg,transparent 0 18px,#24472e 19px 31px,transparent 32px 44px);clip-path:polygon(0 42%,5% 7%,10% 47%,15% 2%,21% 46%,27% 9%,33% 51%,39% 0,45% 49%,51% 13%,58% 51%,64% 5%,71% 48%,78% 12%,85% 53%,92% 4%,100% 45%,100% 100%,0 100%)}
-.wsWater{display:none;position:absolute;left:0;right:0;bottom:26%;height:18%;background:linear-gradient(#5b9fb5,#336f8e);clip-path:polygon(0 29%,13% 42%,28% 31%,42% 49%,57% 31%,72% 43%,88% 27%,100% 36%,100% 100%,0 100%)}
-.wsWater:after{content:"";position:absolute;inset:25% 0 0;background:repeating-linear-gradient(0deg,transparent 0 8px,#d8f3f533 9px 11px)}
-.wsSkyline{display:none;position:absolute;left:12%;right:10%;bottom:37%;height:25%;background:linear-gradient(90deg,#44545d 0 8%,transparent 8% 11%,#35464f 11% 18%,transparent 18% 21%,#54636b 21% 31%,transparent 31% 34%,#364851 34% 43%,transparent 43% 47%,#4d5d65 47% 59%,transparent 59% 62%,#30434d 62% 70%,transparent 70% 74%,#52616a 74% 86%,transparent 86%)}
-.wsBridge{display:none;position:absolute;left:13%;right:13%;bottom:39%;height:17%;border-top:7px solid #67777c}.wsBridge:before,.wsBridge:after{content:"";position:absolute;bottom:0;width:9px;height:100%;background:#67777c}.wsBridge:before{left:22%}.wsBridge:after{right:22%}
-.wsLighthouse{display:none;position:absolute;right:13%;bottom:38%;width:18px;height:72px;background:#f5eee0;border:2px solid #833f38;clip-path:polygon(26% 0,74% 0,100% 100%,0 100%);z-index:4}.wsLighthouse:before{content:"";position:absolute;left:-8px;top:-12px;width:30px;height:15px;background:#8f3f35;border-radius:50% 50% 0 0}.wsLighthouse:after{content:"";position:absolute;left:5px;top:22px;width:5px;height:15px;background:#8f3f35;box-shadow:0 28px 0 #8f3f35}
-.region-wyoming{--landFar:#917d5d;--landNear:#657044}.region-wyoming .wsMesa{display:block}.region-wyoming .wsForest{opacity:.35}
-.region-montana{--landFar:#6b8090;--landNear:#365741}.region-montana .wsLandFar{height:42%;clip-path:polygon(0 100%,9% 45%,17% 69%,27% 19%,36% 72%,48% 2%,58% 67%,71% 20%,82% 75%,93% 31%,100% 60%,100% 100%)}
-.region-idaho{--landFar:#6f8b75;--landNear:#2f5940}.region-idaho .wsWater{display:block}
-.region-washington{--landFar:#a48a5e;--landNear:#6d7848}.region-washington .wsMesa{display:block;left:61%;width:30%;transform:scaleX(-1)}.region-washington .wsForest{opacity:.28}
-.region-gorge{--landFar:#6a7f68;--landNear:#31563f}.region-gorge .wsWater,.region-gorge .wsBridge{display:block}.region-gorge .wsLandFar{height:40%}
-.region-portland{--landFar:#74858a;--landNear:#496557}.region-portland .wsSkyline,.region-portland .wsBridge{display:block}.region-portland .wsForest{opacity:.35}
-.region-coast,.region-newport{--landFar:#607c74;--landNear:#244f3c}.region-coast .wsWater,.region-newport .wsWater,.region-newport .wsLighthouse{display:block}.region-coast .wsWater,.region-newport .wsWater{left:46%;bottom:31%;height:22%}.region-newport .wsBridge{display:block;left:40%;right:4%;bottom:44%;transform:rotate(-3deg)}
-.wsRoad{position:absolute;left:15%;right:15%;bottom:-12%;height:65%;background:#4a4f52;clip-path:polygon(44% 0,56% 0,100% 100%,0 100%);filter:drop-shadow(0 -3px 0 #8c887a);transform-origin:50% 100%;transition:transform .4s}
-.curve-left .wsRoad{transform:translateX(-4%) skewX(-5deg)}.curve-right .wsRoad{transform:translateX(4%) skewX(5deg)}
-.wsRoad:before,.wsRoad:after{content:"";position:absolute;top:0;bottom:0;width:7%;background:#e7d9a8}.wsRoad:before{left:4%;clip-path:polygon(80% 0,100% 0,100% 100%,0 100%)}.wsRoad:after{right:4%;clip-path:polygon(0 0,20% 0,100% 100%,0 100%)}
-.wsLane{position:absolute;left:48.7%;top:4%;width:2.6%;height:101%;background:repeating-linear-gradient(to bottom,#f6dd73 0 14px,transparent 14px 32px);transform:perspective(180px) rotateX(12deg);transform-origin:50% 0;background-position-y:0}
-.driving .wsLane{animation:laneRush .38s linear infinite}.driving .wsLandNear,.driving .wsForest{animation:horizonPulse 1.15s ease-in-out infinite}
-@keyframes laneRush{to{background-position-y:64px}}@keyframes horizonPulse{50%{filter:brightness(1.05);transform:scale(1.012)}}
-.wsObject{position:absolute;z-index:6;bottom:31%;width:42px;height:58px;filter:drop-shadow(0 4px 3px #0004);transition:.3s}.wsObject.left{left:7%}.wsObject.right{right:7%}
-.object-tree:before{content:"";position:absolute;left:6px;bottom:8px;width:31px;height:48px;background:#245738;clip-path:polygon(50% 0,78% 38%,65% 38%,91% 73%,64% 73%,77% 100%,23% 100%,36% 73%,9% 73%,35% 38%,22% 38%)}.object-tree:after{content:"";position:absolute;left:19px;bottom:0;width:7px;height:15px;background:#60442e}
-.object-barn{height:38px;bottom:34%;background:#9a3f35;border:3px solid #ead7bd}.object-barn:before{content:"";position:absolute;left:-5px;top:-19px;width:46px;height:24px;background:#633529;clip-path:polygon(50% 0,100% 100%,0 100%)}.object-barn:after{content:"";position:absolute;left:13px;bottom:0;width:13px;height:22px;background:#46291f}
-.object-rock{width:58px;height:30px;bottom:33%;background:#6f675c;border-radius:55% 42% 24% 24%;transform:rotate(-7deg)}
-.object-sign{width:48px;height:30px;bottom:36%;background:#1f6b45;border:3px solid #fff;border-radius:5px}.object-sign:before{content:"";position:absolute;left:19px;top:27px;width:5px;height:31px;background:#777}.object-sign:after{content:"WEST";position:absolute;inset:4px 2px;color:#fff;font-size:9px;font-weight:900;text-align:center;letter-spacing:.06em}
-.object-lighthouse{width:18px;height:65px;right:8%;bottom:34%;background:#f3ead8;border:2px solid #9a423a;clip-path:polygon(25% 0,75% 0,100% 100%,0 100%)}.object-lighthouse:before{content:"";position:absolute;left:-6px;top:-11px;width:27px;height:13px;background:#963f35;border-radius:50% 50% 0 0}
-.wsRoadSign{position:absolute;z-index:9;right:9%;bottom:43%;min-width:112px;padding:7px 9px;background:#1d6d48;color:white;border:3px solid #f7f2dc;border-radius:7px;box-shadow:0 3px 0 #183b2d;text-align:center;font-weight:900;font-size:.73rem;line-height:1.15;transform:rotate(1deg)}.wsRoadSign:after{content:"";position:absolute;left:50%;top:100%;width:7px;height:50px;background:#747b74;transform:translateX(-50%)}
-.wsWeather{position:absolute;inset:0;z-index:22;pointer-events:none;opacity:0}.weather-rain .wsWeather{opacity:.85;background:repeating-linear-gradient(108deg,transparent 0 15px,#d7f3ff99 16px 18px,transparent 19px 32px);animation:rainFall .36s linear infinite}.weather-fog .wsWeather{opacity:.82;background:linear-gradient(#e9f0ed66,#eef3e9e6 45%,#e7ece6ee);filter:blur(2px)}.weather-wind .wsWeather{opacity:.65;background:repeating-linear-gradient(170deg,transparent 0 34px,#e8f3e73d 36px 40px);animation:windSweep .7s linear infinite}.weather-heat .wsWeather{opacity:.3;background:repeating-linear-gradient(90deg,transparent 0 18px,#fff7 20px 23px);filter:blur(4px);animation:heatShimmer 1.1s ease-in-out infinite}
-@keyframes rainFall{to{background-position:-38px 90px}}@keyframes windSweep{to{background-position:100px 10px}}@keyframes heatShimmer{50%{transform:translateX(4px) skewX(-1deg)}}
-.wsWiper{position:absolute;z-index:31;bottom:6%;left:50%;width:43%;height:6px;background:#161b1e;border-radius:99px;transform-origin:3% 50%;transform:rotate(13deg);opacity:.68}.wsWiper.second{left:48%;transform-origin:97% 50%;transform:rotate(167deg)}.weather-rain .wsWiper,.weather-fog .wsWiper{animation:wiperSweep 1.2s ease-in-out infinite}.weather-rain .wsWiper.second,.weather-fog .wsWiper.second{animation-delay:-.58s}@keyframes wiperSweep{0%,100%{transform:rotate(13deg)}50%{transform:rotate(-55deg)}}
-.wsGlassDamage{position:absolute;inset:0;z-index:28;pointer-events:none;opacity:0}.glass-chipped .wsGlassDamage{opacity:.45;background:linear-gradient(52deg,transparent 0 78%,#fff 78.3% 78.8%,transparent 79.2%),linear-gradient(128deg,transparent 0 82%,#fff 82.3% 82.8%,transparent 83.2%)}.glass-cracked .wsGlassDamage,.glass-bad .wsGlassDamage{opacity:.72;background:conic-gradient(from 12deg at 81% 23%,transparent 0 12deg,#fff 13deg 14deg,transparent 15deg 45deg,#fff 46deg 47deg,transparent 48deg 91deg,#fff 92deg 93deg,transparent 94deg)}.glass-bad .wsGlassDamage{filter:drop-shadow(0 0 1px #fff)}
-.wsDirt{position:absolute;inset:0;z-index:27;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 18% 26%,#4a381f88 0 3px,transparent 5px),radial-gradient(ellipse at 72% 18%,#4a381f77 0 4px,transparent 6px),radial-gradient(ellipse at 62% 43%,#4a381f55 0 2px,transparent 4px),radial-gradient(ellipse at 33% 38%,#4a381f55 0 5px,transparent 7px)}.glass-dirty .wsDirt{opacity:.75}
-.wsHood{position:absolute;z-index:33;left:8%;right:8%;bottom:-7%;height:24%;background:linear-gradient(#315f72,#173b50);clip-path:polygon(8% 22%,32% 3%,68% 3%,92% 22%,100% 100%,0 100%);box-shadow:inset 0 7px 0 #ffffff26}
-.wsDash{position:absolute;z-index:35;left:0;right:0;bottom:0;height:13%;background:linear-gradient(#2b3033,#101416);border-top:4px solid #5d666a}.wsMirror{position:absolute;z-index:35;left:42%;top:0;width:16%;height:9%;background:#20272b;border:4px solid #121719;border-radius:0 0 16px 16px;box-shadow:inset 0 0 0 2px #6c777b}
-.wsDriverBadge{position:absolute;z-index:36;left:17px;bottom:11px;padding:6px 9px;background:#111b;color:#fff;border:1px solid #ffffff55;border-radius:7px;font-size:.72rem;font-weight:900}.wsFatigue{position:absolute;z-index:36;right:17px;bottom:11px;padding:6px 9px;background:#142d25dd;color:#e7fff1;border:1px solid #80c69a;border-radius:7px;font-size:.72rem;font-weight:900}.fatigue-warning .wsFatigue{background:#784d14;color:#fff3cf;border-color:#ffd47c;animation:fatiguePulse 1.1s infinite}.fatigue-danger .wsFatigue{background:#7f2822;color:white;border-color:#ff9b8d;animation:fatiguePulse .55s infinite}@keyframes fatiguePulse{50%{transform:scale(1.04);box-shadow:0 0 14px #ffbb55aa}}
-.wsIncident{position:absolute;z-index:50;left:50%;top:12%;width:min(88%,620px);transform:translate(-50%,-140%);padding:12px 14px;background:#7e241eea;color:#fff;border:3px solid #ffd4c9;border-radius:12px;box-shadow:0 6px 18px #0008;text-align:center;font-weight:900;line-height:1.3;transition:transform .28s ease,opacity .2s;opacity:0;visibility:hidden}.wsIncident.show{transform:translate(-50%,0);opacity:1;visibility:visible}
-.windshieldScene.swerve-left .wsWorld{animation:swerveLeft .8s ease-in-out}.windshieldScene.swerve-right .wsWorld{animation:swerveRight .8s ease-in-out}.windshieldScene.rumble .wsWorld{animation:rumble .55s linear}.windshieldScene.impact .wsWorld{animation:impact .72s ease-in-out}@keyframes swerveLeft{35%{transform:translateX(-8%) rotate(-2deg)}70%{transform:translateX(5%) rotate(1deg)}}@keyframes swerveRight{35%{transform:translateX(8%) rotate(2deg)}70%{transform:translateX(-5%) rotate(-1deg)}}@keyframes rumble{20%,60%{transform:translate(5px,3px)}40%,80%{transform:translate(-6px,-2px)}}@keyframes impact{25%{transform:translateX(8%) rotate(3deg) scale(1.015)}35%{transform:translateX(-3%) rotate(-1deg)}55%{transform:translate(4px,2px)}}
+.time-dawn{--skyTop:#7a88b8;--skyBottom:#f4c1a0}.time-sunset{--skyTop:#607999;--skyBottom:#f4a073}.time-night{--skyTop:#0b2038;--skyBottom:#32556b}
+.time-night .wsStars{opacity:.85}.time-night .wsSun{width:26px;height:26px;background:#f3f0d3;box-shadow:0 0 9px rgba(216,227,255,.35);right:15%;top:11%}.time-sunset .wsSun{top:28%;background:#ffc36a;box-shadow:0 0 20px rgba(255,125,69,.38)}.time-dawn .wsSun{left:11%;right:auto;top:24%}
+.wsCloud{position:absolute;width:88px;height:22px;border-radius:999px;background:rgba(255,255,255,.72);filter:drop-shadow(0 3px 2px rgba(70,100,119,.15))}
+.wsCloud:before,.wsCloud:after{content:"";position:absolute;border-radius:50%;background:inherit}.wsCloud:before{width:36px;height:36px;left:15px;bottom:0}.wsCloud:after{width:42px;height:42px;right:10px;bottom:0}.wsCloud.c1{left:8%;top:15%;transform:scale(.72)}.wsCloud.c2{right:24%;top:22%;transform:scale(.5);opacity:.7}
+.driving .wsCloud.c1{animation:cloudDriftA 16s linear infinite}.driving .wsCloud.c2{animation:cloudDriftB 22s linear infinite}
+@keyframes cloudDriftA{0%{transform:translateX(0) scale(.72)}50%{transform:translateX(10px) scale(.72)}100%{transform:translateX(0) scale(.72)}}
+@keyframes cloudDriftB{0%{transform:translateX(0) scale(.5)}50%{transform:translateX(-12px) scale(.5)}100%{transform:translateX(0) scale(.5)}}
+.wsLandFar{position:absolute;left:-4%;right:-4%;bottom:38%;height:26%;background:var(--landFar);clip-path:polygon(0 72%,12% 54%,22% 60%,34% 35%,45% 56%,56% 28%,67% 58%,79% 40%,90% 55%,100% 42%,100% 100%,0 100%);opacity:.92}
+.wsLandNear{position:absolute;left:-6%;right:-6%;bottom:27%;height:18%;background:var(--landNear);clip-path:polygon(0 58%,10% 43%,21% 53%,34% 35%,48% 49%,60% 31%,73% 50%,86% 38%,100% 54%,100% 100%,0 100%)}
+.wsMesa{display:none;position:absolute;bottom:39%;left:5%;width:28%;height:16%;background:#a36d4b;clip-path:polygon(10% 100%,18% 38%,74% 38%,82% 0,92% 0,100% 100%);opacity:.95}
+.wsForest{position:absolute;left:0;right:0;bottom:28%;height:15%;opacity:.72;background:repeating-linear-gradient(90deg,transparent 0 18px,#2a5338 18px 22px,transparent 22px 38px);clip-path:polygon(0 64%,4% 24%,8% 60%,12% 20%,17% 62%,22% 26%,27% 65%,33% 21%,39% 66%,46% 26%,53% 66%,61% 18%,69% 67%,77% 24%,85% 66%,92% 22%,100% 62%,100% 100%,0 100%)}
+.wsWater{display:none;position:absolute;left:0;right:0;bottom:28%;height:14%;background:linear-gradient(#7ab1c0,#4f87a1);clip-path:polygon(0 32%,15% 43%,31% 34%,45% 47%,61% 34%,76% 44%,90% 31%,100% 38%,100% 100%,0 100%)}
+.wsWater:after{content:"";position:absolute;left:0;right:0;top:32%;height:30%;background:repeating-linear-gradient(0deg,transparent 0 6px,rgba(216,243,245,.25) 7px 8px,transparent 9px 14px)}
+.wsSkyline{display:none;position:absolute;left:16%;right:16%;bottom:39%;height:17%;background:linear-gradient(90deg,#44545d 0 10%,transparent 10% 13%,#35464f 13% 24%,transparent 24% 28%,#54636b 28% 39%,transparent 39% 43%,#364851 43% 56%,transparent 56% 60%,#4d5d65 60% 74%,transparent 74% 78%,#30434d 78% 90%,transparent 90%)}
+.wsBridge{display:none;position:absolute;left:14%;right:14%;bottom:39%;height:13%;border-top:5px solid #6a7a81}.wsBridge:before,.wsBridge:after{content:"";position:absolute;bottom:0;width:7px;height:100%;background:#6a7a81}.wsBridge:before{left:26%}.wsBridge:after{right:26%}
+.wsLighthouse{display:none;position:absolute;right:13%;bottom:38%;width:14px;height:56px;background:#f5eee0;border:2px solid #833f38;clip-path:polygon(26% 0,74% 0,100% 100%,0 100%);z-index:4}.wsLighthouse:before{content:"";position:absolute;left:-7px;top:-10px;width:28px;height:13px;background:#8f3f35;border-radius:50% 50% 0 0}.wsLighthouse:after{content:"";position:absolute;left:4px;top:18px;width:4px;height:12px;background:#8f3f35;box-shadow:0 22px 0 #8f3f35}
+.region-wyoming{--landFar:#a59473;--landNear:#8b885a}.region-wyoming .wsMesa{display:block}.region-wyoming .wsForest{opacity:.22}.region-wyoming .wsRoad{clip-path:polygon(45% 0,55% 0,100% 100%,0 100%)}
+.region-montana{--landFar:#7d8d95;--landNear:#4e6a56}.region-montana .wsLandFar{height:30%;clip-path:polygon(0 100%,8% 56%,17% 70%,27% 33%,37% 71%,48% 15%,58% 63%,70% 28%,82% 72%,92% 38%,100% 58%,100% 100%)}
+.region-idaho{--landFar:#8fb08c;--landNear:#5f7f58}.region-idaho .wsWater{display:block;left:3%;right:52%;bottom:31%;height:9%}.region-idaho .wsForest{opacity:.5}
+.region-washington{--landFar:#b09b71;--landNear:#7c7d55}.region-washington .wsMesa{display:block;left:65%;width:24%;transform:scaleX(-1)}.region-washington .wsForest{opacity:.26}
+.region-gorge{--landFar:#7e8e79;--landNear:#425f49}.region-gorge .wsWater,.region-gorge .wsBridge{display:block}.region-gorge .wsWater{left:0;right:40%;bottom:29%;height:12%}.region-gorge .wsLandFar{height:31%}
+.region-portland{--landFar:#879396;--landNear:#5f7266}.region-portland .wsSkyline,.region-portland .wsBridge{display:block}.region-portland .wsForest{opacity:.3}
+.region-coast,.region-newport{--landFar:#748c84;--landNear:#325645}.region-coast .wsWater,.region-newport .wsWater,.region-newport .wsLighthouse{display:block}.region-coast .wsWater,.region-newport .wsWater{left:48%;right:0;bottom:30%;height:16%}.region-newport .wsBridge{display:block;left:44%;right:4%;bottom:43%;transform:rotate(-2deg)}
+.wsRoad{position:absolute;left:16%;right:16%;bottom:-10%;height:62%;background:linear-gradient(#575c61,#474b50);clip-path:polygon(44% 0,56% 0,100% 100%,0 100%);transform-origin:50% 100%;transition:transform .3s ease}
+.curve-left .wsRoad{transform:translateX(-3%) skewX(-4deg)}.curve-right .wsRoad{transform:translateX(3%) skewX(4deg)}
+.wsRoad:before,.wsRoad:after{content:"";position:absolute;top:0;bottom:0;width:7%;background:var(--roadEdge)}.wsRoad:before{left:4%;clip-path:polygon(80% 0,100% 0,100% 100%,0 100%)}.wsRoad:after{right:4%;clip-path:polygon(0 0,20% 0,100% 100%,0 100%)}
+.wsLane{position:absolute;left:49.1%;top:5%;width:1.8%;height:100%;background:repeating-linear-gradient(to bottom,#f5d86b 0 12px,transparent 12px 29px);transform-origin:50% 0}
+.driving .wsLane{animation:laneScroll .52s linear infinite}@keyframes laneScroll{to{background-position-y:58px}}
+.wsObject{position:absolute;z-index:6;bottom:31%;width:36px;height:48px;filter:drop-shadow(0 3px 2px rgba(0,0,0,.22));transition:.25s}.wsObject.left{left:7%}.wsObject.right{right:7%}
+.driving .wsObject.left{animation:objectDriftLeft 1.5s linear infinite}.driving .wsObject.right{animation:objectDriftRight 1.5s linear infinite}
+@keyframes objectDriftLeft{0%{transform:translateX(0)}100%{transform:translateX(-10px)}}@keyframes objectDriftRight{0%{transform:translateX(0)}100%{transform:translateX(10px)}}
+.object-tree:before{content:"";position:absolute;left:6px;bottom:8px;width:26px;height:40px;background:#245738;clip-path:polygon(50% 0,78% 38%,65% 38%,91% 73%,64% 73%,77% 100%,23% 100%,36% 73%,9% 73%,35% 38%,22% 38%)}.object-tree:after{content:"";position:absolute;left:17px;bottom:0;width:6px;height:14px;background:#60442e}
+.object-barn{height:30px;bottom:34%;background:#a04339;border:2px solid #ead7bd}.object-barn:before{content:"";position:absolute;left:-4px;top:-15px;width:42px;height:19px;background:#633529;clip-path:polygon(50% 0,100% 100%,0 100%)}.object-barn:after{content:"";position:absolute;left:12px;bottom:0;width:10px;height:17px;background:#46291f}
+.object-rock{width:50px;height:24px;bottom:33%;background:#6f675c;border-radius:55% 42% 24% 24%;transform:rotate(-6deg)}
+.object-sign{width:42px;height:24px;bottom:36%;background:#2b7650;border:2px solid #fff;border-radius:4px}.object-sign:before{content:"";position:absolute;left:17px;top:23px;width:4px;height:25px;background:#777}.object-sign:after{content:"WEST";position:absolute;inset:3px 2px;color:#fff;font-size:8px;font-weight:900;text-align:center;letter-spacing:.06em}
+.object-lighthouse{width:15px;height:50px;right:8%;bottom:34%;background:#f3ead8;border:2px solid #9a423a;clip-path:polygon(25% 0,75% 0,100% 100%,0 100%)}.object-lighthouse:before{content:"";position:absolute;left:-6px;top:-10px;width:24px;height:12px;background:#963f35;border-radius:50% 50% 0 0}
+.wsRoadSign{position:absolute;z-index:9;right:8%;bottom:43%;min-width:104px;padding:7px 9px;background:#1d6d48;color:#fff;border:2px solid #f7f2dc;border-radius:7px;box-shadow:0 2px 0 #183b2d;text-align:center;font-weight:900;font-size:.72rem;line-height:1.15}.wsRoadSign:after{content:"";position:absolute;left:50%;top:100%;width:5px;height:44px;background:#747b74;transform:translateX(-50%)}
+.wsWeather{position:absolute;inset:0;z-index:22;pointer-events:none;opacity:0}.wsWeather:before,.wsWeather:after{content:"";position:absolute;inset:0;pointer-events:none}
+.weather-rain .wsWeather{opacity:1}.weather-rain .wsWeather:before{background:repeating-linear-gradient(105deg,transparent 0 20px,rgba(217,243,255,.8) 21px 23px,transparent 24px 54px);animation:rainDrift .65s linear infinite}.weather-rain .wsWeather:after{inset:auto 0 0 0;height:38%;background:linear-gradient(180deg,transparent 0 10%,rgba(115,144,162,.16) 58%,rgba(115,144,162,.22) 100%)}
+.weather-fog .wsWeather{opacity:1}.weather-fog .wsWeather:before{background:linear-gradient(180deg,rgba(233,240,237,.12) 0 35%,rgba(239,243,239,.36) 53%,rgba(234,238,234,.68) 100%)}.weather-fog .wsWeather:after{inset:0 -20% 0 auto;width:65%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);animation:fogDrift 9s linear infinite}
+.weather-wind .wsWeather{opacity:1}.weather-wind .wsWeather:before{background:repeating-linear-gradient(175deg,transparent 0 44px,rgba(243,248,241,.18) 46px 50px,transparent 52px 88px);animation:windSweep 2.6s linear infinite}.weather-wind .wsWeather:after{inset:auto 0 30% 0;height:14%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);animation:windSweep 4s linear infinite reverse}
+.weather-heat .wsWeather{opacity:1}.weather-heat .wsWeather:before{inset:auto 0 18% 0;height:22%;background:repeating-linear-gradient(90deg,transparent 0 18px,rgba(255,255,255,.12) 20px 22px,transparent 24px 36px);filter:blur(3px);animation:heatShimmer 2.2s ease-in-out infinite}
+.weather-snow .wsWeather{opacity:1}.weather-snow .wsWeather:before{background-image:radial-gradient(circle at 12% 18%,rgba(255,255,255,.92) 0 2px,transparent 2.6px),radial-gradient(circle at 30% 35%,rgba(255,255,255,.82) 0 1.8px,transparent 2.4px),radial-gradient(circle at 58% 24%,rgba(255,255,255,.92) 0 2px,transparent 2.5px),radial-gradient(circle at 74% 40%,rgba(255,255,255,.88) 0 2px,transparent 2.5px),radial-gradient(circle at 84% 16%,rgba(255,255,255,.92) 0 2px,transparent 2.4px),radial-gradient(circle at 18% 56%,rgba(255,255,255,.88) 0 1.8px,transparent 2.4px),radial-gradient(circle at 67% 62%,rgba(255,255,255,.88) 0 2px,transparent 2.4px),radial-gradient(circle at 90% 66%,rgba(255,255,255,.92) 0 2px,transparent 2.6px);animation:snowFall 7s linear infinite}.weather-snow .wsWeather:after{background:linear-gradient(180deg,transparent 0 45%,rgba(255,255,255,.12) 62%,rgba(255,255,255,.2) 100%)}
+@keyframes rainDrift{to{background-position:-28px 92px}}@keyframes fogDrift{0%{transform:translateX(18%)}100%{transform:translateX(-16%)}}@keyframes windSweep{to{background-position:-120px 0}}@keyframes heatShimmer{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(2px) scaleY(1.03)}}@keyframes snowFall{to{transform:translateY(22px) translateX(-8px)}}
+.wsWiper{position:absolute;z-index:31;bottom:6%;left:50%;width:40%;height:4px;background:#1d2326;border-radius:99px;transform-origin:3% 50%;transform:rotate(10deg);opacity:.55}.wsWiper.second{left:49%;transform-origin:97% 50%;transform:rotate(170deg)}.weather-rain .wsWiper,.weather-fog .wsWiper,.weather-snow .wsWiper{animation:wiperSweep 1.6s ease-in-out infinite}.weather-rain .wsWiper.second,.weather-fog .wsWiper.second,.weather-snow .wsWiper.second{animation-delay:-.8s}@keyframes wiperSweep{0%,100%{transform:rotate(10deg)}50%{transform:rotate(-42deg)}}
+.wsMirror{position:absolute;left:50%;top:0;width:18%;height:8%;background:linear-gradient(#23292d,#161b1e);border-radius:0 0 12px 12px;transform:translateX(-50%);z-index:32;box-shadow:0 3px 0 #0f1214}.wsMirror:before{content:"";position:absolute;left:50%;top:-16px;width:7px;height:18px;background:#23292d;transform:translateX(-50%)}
+.wsHood{position:absolute;left:0;right:0;bottom:0;height:12%;background:linear-gradient(#5d6267,#3f4549);clip-path:polygon(0 100%,8% 45%,22% 28%,42% 18%,58% 18%,78% 28%,92% 45%,100% 100%);z-index:18}
+.wsDash{position:absolute;left:0;right:0;bottom:0;height:10%;background:linear-gradient(#2c3438,#1f2528);z-index:19}
+.wsDriverBadge,.wsFatigue{position:absolute;z-index:33;padding:6px 9px;border-radius:10px;background:rgba(32,40,44,.82);color:#fff;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.18)}.wsDriverBadge{left:10px;top:10px;font-size:.76rem}.wsFatigue{right:10px;top:10px;font-size:.72rem}
+.fatigue-warning .wsFatigue{background:rgba(170,122,27,.88)}.fatigue-danger .wsFatigue{background:rgba(152,49,41,.9)}
+.wsIncident{position:absolute;left:50%;top:14%;transform:translateX(-50%);max-width:min(88%,480px);padding:10px 12px;border-radius:12px;background:#fff6d8;border:2px solid #b78b3f;color:#5c401b;font-weight:900;line-height:1.25;box-shadow:0 4px 14px rgba(0,0,0,.18);z-index:34;opacity:0;transition:.22s}.wsIncident.show{opacity:1}
+.wsGlassDamage,.wsDirt{position:absolute;inset:0;z-index:30;pointer-events:none;opacity:0}
+.glass-dirty .wsDirt{opacity:.35;background:radial-gradient(circle at 16% 76%,rgba(89,71,53,.14) 0 18px,transparent 19px),radial-gradient(circle at 82% 68%,rgba(89,71,53,.12) 0 16px,transparent 17px),radial-gradient(circle at 44% 24%,rgba(89,71,53,.09) 0 14px,transparent 15px)}
+.glass-chipped .wsGlassDamage{opacity:.55;background:radial-gradient(circle at 80% 30%,transparent 0 10px,rgba(255,255,255,.7) 11px 12px,transparent 13px),linear-gradient(112deg,transparent 79.3%,rgba(255,255,255,.45) 79.8%,transparent 80.2%),linear-gradient(92deg,transparent 80.3%,rgba(255,255,255,.38) 80.7%,transparent 81.1%)}
+.glass-cracked .wsGlassDamage{opacity:.7;background:linear-gradient(120deg,transparent 77.7%,rgba(255,255,255,.42) 78%,transparent 78.3%),linear-gradient(76deg,transparent 79%,rgba(255,255,255,.38) 79.2%,transparent 79.4%),linear-gradient(100deg,transparent 79.8%,rgba(255,255,255,.32) 80.05%,transparent 80.3%),radial-gradient(circle at 81% 30%,transparent 0 12px,rgba(255,255,255,.58) 13px 14px,transparent 15px)}
+.glass-bad .wsGlassDamage{opacity:.82;background:linear-gradient(122deg,transparent 76%,rgba(255,255,255,.5) 76.3%,transparent 76.6%),linear-gradient(76deg,transparent 78.5%,rgba(255,255,255,.48) 78.8%,transparent 79.1%),linear-gradient(98deg,transparent 80.2%,rgba(255,255,255,.42) 80.4%,transparent 80.6%),linear-gradient(145deg,transparent 73.5%,rgba(255,255,255,.4) 73.7%,transparent 73.9%),radial-gradient(circle at 80% 29%,transparent 0 13px,rgba(255,255,255,.64) 14px 15px,transparent 16px)}
+.windshieldScene.swerve-left .wsWorld{animation:swerveLeft .7s ease-in-out}.windshieldScene.swerve-right .wsWorld{animation:swerveRight .7s ease-in-out}.windshieldScene.rumble .wsWorld{animation:rumble .45s linear}.windshieldScene.impact .wsWorld{animation:impact .65s ease-in-out}@keyframes swerveLeft{35%{transform:translateX(-4%) rotate(-1deg)}70%{transform:translateX(2%) rotate(.5deg)}}@keyframes swerveRight{35%{transform:translateX(4%) rotate(1deg)}70%{transform:translateX(-2%) rotate(-.5deg)}}@keyframes rumble{20%,60%{transform:translate(3px,2px)}40%,80%{transform:translate(-3px,-1px)}}@keyframes impact{25%{transform:translateX(4%) rotate(1.6deg) scale(1.006)}35%{transform:translateX(-2%) rotate(-.6deg)}55%{transform:translate(2px,1px)}}
 .windshieldReadout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:9px}.windshieldReadout div{padding:7px 8px;background:#fff8df;border:1px solid #b9a579;border-radius:8px}.windshieldReadout b{display:block;font-size:.67rem;text-transform:uppercase;color:#74644d}.windshieldReadout span{display:block;font-weight:900;font-size:.83rem;margin-top:2px}
-@media(max-width:520px){.windshieldScene{height:285px;border-width:6px;border-bottom-width:13px;border-radius:34px 34px 16px 16px}.windshieldReadout{grid-template-columns:1fr}.wsRoadSign{right:4%;min-width:86px;font-size:.64rem}.wsObject.left{left:3%}.wsObject.right{right:3%}}
-
+@media(max-width:520px){.windshieldScene{height:305px;border-width:5px;border-bottom-width:12px;border-radius:22px 22px 14px 14px}.windshieldReadout{grid-template-columns:1fr}.wsRoadSign{right:4%;min-width:82px;font-size:.63rem}.wsObject.left{left:4%}.wsObject.right{right:4%}.wsMirror{width:22%}.wsDriverBadge,.wsFatigue{font-size:.68rem}}
 .dashboardAtlas{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;background:linear-gradient(145deg,#b89d68,#ead7a1 48%,#b89d68);border:4px solid #694f2e;border-radius:15px;padding:12px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.38),0 5px 12px rgba(61,42,20,.18)}
 .atlasMini{position:relative;min-height:184px;border:3px solid #5c4326;border-radius:10px;overflow:hidden;background:#efe0ab;box-shadow:inset 0 0 24px rgba(78,53,24,.26),0 4px 9px rgba(38,25,12,.2);transform:rotate(-.25deg)}
 .atlasMini:before,.atlasLarge:before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(90deg,transparent 24.4%,rgba(76,56,29,.2) 25%,rgba(255,255,255,.35) 25.7%,transparent 26.4%,transparent 49.2%,rgba(76,56,29,.22) 50%,rgba(255,255,255,.38) 50.8%,transparent 51.6%,transparent 74.2%,rgba(76,56,29,.2) 75%,rgba(255,255,255,.34) 75.7%,transparent 76.4%),linear-gradient(0deg,transparent 48.8%,rgba(76,56,29,.13) 49.6%,rgba(255,255,255,.25) 50.4%,transparent 51.2%)}
@@ -158,7 +172,7 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 <div class="wrap"><div class="game">
 <header>
   <h1>Cody to the Coast</h1>
-  <p>A highway survival comedy — v0.97</p>
+  <p>A highway survival comedy — v0.98</p>
   <div class="audioControls">
     <button id="musicBtn" class="audioBtn" type="button" aria-pressed="false">♫ Music Off</button>
     <button id="prevTuneBtn" class="audioBtn smallAudioBtn" type="button">◀ Prev Tune</button>
@@ -401,7 +415,7 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 <script>
 (() => {
 "use strict";
-const BUILD_VERSION="0.97",SAVE="cody_to_coast_v097",LEGACY_SAVES=["cody_to_coast_v096","cody_to_coast_v095","cody_to_coast_v094","cody_to_coast_v093","cody_to_coast_v092","cody_to_coast_v091","cody_to_coast_v09","cody_to_coast_v08","cody_to_coast_v07","cody_to_coast_v06","cody_to_coast_v05","cody_to_coast_v04","cody_to_coast_v03","cody_to_coast_v02","cody_to_coast_v01"];
+const BUILD_VERSION="0.98",SAVE="cody_to_coast_v098",LEGACY_SAVES=["cody_to_coast_v097","cody_to_coast_v096","cody_to_coast_v095","cody_to_coast_v094","cody_to_coast_v093","cody_to_coast_v092","cody_to_coast_v091","cody_to_coast_v09","cody_to_coast_v08","cody_to_coast_v07","cody_to_coast_v06","cody_to_coast_v05","cody_to_coast_v04","cody_to_coast_v03","cody_to_coast_v02","cody_to_coast_v01"];
 const route=[
  {name:"Cody, Wyoming",miles:0,blurb:"The trip begins beneath the wide Wyoming sky."},
  {name:"Bridger, Montana",miles:76,blurb:"A small Montana stop with fuel, food, and room to stretch."},
@@ -557,9 +571,12 @@ function windshieldCurve(){
 function windshieldGlassClass(){return state.glass<25?"bad":state.glass<55?"cracked":state.glass<85?"chipped":"clear"}
 function windshieldVisibility(){
  if(state.glass<25)return "Poor — badly cracked glass";
- if(state.wiper<12&&(state.weatherKey==="rain"||state.weatherKey==="fog"))return "Poor — washer fluid nearly empty";
+ if(state.wiper<12&&(state.weatherKey==="rain"||state.weatherKey==="fog"||state.weatherKey==="snow"))return "Poor — washer fluid nearly empty";
  if(state.weatherKey==="fog")return "Reduced by fog";
  if(state.weatherKey==="rain")return "Reduced by rain";
+ if(state.weatherKey==="snow")return "Reduced by snowfall";
+ if(state.weatherKey==="wind")return "Steady with side gusts";
+ if(state.weatherKey==="heat")return "Good — slight road shimmer";
  if(windshieldDaypart().key==="night")return "Headlights and dark highway";
  return "Good";
 }
@@ -600,7 +617,8 @@ const weatherTypes=[
  {key:"rain",name:"Steady rain",icon:"🌧️",speed:.88,fuel:1.02,event:.08,wiper:10},
  {key:"fog",name:"Morning fog",icon:"🌫️",speed:.82,fuel:1,event:.06,wiper:4},
  {key:"wind",name:"Strong side wind",icon:"💨",speed:.91,fuel:1.09,event:.05,wiper:0},
- {key:"heat",name:"Hot dry highway",icon:"🌡️",speed:.96,fuel:1.05,event:.03,wiper:0}
+ {key:"heat",name:"Hot dry highway",icon:"🌡️",speed:.96,fuel:1.05,event:.03,wiper:0},
+ {key:"snow",name:"Light snow",icon:"❄️",speed:.78,fuel:1.06,event:.07,wiper:5}
 ];
 const $=id=>document.getElementById(id);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -1208,9 +1226,10 @@ function recover(){
  });
 }
 function rollWeather(){
- let pool=[...weatherTypes];
+ let pool=[weatherTypes[0],weatherTypes[1],weatherTypes[2],weatherTypes[3],weatherTypes[4]];
+ if(state.routeIndex<=4)pool.push(weatherTypes[4],weatherTypes[3],weatherTypes[5]);
  if(state.routeIndex>=8)pool.push(weatherTypes[1],weatherTypes[1],weatherTypes[2]);
- if(state.routeIndex<=4)pool.push(weatherTypes[4],weatherTypes[3]);
+ if(state.routeIndex>=10&&state.routeIndex<=12)pool.push(weatherTypes[2],weatherTypes[1]);
  const w=pool[Math.floor(Math.random()*pool.length)];
  state.weatherKey=w.key;state.weatherName=w.name;
  return w;
