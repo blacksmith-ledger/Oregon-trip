@@ -299,10 +299,10 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 
 <div id="miniModal" class="modal"><div class="box">
   <h2>Road Pickup Run</h2>
-  <p class="small">Move between three lanes. Collect large supplies—including roadkill for the cats—and avoid potholes, cones, and loose tires. The run lasts 20 seconds.</p>
+  <p class="small">Touch and drag across the road to steer. The car stays slightly above your finger so you can see it. Collect supplies—including roadkill for the cats—and avoid potholes, cones, and loose tires. The run lasts 20 seconds.</p>
   <div class="minibar"><span id="miniTime">Time: 20</span><span id="miniScore">Collected: 0</span></div>
-  <canvas id="canvas" width="420" height="520"></canvas>
-  <div class="gameControls"><button id="leftBtn">◀</button><button id="rightBtn">▶</button></div>
+  <canvas id="canvas" width="420" height="520" style="touch-action:none;cursor:grab"></canvas>
+  <div id="dragHint" class="small" style="text-align:center;font-weight:900;margin:7px 0">Drag anywhere on the road to steer</div>
   <button id="startMini" class="primary">Start the Run</button>
   <button id="closeMini" class="light">Return to the Trip</button>
 </div></div>
@@ -310,7 +310,7 @@ canvas{display:block;width:100%;height:auto;background:var(--road);border:3px so
 <script>
 (() => {
 "use strict";
-const SAVE="cody_to_coast_v094",LEGACY_SAVES=["cody_to_coast_v093","cody_to_coast_v092","cody_to_coast_v091","cody_to_coast_v09","cody_to_coast_v08","cody_to_coast_v07","cody_to_coast_v06","cody_to_coast_v05","cody_to_coast_v04","cody_to_coast_v03","cody_to_coast_v02","cody_to_coast_v01"];
+const SAVE="cody_to_coast_v095",LEGACY_SAVES=["cody_to_coast_v094","cody_to_coast_v093","cody_to_coast_v092","cody_to_coast_v091","cody_to_coast_v09","cody_to_coast_v08","cody_to_coast_v07","cody_to_coast_v06","cody_to_coast_v05","cody_to_coast_v04","cody_to_coast_v03","cody_to_coast_v02","cody_to_coast_v01"];
 const route=[
  {name:"Cody, Wyoming",miles:0,blurb:"The trip begins beneath the wide Wyoming sky."},
  {name:"Bridger, Montana",miles:76,blurb:"A small Montana stop with fuel, food, and room to stretch."},
@@ -1571,8 +1571,8 @@ function restart(){
  notice("Everyone is packed. The coast is a long way west, and twelve illustrated journal cards are waiting to be collected.");render();
 }
 
-/* Three-lane pickup mini-game */
-const canvas=$("canvas"),ctx=canvas.getContext("2d"),lanes=[105,210,315];
+/* Drag-to-steer pickup mini-game */
+const canvas=$("canvas"),ctx=canvas.getContext("2d");
 const pickups=[
  {icon:"💧",key:"water"},{icon:"☕",key:"coffee"},{icon:"🐟",key:"pate"},
  {icon:"🦴",key:"roadkill"},{icon:"⛽",key:"gas"},{icon:"🧴",key:"wiper"},
@@ -1580,30 +1580,43 @@ const pickups=[
 ];
 const hazards=[{icon:"🕳️"},{icon:"🚧"},{icon:"🛞"},{icon:"🧳"}];
 let mini;
+const MINI_LEFT=48,MINI_RIGHT=372,MINI_CAR_Y=438;
 function miniReset(){
  cancelAnimationFrame(mini?.raf);
- mini={running:false,lane:1,objects:[],time:20,score:0,last:0,spawn:0,raf:0,rewards:{},hits:0};
+ mini={running:false,x:210,targetX:210,vx:0,dragging:false,pointerId:null,objects:[],time:20,score:0,last:0,spawn:0,raf:0,rewards:{},hits:0,track:[]};
  drawMini();miniText();$("startMini").disabled=false;
 }
 function openMini(){miniReset();$("miniModal").classList.add("show")}
-function moveMini(d){if(mini.running)mini.lane=clamp(mini.lane+d,0,2)}
-function startMini(){if(mini.running)return;mini.running=true;mini.last=performance.now();$("startMini").disabled=true;mini.raf=requestAnimationFrame(miniLoop)}
+function steerMiniTo(x){if(mini.running)mini.targetX=clamp(x,MINI_LEFT,MINI_RIGHT)}
+function nudgeMini(d){if(mini.running)mini.targetX=clamp(mini.targetX+d*48,MINI_LEFT,MINI_RIGHT)}
+function startMini(){
+ if(mini.running)return;
+ mini.running=true;mini.last=performance.now();$("startMini").disabled=true;
+ $("dragHint").textContent="Steer by dragging left and right";
+ mini.raf=requestAnimationFrame(miniLoop);
+}
 function spawn(){
  const good=Math.random()<.72,src=good?pickups[Math.floor(Math.random()*pickups.length)]:hazards[Math.floor(Math.random()*hazards.length)];
- mini.objects.push({lane:Math.floor(Math.random()*3),y:-48,good,...src});
+ mini.objects.push({x:MINI_LEFT+Math.random()*(MINI_RIGHT-MINI_LEFT),y:-48,good,...src});
 }
 function miniLoop(now){
  const dt=Math.min(.05,(now-mini.last)/1000);mini.last=now;mini.time-=dt;mini.spawn+=dt;
  if(mini.spawn>.55){mini.spawn=0;spawn()}
- mini.objects.forEach(o=>o.y+=230*dt);
+ const desired=(mini.targetX-mini.x)*12;
+ mini.vx+=(desired-mini.vx)*Math.min(1,dt*10);
+ mini.x=clamp(mini.x+mini.vx*dt,MINI_LEFT,MINI_RIGHT);
+ mini.track.push({x:mini.x,y:MINI_CAR_Y+44,a:.24});if(mini.track.length>18)mini.track.shift();
+ const speed=230+(20-mini.time)*2.7;
+ mini.objects.forEach(o=>o.y+=speed*dt);
  mini.objects.forEach(o=>{
-  if(!o.done&&o.lane===mini.lane&&o.y>380&&o.y<490){
+  const dx=o.x-mini.x,dy=o.y-MINI_CAR_Y;
+  if(!o.done&&Math.abs(dx)<42&&Math.abs(dy)<57){
    o.done=true;
    if(o.good){mini.score++;mini.rewards[o.key]=(mini.rewards[o.key]||0)+1}
-   else{mini.hits++;mini.score=Math.max(0,mini.score-1)}
+   else{mini.hits++;mini.score=Math.max(0,mini.score-1);mini.vx*=-.4}
   }
  });
- mini.objects=mini.objects.filter(o=>!o.done&&o.y<560);
+ mini.objects=mini.objects.filter(o=>!o.done&&o.y<570);
  drawMini();miniText();
  if(mini.time<=0)return endMini();
  mini.raf=requestAnimationFrame(miniLoop);
@@ -1617,16 +1630,23 @@ function roundRect(x,y,w,h,r,fill){
  ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();ctx.fillStyle=fill;ctx.fill();
 }
 function drawMini(){
- ctx.clearRect(0,0,420,520);ctx.fillStyle="#596269";ctx.fillRect(0,0,420,520);
- ctx.strokeStyle="#f4d35e";ctx.lineWidth=5;ctx.setLineDash([24,22]);
- [157.5,262.5].forEach(x=>{ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,520);ctx.stroke()});ctx.setLineDash([]);
- ctx.font="48px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";mini.objects.forEach(o=>ctx.fillText(o.icon,lanes[o.lane],o.y));
- roundRect(lanes[mini.lane]-32,407,64,90,13,"#2f6fb2");roundRect(lanes[mini.lane]-22,419,44,27,7,"#b9e4ef");
- ctx.fillStyle="#222";ctx.fillRect(lanes[mini.lane]-38,430,8,22);ctx.fillRect(lanes[mini.lane]+30,430,8,22);
- ctx.fillRect(lanes[mini.lane]-38,468,8,22);ctx.fillRect(lanes[mini.lane]+30,468,8,22);
+ ctx.clearRect(0,0,420,520);
+ ctx.fillStyle="#375f39";ctx.fillRect(0,0,420,520);
+ ctx.fillStyle="#596269";ctx.fillRect(34,0,352,520);
+ ctx.fillStyle="#e8ddbf";ctx.fillRect(28,0,6,520);ctx.fillRect(386,0,6,520);
+ ctx.strokeStyle="#f4d35e";ctx.lineWidth=4;ctx.setLineDash([24,22]);
+ [151,269].forEach(x=>{ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,520);ctx.stroke()});ctx.setLineDash([]);
+ mini.track.forEach((t,i)=>{ctx.globalAlpha=(i+1)/mini.track.length*.22;ctx.fillStyle="#222";ctx.fillRect(t.x-28,t.y,7,12);ctx.fillRect(t.x+21,t.y,7,12)});ctx.globalAlpha=1;
+ ctx.font="48px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";mini.objects.forEach(o=>ctx.fillText(o.icon,o.x,o.y));
+ const lean=clamp(mini.vx/280,-.12,.12);
+ ctx.save();ctx.translate(mini.x,MINI_CAR_Y);ctx.rotate(lean);
+ roundRect(-32,-31,64,90,13,"#2f6fb2");roundRect(-22,-19,44,27,7,"#b9e4ef");
+ ctx.fillStyle="#222";ctx.fillRect(-38,-8,8,22);ctx.fillRect(30,-8,8,22);ctx.fillRect(-38,30,8,22);ctx.fillRect(30,30,8,22);
+ ctx.restore();
+ if(!mini.running){ctx.fillStyle="#0009";ctx.fillRect(45,205,330,82);ctx.fillStyle="white";ctx.font="bold 22px system-ui";ctx.fillText("Drag left and right to steer",210,239);ctx.font="16px system-ui";ctx.fillText("Press Start when ready",210,270)}
 }
 function endMini(){
- mini.running=false;cancelAnimationFrame(mini.raf);state.caught+=mini.score;state.hours+=.35+mini.hits*.2;state.lastMiniAt=state.routeIndex;
+ mini.running=false;mini.dragging=false;cancelAnimationFrame(mini.raf);state.caught+=mini.score;state.hours+=.35+mini.hits*.2;state.lastMiniAt=state.routeIndex;
  const rewards=[];
  Object.entries(mini.rewards).forEach(([k,q])=>{
   if(k==="gas"){state.fuel=clamp(state.fuel+q*.5,0,16);rewards.push(`${q} small gas can${q===1?"":"s"}`)}
@@ -1638,7 +1658,7 @@ function endMini(){
  const summary=rewards.length?`Collected ${rewards.join(", ")}.`:"No useful items were collected.";
  addLog(`Road Pickup Run: ${summary} ${mini.hits} hazard${mini.hits===1?"":"s"} hit.`);
  notice(summary+(mini.hits?` ${mini.hits} hazard hit${mini.hits===1?"":"s"} added delay.`:""),mini.hits?"bad":"good");
- $("startMini").disabled=false;render();drawMini();
+ $("startMini").disabled=false;$("dragHint").textContent="Drag anywhere on the road to steer";render();drawMini();
 }
 
 $("atlasBtn").onclick=openAtlas;$("closeAtlas").onclick=()=>$("atlasModal").classList.remove("show");
@@ -1651,9 +1671,14 @@ $("closeStore").onclick=()=>$("storeModal").classList.remove("show");$("buyStore
 $("closeTown").onclick=()=>$("townModal").classList.remove("show");$("closeAlbum").onclick=()=>{closeCardViewer();$("albumModal").classList.remove("show");albumOpenedFromEnd=false};$("closeCardViewer").onclick=closeCardViewer;
 $("miniBtn").onclick=openMini;$("startMini").onclick=startMini;
 $("closeMini").onclick=()=>{if(!mini.running)$("miniModal").classList.remove("show")};
-$("leftBtn").onclick=()=>moveMini(-1);$("rightBtn").onclick=()=>moveMini(1);
-window.addEventListener("keydown",e=>{if(e.key==="ArrowLeft")moveMini(-1);if(e.key==="ArrowRight")moveMini(1)});
-canvas.addEventListener("pointerdown",e=>{const r=canvas.getBoundingClientRect();moveMini(e.clientX-r.left<r.width/2?-1:1)});
+window.addEventListener("keydown",e=>{if(e.key==="ArrowLeft")nudgeMini(-1);if(e.key==="ArrowRight")nudgeMini(1)});
+function pointerX(e){const r=canvas.getBoundingClientRect();return (e.clientX-r.left)*(canvas.width/r.width)}
+canvas.addEventListener("pointerdown",e=>{
+ if(!mini.running)return;mini.dragging=true;mini.pointerId=e.pointerId;canvas.setPointerCapture?.(e.pointerId);canvas.style.cursor="grabbing";steerMiniTo(pointerX(e));e.preventDefault();
+});
+canvas.addEventListener("pointermove",e=>{if(mini.running&&mini.dragging&&e.pointerId===mini.pointerId){steerMiniTo(pointerX(e));e.preventDefault()}});
+function releaseMiniPointer(e){if(e.pointerId===mini.pointerId){mini.dragging=false;mini.pointerId=null;canvas.style.cursor="grab"}}
+canvas.addEventListener("pointerup",releaseMiniPointer);canvas.addEventListener("pointercancel",releaseMiniPointer);
 setupMusicControls();
 
 if(!state.log.length)addLog("Henry takes the wheel while Emily, Frank, and Edna leave Cody for the coast.");
